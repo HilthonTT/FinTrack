@@ -1,0 +1,6 @@
+services:
+  fintrack.api:
+    image: ${DOCKER_REGISTRY-}fintrackapi
+    build:
+      context: .
+      dockerfile: FinTrack.Api/Dockerfile
