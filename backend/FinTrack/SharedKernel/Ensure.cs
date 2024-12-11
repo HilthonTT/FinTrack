@@ -5,6 +5,16 @@ namespace SharedKernel;
 
 public static class Ensure
 {
+    public static void NotNull(
+        [NotNull] object? value,
+        [CallerArgumentExpression(nameof(value))] string? paramName = default)
+    {
+        if (value is null)
+        {
+            throw new ArgumentNullException(paramName);
+        }
+    }
+
     public static void NotNullOrWhitespace(
         [NotNull] string? value, 
         [CallerArgumentExpression(nameof(value))] string? paramName = default)

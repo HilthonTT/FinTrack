@@ -15,6 +15,10 @@ public sealed class User : Entity, IAuditable
         EmailVerified = false;
     }
 
+    private User()
+    {
+    }
+
     public Email Email { get; private set; }
 
     public Name Name { get; private set; }

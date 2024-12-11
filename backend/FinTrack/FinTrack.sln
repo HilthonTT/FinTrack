@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Domain", "FinTrack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Application", "FinTrack.Application\FinTrack.Application.csproj", "{6C4CB516-56B1-4778-B5C5-E7241F5064B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Contracts", "FinTrack.Contracts\FinTrack.Contracts.csproj", "{8530D9CC-DF92-4704-AA49-F748F07E269C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{6C4CB516-56B1-4778-B5C5-E7241F5064B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C4CB516-56B1-4778-B5C5-E7241F5064B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C4CB516-56B1-4778-B5C5-E7241F5064B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8530D9CC-DF92-4704-AA49-F748F07E269C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8530D9CC-DF92-4704-AA49-F748F07E269C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8530D9CC-DF92-4704-AA49-F748F07E269C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8530D9CC-DF92-4704-AA49-F748F07E269C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{2A578B18-FA79-4E6D-9C25-3A9B1EF4B11D} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
 		{C90FCE75-542A-412B-AAC0-4CC637533618} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
 		{6C4CB516-56B1-4778-B5C5-E7241F5064B0} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
+		{8530D9CC-DF92-4704-AA49-F748F07E269C} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
 	EndGlobalSection
 EndGlobal
