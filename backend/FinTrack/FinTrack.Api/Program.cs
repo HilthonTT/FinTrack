@@ -3,6 +3,7 @@ using FinTrack.Events;
 using FinTrack.ServiceDefaults;
 using FinTrack.Api.Extensions;
 using FinTrack.Infrastructure;
+using FinTrack.Application;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,8 @@ builder.Services.AddOpenApi();
 builder.Services
     .AddPersistence(builder.Configuration)
     .AddEvents(builder.Configuration)
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication();
 
 WebApplication app = builder.Build();
 
