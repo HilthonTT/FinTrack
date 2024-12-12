@@ -1,6 +1,9 @@
-﻿using MassTransit;
+﻿using FinTrack.Application.Abstractions.Events;
+using FinTrack.Events.Bus;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel;
 
 namespace FinTrack.Events;
 
@@ -14,11 +17,16 @@ public static class DependencyInjection
 
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
-                configurator.Host(configuration.GetConnectionString("fintrack-mq"));
+                string? connectionString = configuration.GetConnectionString("fintrack-mq");
+                Ensure.NotNullOrWhitespace(connectionString, nameof(connectionString));
+
+                configurator.Host(connectionString);
 
                 configurator.ConfigureEndpoints(context);
             });
         });
+
+        services.AddScoped<IEventBus, EventBus>();
 
         return services;
     }

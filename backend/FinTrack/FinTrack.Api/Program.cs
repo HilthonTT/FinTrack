@@ -2,6 +2,7 @@ using FinTrack.Persistence;
 using FinTrack.Events;
 using FinTrack.ServiceDefaults;
 using FinTrack.Api.Extensions;
+using FinTrack.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,8 @@ builder.Services.AddOpenApi();
 
 builder.Services
     .AddPersistence(builder.Configuration)
-    .AddEvents(builder.Configuration);
+    .AddEvents(builder.Configuration)
+    .AddInfrastructure(builder.Configuration);
 
 WebApplication app = builder.Build();
 
@@ -25,5 +27,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 await app.RunAsync();

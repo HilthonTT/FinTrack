@@ -36,4 +36,6 @@ public sealed record Email
 
         return new Email(email);
     }
+
+    public static implicit operator string(Email email) => email.Value;
 }

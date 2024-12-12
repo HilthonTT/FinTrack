@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FinTrack.Application\FinTrack.Application.csproj" />
     <ProjectReference Include="..\FinTrack.Events\FinTrack.Events.csproj" />
+    <ProjectReference Include="..\FinTrack.Infrastructure\FinTrack.Infrastructure.csproj" />
     <ProjectReference Include="..\FinTrack.Persistence\FinTrack.Persistence.csproj" />
     <ProjectReference Include="..\FinTrack.ServiceDefaults\FinTrack.ServiceDefaults.csproj" />
   </ItemGroup>

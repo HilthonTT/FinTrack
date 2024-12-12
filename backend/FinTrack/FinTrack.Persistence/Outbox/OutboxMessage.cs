@@ -8,7 +8,7 @@ public sealed class OutboxMessage
 
     public required string Content { get; init; }
 
-    public DateTime OccurredOnUtc { get; init; }
+    public required DateTime OccurredOnUtc { get; init; }
 
     public DateTime? ProcessedOnUtc { get; init; }
 

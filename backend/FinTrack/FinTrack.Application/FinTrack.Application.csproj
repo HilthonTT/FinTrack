@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FinTrack.Contracts\FinTrack.Contracts.csproj" />
     <ProjectReference Include="..\FinTrack.Domain\FinTrack.Domain.csproj" />
   </ItemGroup>
 

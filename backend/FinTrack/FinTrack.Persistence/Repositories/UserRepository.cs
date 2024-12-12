@@ -1,6 +1,7 @@
 ﻿using FinTrack.Domain.Users;
 using FinTrack.Domain.Users.Repositories;
 using FinTrack.Domain.Users.ValueObjects;
+using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrack.Persistence.Repositories;

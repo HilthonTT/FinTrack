@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace FinTrack.Persistence;
+namespace FinTrack.Persistence.Context;
 
 internal sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {

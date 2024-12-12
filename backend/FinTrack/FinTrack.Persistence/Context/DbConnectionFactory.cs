@@ -2,7 +2,7 @@
 using Npgsql;
 using System.Data;
 
-namespace FinTrack.Persistence;
+namespace FinTrack.Persistence.Context;
 
 internal sealed class DbConnectionFactory(NpgsqlDataSource dataSource) : IDbConnectionFactory
 {

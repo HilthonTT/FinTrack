@@ -1,4 +1,4 @@
-﻿using FinTrack.Persistence;
+﻿using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrack.Api.Extensions;
@@ -9,9 +9,8 @@ internal static class MigrationExtensions
     {
         using IServiceScope scope = app.ApplicationServices.CreateScope();
 
-        using AppDbContext usersDbContext =
-            scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        usersDbContext.Database.Migrate();
+        dbContext.Database.Migrate();
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FinTrack.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_User_Relations : Migration
+    public partial class Create_Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace FinTrack.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     type = table.Column<string>(type: "text", nullable: false),
-                    content = table.Column<string>(type: "text", nullable: false),
+                    content = table.Column<string>(type: "jsonb", nullable: false),
                     occurred_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     processed_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     error = table.Column<string>(type: "text", nullable: true)
@@ -86,6 +86,12 @@ namespace FinTrack.Persistence.Migrations
                 name: "ix_email_verification_tokens_user_id",
                 table: "email_verification_tokens",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_outbox_messages_unprocessed",
+                table: "outbox_messages",
+                columns: new[] { "occurred_on_utc", "processed_on_utc" },
+                filter: "processed_on_utc IS NULL");
 
             migrationBuilder.CreateIndex(
                 name: "ix_refresh_tokens_token",

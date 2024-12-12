@@ -5,16 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
-namespace FinTrack.Persistence;
+namespace FinTrack.Persistence.Context;
 
-public sealed class AppDbContext : DbContext, IUnitOfWork
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IUnitOfWork
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
-    {
-        
-    }
-
     public DbSet<User> Users { get; set; }
 
     public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
@@ -26,7 +20,7 @@ public sealed class AppDbContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(PersistenceAssembly.Instance);
-        
+
         base.OnModelCreating(modelBuilder);
     }
 
