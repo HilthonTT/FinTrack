@@ -1,39 +1,37 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace FinTrack.Persistence.Outbox;
+namespace FinTrack.Infrastructure.Outbox;
 
-internal sealed class OutboxBackgroundService(
+internal sealed class ProcessOutboxMessagesJob(
     IServiceScopeFactory serviceScopeFactory,
-    ILogger<OutboxBackgroundService> logger) : BackgroundService
+    ILogger<ProcessOutboxMessagesJob> logger) : IProcessOutboxMessagesJob
 {
     private const int MaxParallelism = 5;
     private int _totalIterations = 0;
     private int _totalProcessedMessage = 0;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task ExecuteAsync()
     {
         OutboxLoggers.LogStarting(logger);
 
         using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
-        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, stoppingToken);
 
         var parallelOptions = new ParallelOptions
         {
             MaxDegreeOfParallelism = MaxParallelism,
-            CancellationToken = linkedCts.Token,
+            CancellationToken = cts.Token,
         };
 
         try
         {
             await Parallel.ForEachAsync(
                 Enumerable.Range(0, MaxParallelism),
-                parallelOptions, 
+                parallelOptions,
                 async (_, token) =>
-            {
-                await ProcessOutboxMessages(token);
-            });
+                {
+                    await ProcessOutboxMessages(token);
+                });
         }
         catch (OperationCanceledException)
         {
@@ -48,21 +46,18 @@ internal sealed class OutboxBackgroundService(
             OutboxLoggers.LogFinished(logger, _totalIterations, _totalProcessedMessage);
         }
     }
-
+        
     private async Task ProcessOutboxMessages(CancellationToken cancellationToken)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         var outboxProcessor = scope.ServiceProvider.GetRequiredService<OutboxProcessor>();
 
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            int iterationCount = Interlocked.Increment(ref _totalIterations);
-            OutboxLoggers.LogStartingIteration(logger, iterationCount);
+        int iterationCount = Interlocked.Increment(ref _totalIterations);
+        OutboxLoggers.LogStartingIteration(logger, iterationCount);
 
-            int processedMessages = await outboxProcessor.Execute(cancellationToken);
-            int totalProcessedMessages = Interlocked.Add(ref _totalProcessedMessage, processedMessages);
+        int processedMessages = await outboxProcessor.Execute(cancellationToken);
+        int totalProcessedMessages = Interlocked.Add(ref _totalProcessedMessage, processedMessages);
 
-            OutboxLoggers.LogIterationCompleted(logger, iterationCount, processedMessages, totalProcessedMessages);
-        }
+        OutboxLoggers.LogIterationCompleted(logger, iterationCount, processedMessages, totalProcessedMessages); 
     }
 }

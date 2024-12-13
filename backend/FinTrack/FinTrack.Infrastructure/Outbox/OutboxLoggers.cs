@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace FinTrack.Persistence.Outbox;
+namespace FinTrack.Infrastructure.Outbox;
 
 internal static partial class OutboxLoggers
 {

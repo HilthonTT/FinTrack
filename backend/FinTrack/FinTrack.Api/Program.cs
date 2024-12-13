@@ -7,6 +7,7 @@ using FinTrack.Application;
 using FinTrack.Api;
 using Scalar.AspNetCore;
 using FinTrack.Api.Constants;
+using Zylo.Api.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ WebApplication app = builder.Build();
 app.MapEndpoints();
 
 app.MapDefaultEndpoints();
+
+app.UseBackgroundJobs();
 
 if (app.Environment.IsDevelopment())
 {

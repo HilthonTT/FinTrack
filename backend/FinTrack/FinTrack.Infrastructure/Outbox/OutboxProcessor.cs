@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using FinTrack.Application.Abstractions.Data;
-using MassTransit;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -9,7 +8,7 @@ using System.Data;
 using FinTrack.Domain;
 using MediatR;
 
-namespace FinTrack.Persistence.Outbox;
+namespace FinTrack.Infrastructure.Outbox;
 
 internal sealed class OutboxProcessor(
     IDbConnectionFactory factory,
@@ -85,7 +84,7 @@ internal sealed class OutboxProcessor(
             Type messageType = GetOrAddMessageType(message.Type);
 
             object deserializedMessage = JsonSerializer.Deserialize(
-                message.Content, 
+                message.Content,
                 messageType) ?? throw new InvalidOperationException("Deserialization failed");
 
             await publisher.Publish(deserializedMessage, cancellationToken);
@@ -151,10 +150,7 @@ internal sealed class OutboxProcessor(
             .GetTypes()
             .FirstOrDefault(type => type.Name == typeName);
 
-        if (type is null)
-        {
-            throw new ArgumentNullException($"Type not found: {typeName}");
-        }
+        ArgumentNullException.ThrowIfNull(type, $"Type not found: {typeName}");
 
         return TypeCache.GetOrAdd(typeName, type);
     }

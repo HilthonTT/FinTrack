@@ -3,7 +3,6 @@ using FinTrack.Domain.Users.Repositories;
 using FinTrack.Persistence.Constants;
 using FinTrack.Persistence.Context;
 using FinTrack.Persistence.Interceptors;
-using FinTrack.Persistence.Outbox;
 using FinTrack.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -17,15 +16,6 @@ namespace FinTrack.Persistence;
 public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
-    {
-        services
-            .AddDatabase(configuration)
-            .AddBackgroundJob();
-
-        return services;
-    }
-
-    private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<SoftDeleteInterceptor>();
         services.AddSingleton<UpdateAuditableInterceptor>();
@@ -54,17 +44,8 @@ public static class DependencyInjection
 
         services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
 
-        services.AddScoped<IDbConnectionFactory>(_ => 
+        services.AddScoped<IDbConnectionFactory>(_ =>
             new DbConnectionFactory(new NpgsqlDataSourceBuilder(connectionString).Build()));
-
-        return services;
-    }
-
-    private static IServiceCollection AddBackgroundJob(this IServiceCollection services)
-    {
-        services.AddScoped<OutboxProcessor>();
-
-        services.AddHostedService<OutboxBackgroundService>();
 
         return services;
     }

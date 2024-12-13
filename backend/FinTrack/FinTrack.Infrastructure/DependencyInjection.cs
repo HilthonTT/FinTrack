@@ -4,7 +4,10 @@ using FinTrack.Application.Abstractions.Emails;
 using FinTrack.Infrastructure.Authentication;
 using FinTrack.Infrastructure.Caching;
 using FinTrack.Infrastructure.Emails;
+using FinTrack.Infrastructure.Outbox;
 using FinTrack.Infrastructure.Time;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +25,7 @@ public static class DependencyInjection
             .AddServices()
             .AddEmail()
             .AddCaching(configuration)
+            .AddBackgroundJobs(configuration)
             .AddAuthenticationInternal(configuration)
             .AddAuthorizationInternal();
 
@@ -53,6 +57,24 @@ public static class DependencyInjection
         services.AddOptions<EmailOptions>().BindConfiguration(EmailOptions.ConfigurationSection);
 
         services.AddTransient<IEmailService, EmailService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration)
+    {
+        string? connectionString = configuration.GetConnectionString("fintrack-db");
+        Ensure.NotNullOrWhitespace(connectionString, nameof(connectionString));
+
+        services.AddHangfire(config =>
+            config.UsePostgreSqlStorage(options =>
+                options.UseNpgsqlConnection(connectionString)));
+
+        services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromSeconds(1));
+
+        services.AddScoped<OutboxProcessor>();
+
+        services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 
         return services;
     }
