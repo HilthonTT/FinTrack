@@ -52,7 +52,11 @@ public static class DependencyInjection
     {
         services
             .AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
-            .AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
+            .AddSmtpSender(
+                configuration["Email:Host"],
+                configuration.GetValue<int>("Email:Port"),
+                configuration["Email:Username"],
+                configuration["Email:Password"]);
 
         services.AddTransient<IEmailService, EmailService>();
 

@@ -1,5 +1,6 @@
 ﻿using FinTrack.Application.Abstractions.Events;
 using FinTrack.Events.Bus;
+using FinTrack.Events.Users.Created;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ public static class DependencyInjection
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
+            busConfigurator.AddConsumer<UserCreatedIntegrationEventHandler>();
+
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
                 string? connectionString = configuration.GetConnectionString("fintrack-mq");
@@ -22,11 +25,16 @@ public static class DependencyInjection
 
                 configurator.Host(connectionString);
 
+                configurator.ReceiveEndpoint(nameof(UserCreatedIntegrationEventHandler), e =>
+                {
+                    e.ConfigureConsumer<UserCreatedIntegrationEventHandler>(context);
+                });
+
                 configurator.ConfigureEndpoints(context);
             });
         });
 
-        services.AddScoped<IEventBus, EventBus>();
+        services.AddTransient<IEventBus, EventBus>();
 
         return services;
     }

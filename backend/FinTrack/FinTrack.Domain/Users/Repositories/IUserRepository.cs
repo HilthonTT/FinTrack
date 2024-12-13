@@ -11,4 +11,6 @@ public interface IUserRepository
     void Insert(User user);
 
     void Remove(User user);
+
+    Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default);
 }

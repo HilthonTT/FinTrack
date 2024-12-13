@@ -27,9 +27,9 @@ public sealed class User : Entity, IAuditable
 
     public bool EmailVerified { get; private set; }
 
-    public DateTime CreatedOnUtc { get; }
+    public DateTime CreatedOnUtc { get; set; }
 
-    public DateTime? ModifiedOnUtc { get; }
+    public DateTime? ModifiedOnUtc { get; set; }
 
     public static User Create(Email email, Name name, string passwordHash)
     {

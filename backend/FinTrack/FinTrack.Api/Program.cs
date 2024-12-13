@@ -4,20 +4,22 @@ using FinTrack.ServiceDefaults;
 using FinTrack.Api.Extensions;
 using FinTrack.Infrastructure;
 using FinTrack.Application;
+using FinTrack.Api;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddOpenApi();
-
 builder.Services
     .AddPersistence(builder.Configuration)
     .AddEvents(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication()
+    .AddPresentation();
 
 WebApplication app = builder.Build();
+
+app.MapEndpoints();
 
 app.MapDefaultEndpoints();
 
@@ -35,3 +37,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 await app.RunAsync();
+
+// REMARK: Required for functional and integration tests to work.
+namespace FinTrack.Api
+{
+    public partial class Program;
+}

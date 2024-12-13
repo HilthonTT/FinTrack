@@ -5,14 +5,15 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.Json;
-using FinTrack.Contracts;
 using System.Data;
+using FinTrack.Domain;
+using MediatR;
 
 namespace FinTrack.Persistence.Outbox;
 
 internal sealed class OutboxProcessor(
     IDbConnectionFactory factory,
-    IPublishEndpoint publishEndpoint,
+    IPublisher publisher,
     ILogger<OutboxProcessor> logger)
 {
     private const int BatchSize = 1000;
@@ -25,7 +26,7 @@ internal sealed class OutboxProcessor(
         using IDbConnection connection = await factory.GetOpenConnectionAsync(cancellationToken);
         using IDbTransaction transaction = connection.BeginTransaction();
 
-        List<OutboxMessage> messages = await FetchPendingMessagesAsync(connection, transaction, cancellationToken);
+        List<OutboxMessage> messages = await FetchPendingMessagesAsync(connection, transaction);
 
         ConcurrentQueue<OutboxUpdate> updateQueue = await ProcessMessagesAsync(messages, cancellationToken);
 
@@ -40,10 +41,9 @@ internal sealed class OutboxProcessor(
         return messages.Count;
     }
 
-    private async Task<List<OutboxMessage>> FetchPendingMessagesAsync(
+    private static async Task<List<OutboxMessage>> FetchPendingMessagesAsync(
         IDbConnection connection,
-        IDbTransaction transaction,
-        CancellationToken cancellationToken)
+        IDbTransaction transaction)
     {
         const string sql = @"
             SELECT id AS Id, type AS Type, content AS Content
@@ -88,7 +88,7 @@ internal sealed class OutboxProcessor(
                 message.Content, 
                 messageType) ?? throw new InvalidOperationException("Deserialization failed");
 
-            await publishEndpoint.Publish(deserializedMessage, cancellationToken);
+            await publisher.Publish(deserializedMessage, cancellationToken);
 
             updateQueue.Enqueue(new OutboxUpdate
             {
@@ -107,7 +107,7 @@ internal sealed class OutboxProcessor(
         }
     }
 
-    private async Task UpdateProcessedMessagesAsync(
+    private static async Task UpdateProcessedMessagesAsync(
         IDbConnection connection,
         IDbTransaction transaction,
         ConcurrentQueue<OutboxUpdate> updateQueue)
@@ -147,9 +147,16 @@ internal sealed class OutboxProcessor(
 
     private static Type GetOrAddMessageType(string typeName)
     {
-        return TypeCache.GetOrAdd(
-            typeName, 
-            name => ContractsAssembly.Instance.GetType(name) ?? throw new InvalidOperationException($"Type not found: {name}"));
+        Type? type = DomainAssembly.Instance
+            .GetTypes()
+            .FirstOrDefault(type => type.Name == typeName);
+
+        if (type is null)
+        {
+            throw new ArgumentNullException($"Type not found: {typeName}");
+        }
+
+        return TypeCache.GetOrAdd(typeName, type);
     }
 
     private void LogPerformance(long totalTime, int messageCount)

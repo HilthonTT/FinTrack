@@ -9,4 +9,6 @@ public static class EmailErrors
     public static readonly Error InvalidFormat = Error.Problem("Email.InvalidFormat", "The email format is invalid");
 
     public static readonly Error TooLong = Error.Problem("Email.TooLong", "The email is too long");
+
+    public static readonly Error NotUnique = Error.Problem("Email.NotUnique", "The email is already in use");
 }

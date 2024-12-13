@@ -22,6 +22,11 @@ internal sealed class UserRepository(AppDbContext dbContext) : IUserRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
+    {
+        return !await dbContext.Users.AnyAsync(u => u.Email.Value == email.Value, cancellationToken);
+    }
+
     public void Insert(User user)
     {
         dbContext.Users.Add(user);
