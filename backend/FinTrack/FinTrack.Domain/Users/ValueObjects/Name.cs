@@ -27,4 +27,6 @@ public sealed record Name
 
         return new Name(email);
     }
+
+    public static implicit operator string(Name name) => name.Value;
 }

@@ -39,4 +39,9 @@ public sealed class User : Entity, IAuditable
 
         return user;
     }
+
+    public void VerifyEmail()
+    {
+        EmailVerified = true;
+    }
 }

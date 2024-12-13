@@ -11,11 +11,26 @@ internal sealed class EmailVerificationTokenRepository(AppDbContext dbContext) :
     {
         return dbContext.EmailVerificationTokens
             .Where(e => e.Id == id)
+            .Include(e => e.User)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<EmailVerificationToken?> GetMostRecentAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return dbContext.EmailVerificationTokens
+            .Where(e => e.UserId == userId && e.ExpiresOnUtc > DateTime.UtcNow)
+            .OrderByDescending(e => e.CreatedOnUtc)
+            .Include(e => e.User)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public void Insert(EmailVerificationToken emailVerificationToken)
     {
         dbContext.Add(emailVerificationToken);
+    }
+
+    public void Remove(EmailVerificationToken emailVerificationToken)
+    {
+        dbContext.Remove(emailVerificationToken);
     }
 }

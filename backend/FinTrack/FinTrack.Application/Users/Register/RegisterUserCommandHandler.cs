@@ -1,6 +1,8 @@
 ﻿using FinTrack.Application.Abstractions.Authentication;
 using FinTrack.Application.Abstractions.Data;
+using FinTrack.Application.Abstractions.Emails;
 using FinTrack.Application.Abstractions.Messaging;
+using FinTrack.Contracts.Emails;
 using FinTrack.Domain.Users;
 using FinTrack.Domain.Users.Repositories;
 using FinTrack.Domain.Users.ValueObjects;
@@ -11,6 +13,10 @@ namespace FinTrack.Application.Users.Register;
 internal sealed class RegisterUserCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
+    IDateTimeProvider dateTimeProvider,
+    IEmailVerificationLinkFactory emailVerificationLinkFactory,
+    IEmailVerificationTokenRepository emailVerificationTokenRepository,
+    IEmailService emailService,
     IUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand>
 {
     public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -39,7 +45,23 @@ internal sealed class RegisterUserCommandHandler(
 
         userRepository.Insert(user);
 
+        var token = new EmailVerificationToken(Guid.NewGuid(), user.Id, dateTimeProvider.UtcNow);
+
+        emailVerificationTokenRepository.Insert(token);
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        string verificationLink = emailVerificationLinkFactory.Create(token);
+
+        var mailRequest = new MailRequest(
+            user.Email,
+            "Email verification for FinTrack!",
+            $"To verify your email address <a href='{verificationLink}'>click here</a>");
+
+        await emailService.SendEmailAsync(
+            mailRequest,
+            isHtml: true,
+            cancellationToken: cancellationToken);
 
         return Result.Success();
     }

@@ -20,8 +20,8 @@ public static class DependencyInjection
     {
         services
             .AddServices()
+            .AddEmail()
             .AddCaching(configuration)
-            .AddEmail(configuration)
             .AddAuthenticationInternal(configuration)
             .AddAuthorizationInternal();
 
@@ -48,15 +48,9 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddEmail(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddEmail(this IServiceCollection services)
     {
-        services
-            .AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
-            .AddSmtpSender(
-                configuration["Email:Host"],
-                configuration.GetValue<int>("Email:Port"),
-                configuration["Email:Username"],
-                configuration["Email:Password"]);
+        services.AddOptions<EmailOptions>().BindConfiguration(EmailOptions.ConfigurationSection);
 
         services.AddTransient<IEmailService, EmailService>();
 
@@ -84,6 +78,8 @@ public static class DependencyInjection
         services.AddScoped<IUserContext, UserContext>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<ITokenProvider, TokenProvider>();
+
+        services.AddScoped<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
 
         return services;
     }

@@ -5,6 +5,8 @@ using FinTrack.Api.Extensions;
 using FinTrack.Infrastructure;
 using FinTrack.Application;
 using FinTrack.Api;
+using Scalar.AspNetCore;
+using FinTrack.Api.Constants;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +28,18 @@ app.MapDefaultEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("FinTrack API")
+            .WithTheme(ScalarTheme.Mars)
+            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
 
     app.ApplyMigrations();
 }
+
+app.UseCors(CorsPolicy.AllowAllHeaders);
 
 app.UseHttpsRedirection();
 

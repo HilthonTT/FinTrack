@@ -43,4 +43,8 @@ public static class UserValidationErrors
     public static readonly Error PasswordMissingSpecialCharacter = Error.Problem(
         "UserValidation.PasswordMissingSpecialCharacter",
         "The password must contain at least one special character");
+
+    public static readonly Error TokenIdEmpty = Error.Problem(
+        "UserValidation.TokenIdEmpty",
+        "The token identifier is empty");
 }
