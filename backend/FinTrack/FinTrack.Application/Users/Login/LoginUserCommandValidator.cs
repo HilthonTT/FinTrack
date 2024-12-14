@@ -2,23 +2,16 @@
 using FinTrack.Domain.Users.ValueObjects;
 using FluentValidation;
 
-namespace FinTrack.Application.Users.Register;
+namespace FinTrack.Application.Users.Login;
 
-internal sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+internal sealed class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 {
-    public RegisterUserCommandValidator()
-    {
-        // Name validation
-        RuleFor(x => x.Name)
-            .NotEmpty().WithError(UserValidationErrors.NameEmpty)
-            .MaximumLength(Name.MaxLength).WithError(UserValidationErrors.NameTooLong);
+	public LoginUserCommandValidator()
+	{
+		RuleFor(x => x.Email)
+			.NotEmpty().WithError(UserValidationErrors.EmailEmpty)
+			.EmailAddress().WithError(UserValidationErrors.EmailInvalidFormat);
 
-        // Email validation
-        RuleFor(x => x.Email)
-            .NotEmpty().WithError(UserValidationErrors.EmailEmpty)
-            .EmailAddress().WithError(UserValidationErrors.EmailInvalidFormat);
-
-        // Password validation
         RuleFor(x => x.Password)
             .NotEmpty().WithError(UserValidationErrors.PasswordEmpty)
             .MinimumLength(Password.MinimumLength).WithError(UserValidationErrors.PasswordTooShort)

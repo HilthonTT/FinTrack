@@ -11,6 +11,7 @@ internal sealed class RefreshTokenRepository(AppDbContext dbContext) : IRefreshT
     {
         return dbContext.RefreshTokens
             .Where(r => r.Id == id)
+            .Include(r => r.UserId)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -18,7 +19,15 @@ internal sealed class RefreshTokenRepository(AppDbContext dbContext) : IRefreshT
     {
         return dbContext.RefreshTokens
             .Where(r => r.Token == token)
+            .Include(r => r.User)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task DeleteAllAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return dbContext.RefreshTokens
+            .Where(r => r.UserId == userId)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     public void Insert(RefreshToken refreshToken)

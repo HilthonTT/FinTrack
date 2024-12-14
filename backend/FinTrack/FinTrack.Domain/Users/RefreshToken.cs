@@ -19,4 +19,10 @@ public sealed class RefreshToken : Entity
         UserId = userId;
         ExpiresOnUtc = expiresOnUtc;
     }
+
+    public void Update(string token, DateTime expiresOnUtc)
+    {
+        Token = token;
+        ExpiresOnUtc = expiresOnUtc;
+    }
 }

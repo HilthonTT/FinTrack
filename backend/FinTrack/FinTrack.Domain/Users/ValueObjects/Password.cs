@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using SharedKernel;
+﻿using SharedKernel;
 
 namespace FinTrack.Domain.Users.ValueObjects;
 
@@ -26,28 +25,37 @@ public sealed record Password
             return Result.Failure<Password>(PasswordErrors.TooShort);
         }
 
-        if (!Regex.IsMatch(password, @"[A-Z]"))
+        if (!ContainUppercase(password))
         {
             return Result.Failure<Password>(PasswordErrors.MissingUppercase);
         }
 
-        if (!Regex.IsMatch(password, @"[a-z]"))
+        if (!ContainLowercase(password))
         {
             return Result.Failure<Password>(PasswordErrors.MissingLowercase);
         }
 
-        if (!Regex.IsMatch(password, @"\d"))
+        if (!ContainNumber(password))
         {
             return Result.Failure<Password>(PasswordErrors.MissingNumber);
         }
 
-        if (!Regex.IsMatch(password, @"[\W_]"))
+        if (!ContainSpecialCharacter(password))
         {
             return Result.Failure<Password>(PasswordErrors.MissingSpecialCharacter);
         }
 
         return new Password(password);
     }
+
+    public static bool ContainUppercase(string password) => password.Any(char.IsUpper);
+
+    public static bool ContainLowercase(string password) => password.Any(char.IsLower);
+
+    public static bool ContainNumber(string password) => password.Any(char.IsDigit);
+
+    public static bool ContainSpecialCharacter(string password) =>
+        password.Any(ch => !char.IsLetterOrDigit(ch));
 
     public static implicit operator string(Password password) => password.Value;
 }

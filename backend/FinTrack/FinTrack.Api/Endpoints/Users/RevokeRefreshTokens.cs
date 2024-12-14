@@ -1,29 +1,29 @@
 ﻿using FinTrack.Api.Constants;
 using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
-using FinTrack.Application.Users.Register;
-using FinTrack.Contracts.Users;
+using FinTrack.Application.Users.RevokeRefreshToken;
 using MediatR;
 using SharedKernel;
 
 namespace FinTrack.Api.Endpoints.Users;
 
-internal sealed class Register : IEndpoint
+internal sealed class RevokeRefreshTokens : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("users/register", async (
-            RegisterRequest request,
+        app.MapDelete("users/{userId:guid}/refresh-tokens", async (
+            Guid userId,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var command = new RegisterUserCommand(request.Email, request.Name, request.Password);
+            var command = new RevokeRefreshTokenCommand(userId);
 
             Result result = await sender.Send(command, cancellationToken);
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
         .WithTags(Tags.Users)
-        .RequireCors(CorsPolicy.AllowAllHeaders);
+        .RequireCors(CorsPolicy.AllowAllHeaders)
+        .RequireAuthorization();
     }
 }

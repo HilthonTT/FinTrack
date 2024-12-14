@@ -7,7 +7,7 @@ internal sealed class ProcessOutboxMessagesJob(
     IServiceScopeFactory serviceScopeFactory,
     ILogger<ProcessOutboxMessagesJob> logger) : IProcessOutboxMessagesJob
 {
-    private const int MaxParallelism = 5;
+    private const int MaxParallelism = 2;
     private int _totalIterations = 0;
     private int _totalProcessedMessage = 0;
 
@@ -15,23 +15,12 @@ internal sealed class ProcessOutboxMessagesJob(
     {
         OutboxLoggers.LogStarting(logger);
 
-        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
-
-        var parallelOptions = new ParallelOptions
-        {
-            MaxDegreeOfParallelism = MaxParallelism,
-            CancellationToken = cts.Token,
-        };
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
 
         try
         {
-            await Parallel.ForEachAsync(
-                Enumerable.Range(0, MaxParallelism),
-                parallelOptions,
-                async (_, token) =>
-                {
-                    await ProcessOutboxMessages(token);
-                });
+            await Task.WhenAll(
+                Enumerable.Range(0, MaxParallelism).Select(_ => ProcessOutboxMessages(cts.Token)));
         }
         catch (OperationCanceledException)
         {

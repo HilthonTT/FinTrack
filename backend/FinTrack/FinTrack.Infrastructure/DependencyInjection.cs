@@ -76,6 +76,8 @@ public static class DependencyInjection
 
         services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 
+        services.AddScoped<IRevokeRefreshTokensJob, RevokeRefreshTokensJob>();
+
         return services;
     }
 

@@ -9,4 +9,6 @@ public interface IRefreshTokenRepository
     void Insert(RefreshToken refreshToken);
 
     void Remove(RefreshToken refreshToken);
+
+    Task DeleteAllAsync(Guid userId, CancellationToken cancellationToken = default);
 }
