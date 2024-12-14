@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Contracts", "FinTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Infrastructure", "FinTrack.Infrastructure\FinTrack.Infrastructure.csproj", "{F3BDC1E2-08C6-4669-A646-3FF8AE28672D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E912D0F1-759D-4A7B-8B77-0DF2A9AC586A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchitectureTests", "ArchitectureTests\ArchitectureTests.csproj", "{79775EA5-739C-41E7-A5BC-67D5F79BFE01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +77,10 @@ Global
 		{F3BDC1E2-08C6-4669-A646-3FF8AE28672D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3BDC1E2-08C6-4669-A646-3FF8AE28672D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3BDC1E2-08C6-4669-A646-3FF8AE28672D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79775EA5-739C-41E7-A5BC-67D5F79BFE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79775EA5-739C-41E7-A5BC-67D5F79BFE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79775EA5-739C-41E7-A5BC-67D5F79BFE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79775EA5-739C-41E7-A5BC-67D5F79BFE01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,5 +96,6 @@ Global
 		{6C4CB516-56B1-4778-B5C5-E7241F5064B0} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
 		{8530D9CC-DF92-4704-AA49-F748F07E269C} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
 		{F3BDC1E2-08C6-4669-A646-3FF8AE28672D} = {F88D3634-8BF7-4E03-9DF9-535E04EC9303}
+		{79775EA5-739C-41E7-A5BC-67D5F79BFE01} = {E912D0F1-759D-4A7B-8B77-0DF2A9AC586A}
 	EndGlobalSection
 EndGlobal

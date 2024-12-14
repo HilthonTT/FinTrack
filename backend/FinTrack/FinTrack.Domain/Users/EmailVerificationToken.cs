@@ -19,4 +19,8 @@ public sealed class EmailVerificationToken : Entity
         CreatedOnUtc = createdOnUtc;
         ExpiresOnUtc = createdOnUtc.AddDays(1);
     }
+
+    private EmailVerificationToken()
+    {
+    }
 }

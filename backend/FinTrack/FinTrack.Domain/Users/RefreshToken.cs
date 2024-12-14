@@ -20,6 +20,10 @@ public sealed class RefreshToken : Entity
         ExpiresOnUtc = expiresOnUtc;
     }
 
+    private RefreshToken()
+    {
+    }
+
     public void Update(string token, DateTime expiresOnUtc)
     {
         Token = token;
