@@ -46,6 +46,10 @@ app.UseCors(CorsPolicy.AllowAllHeaders);
 
 app.UseHttpsRedirection();
 
+app.UseExceptionHandler();
+
+app.UseStatusCodePages();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
