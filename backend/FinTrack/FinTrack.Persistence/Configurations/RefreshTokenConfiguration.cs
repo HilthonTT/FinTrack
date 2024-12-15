@@ -1,4 +1,5 @@
 ﻿using FinTrack.Domain.Users;
+using FinTrack.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +9,8 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
+        builder.ToTable(TableNames.RefreshToken);
+
         builder.HasKey(r => r.Id);
 
         builder.Property(r => r.Token).HasMaxLength(200);

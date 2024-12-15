@@ -1,4 +1,5 @@
-﻿using FinTrack.Persistence.Outbox;
+﻿using FinTrack.Persistence.Constants;
+using FinTrack.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +9,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
-        builder.ToTable("outbox_messages");
+        builder.ToTable(TableNames.OutboxMessages);
 
         builder.Property(o => o.Content).HasColumnType("jsonb");
 

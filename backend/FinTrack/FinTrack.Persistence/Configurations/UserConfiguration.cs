@@ -1,5 +1,6 @@
 ﻿using FinTrack.Domain.Users;
 using FinTrack.Domain.Users.ValueObjects;
+using FinTrack.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,6 +10,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.ToTable(TableNames.Users);
+
         builder.HasKey(u => u.Id);
 
         builder.OwnsOne(u => u.Email, emailBuilder =>

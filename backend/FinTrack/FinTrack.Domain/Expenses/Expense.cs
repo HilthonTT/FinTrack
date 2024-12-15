@@ -9,18 +9,18 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
     private Expense(
         Guid id, 
         Guid userId, 
-        Guid categoryId,
         string name,
         Money money, 
+        ExpenseCategory category,
         SubscriptionType subscriptionType, 
         TransactionType transactionType,
         DateTime date) 
         : base(id)
     {
         UserId = userId;
-        CategoryId = categoryId;
         Name = name;
         Money = money;
+        Category = category;
         SubscriptionType = subscriptionType;
         TransactionType = transactionType;
         Date = date;
@@ -32,11 +32,12 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
 
     public Guid UserId { get; private set; }
 
-    public Guid CategoryId { get; private set; }
 
     public string Name { get; private set; }
 
     public Money Money { get; private set; }
+
+    public ExpenseCategory Category { get; private set; }
 
     public SubscriptionType SubscriptionType { get; private set; }
 
@@ -54,9 +55,9 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
 
     public static Result<Expense> Create(
         Guid userId, 
-        Guid categoryId,
         string name, 
         Money money, 
+        ExpenseCategory category,
         SubscriptionType subscriptionType, 
         TransactionType transactionType,
         DateTime date)
@@ -74,9 +75,9 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
         var expense = new Expense(
             Guid.NewGuid(), 
             userId, 
-            categoryId,
             name, 
             money, 
+            category,
             subscriptionType, 
             transactionType, 
             date);

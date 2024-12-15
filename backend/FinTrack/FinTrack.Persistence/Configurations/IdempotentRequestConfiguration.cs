@@ -1,4 +1,5 @@
-﻿using FinTrack.Persistence.Idempotency;
+﻿using FinTrack.Persistence.Constants;
+using FinTrack.Persistence.Idempotency;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +9,7 @@ internal sealed class IdempotentRequestConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<IdempotentRequest> builder)
     {
-        builder.ToTable("idempotent_requests");
+        builder.ToTable(TableNames.IdempotentRequests);
 
         builder.HasKey(ir => ir.Id);
 

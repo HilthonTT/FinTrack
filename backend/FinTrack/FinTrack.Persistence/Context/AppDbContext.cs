@@ -1,4 +1,6 @@
 ﻿using FinTrack.Application.Abstractions.Data;
+using FinTrack.Domain.Budget;
+using FinTrack.Domain.Expenses;
 using FinTrack.Domain.Users;
 using FinTrack.Persistence.Idempotency;
 using FinTrack.Persistence.Outbox;
@@ -19,6 +21,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     public DbSet<IdempotentRequest> IdempotentRequests { get; set; }
+
+    public DbSet<Budget> Budgets { get; set; }
+
+    public DbSet<Expense> Expenses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

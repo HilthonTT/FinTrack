@@ -1,5 +1,7 @@
 ﻿using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Idempotency;
+using FinTrack.Domain.Budget;
+using FinTrack.Domain.Expenses.Repositories;
 using FinTrack.Domain.Users.Repositories;
 using FinTrack.Persistence.Constants;
 using FinTrack.Persistence.Context;
@@ -41,10 +43,10 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<IUserRepository, UserRepository>();
-
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-
         services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
+        services.AddScoped<IBudgetRepository, BudgetRepository>();
+        services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
         services.AddScoped<IDbConnectionFactory>(_ =>
             new DbConnectionFactory(new NpgsqlDataSourceBuilder(connectionString).Build()));
