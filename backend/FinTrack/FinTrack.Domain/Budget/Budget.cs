@@ -14,8 +14,8 @@ public sealed class Budget : Entity, IAuditable
         DateRange dateRange)
         : base(id)
     {
-        Ensure.GreaterThanZero(amount.Amount, nameof(amount));
-        Ensure.GreaterThanZero(spent.Amount, nameof(spent));
+        Ensure.GreaterThanOrEqualToZero(amount.Amount, nameof(amount));
+        Ensure.GreaterThanOrEqualToZero(spent.Amount, nameof(spent));
 
         UserId = userId;
         Amount = amount;

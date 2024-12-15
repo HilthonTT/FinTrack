@@ -6,7 +6,6 @@ public sealed record Money : IComparable<Money>
 {
     public Money(decimal amount, Currency currency)
     {
-        Ensure.GreaterThanZero(amount);
         Ensure.NotNull(currency, nameof(currency));
 
         Amount = amount;
