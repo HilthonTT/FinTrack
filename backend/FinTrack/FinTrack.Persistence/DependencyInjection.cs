@@ -1,7 +1,9 @@
 ﻿using FinTrack.Application.Abstractions.Data;
+using FinTrack.Application.Abstractions.Idempotency;
 using FinTrack.Domain.Users.Repositories;
 using FinTrack.Persistence.Constants;
 using FinTrack.Persistence.Context;
+using FinTrack.Persistence.Idempotency;
 using FinTrack.Persistence.Interceptors;
 using FinTrack.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +48,8 @@ public static class DependencyInjection
 
         services.AddScoped<IDbConnectionFactory>(_ =>
             new DbConnectionFactory(new NpgsqlDataSourceBuilder(connectionString).Build()));
+
+        services.AddScoped<IIdempotencyService, IdempotencyService>();
 
         return services;
     }

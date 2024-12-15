@@ -1,5 +1,6 @@
 ﻿using FinTrack.Application.Abstractions.Data;
 using FinTrack.Domain.Users;
+using FinTrack.Persistence.Idempotency;
 using FinTrack.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -16,6 +17,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
+
+    public DbSet<IdempotentRequest> IdempotentRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
