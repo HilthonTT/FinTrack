@@ -2,7 +2,7 @@
 
 namespace FinTrack.Application.Users;
 
-public static class UserValidationErrors
+internal static class UserValidationErrors
 {
     public static readonly Error UserIdEmpty = Error.Problem(
         "UserValidationErrors.UserIdEmpty",
