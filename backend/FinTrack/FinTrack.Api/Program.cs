@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
     {
         options
             .WithTitle("FinTrack API")
-            .WithTheme(ScalarTheme.Mars)
+            .WithTheme(ScalarTheme.DeepSpace)
             .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
 
