@@ -13,4 +13,6 @@ public interface IUserRepository
     void Remove(User user);
 
     Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyCollection<Role>[]> GetRolesAsync(Guid userId, CancellationToken cancellationToken = default);
 }

@@ -6,6 +6,8 @@ namespace FinTrack.Domain.Users;
 
 public sealed class User : Entity, IAuditable
 {
+    private readonly List<Role> _roles = [];
+
     private User(Guid id, Email email, Name name, string passwordHash)
         : base(id)
     { 
@@ -30,6 +32,8 @@ public sealed class User : Entity, IAuditable
     public DateTime CreatedOnUtc { get; set; }
 
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public IReadOnlyCollection<Role> Roles => _roles;
 
     public static User Create(Email email, Name name, string passwordHash)
     {

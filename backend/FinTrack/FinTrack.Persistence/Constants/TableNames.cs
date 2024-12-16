@@ -15,4 +15,10 @@ internal static class TableNames
     public const string Users = "users";
 
     public const string Budgets = "budgets";
+
+    public const string Roles = "roles";
+
+    public const string RolePermissions = "role_permissions";
+
+    public const string Permissions = "permissions";
 }

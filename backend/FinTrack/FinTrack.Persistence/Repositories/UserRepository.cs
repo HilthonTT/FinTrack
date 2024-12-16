@@ -27,6 +27,19 @@ internal sealed class UserRepository(AppDbContext dbContext) : IUserRepository
         return !await dbContext.Users.AnyAsync(u => u.Email.Value == email.Value, cancellationToken);
     }
 
+    public async Task<IReadOnlyCollection<Role>[]> GetRolesAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        IReadOnlyCollection<Role>[] roles = await dbContext.Users
+            .Include(x => x.Roles)
+            .ThenInclude(x => x.Permissions)
+            .AsSplitQuery()
+            .Where(x => x.Id == userId)
+            .Select(x => x.Roles)
+            .ToArrayAsync(cancellationToken);
+
+        return roles;
+    } 
+
     public void Insert(User user)
     {
         dbContext.Users.Add(user);

@@ -2,6 +2,7 @@
 using FinTrack.Application.Abstractions.Caching;
 using FinTrack.Application.Abstractions.Emails;
 using FinTrack.Infrastructure.Authentication;
+using FinTrack.Infrastructure.Authorization;
 using FinTrack.Infrastructure.Caching;
 using FinTrack.Infrastructure.Emails;
 using FinTrack.Infrastructure.Outbox;
@@ -9,6 +10,7 @@ using FinTrack.Infrastructure.Time;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -111,6 +113,12 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthorizationInternal(this IServiceCollection services)
     {
         services.AddAuthorization();
+
+        services.AddScoped<PermissionProvider>();
+
+        services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+        services.AddTransient<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 
         return services;
     }
