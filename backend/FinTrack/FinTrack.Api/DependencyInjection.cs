@@ -1,10 +1,10 @@
 ﻿using FinTrack.Api.Constants;
 using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading.RateLimiting;
 
 namespace FinTrack.Api;
 
@@ -12,10 +12,26 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        services.AddOpenApi();
-
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
+        services
+            .AddServices()
+            .ConfigureCors()
+            .ConfigureProblemDetails()
+            .ConfigureRateLimiter();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddOpenApi();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureCors(this IServiceCollection services)
+    {
         services.AddCors(options =>
         {
             options.AddPolicy(CorsPolicy.AllowAllHeaders,
@@ -28,6 +44,11 @@ public static class DependencyInjection
                 });
         });
 
+        return services;
+    }
+
+    private static IServiceCollection ConfigureProblemDetails(this IServiceCollection services)
+    {
         services.AddProblemDetails(o =>
         {
             o.CustomizeProblemDetails = context =>
@@ -42,6 +63,25 @@ public static class DependencyInjection
         });
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureRateLimiter(this IServiceCollection services)
+    {
+        services.AddRateLimiter(rateLimiterOptions =>
+        {
+            rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            rateLimiterOptions.AddPolicy(RateLimitPolicy.FixedByIp, httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    httpContext.Connection.RemoteIpAddress?.ToString(),
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 50,
+                        Window = TimeSpan.FromMinutes(1),
+                    }));
+        });
 
         return services;
     }

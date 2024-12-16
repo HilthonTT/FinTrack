@@ -54,6 +54,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseRateLimiter();
+
 await app.RunAsync();
 
 // REMARK: Required for functional and integration tests to work.
