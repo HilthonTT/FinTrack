@@ -2,6 +2,7 @@
 using FinTrack.Api.Constants;
 using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
+using FinTrack.Api.OpenApi;
 using Microsoft.AspNetCore.Http.Features;
 using System.Diagnostics;
 using System.Reflection;
@@ -28,6 +29,12 @@ public static class DependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddOpenApi();
+
+        services.AddEndpointsApiExplorer();
+
+        services.AddSwaggerGenWithAuth();
+
+        services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 
         return services;
     }

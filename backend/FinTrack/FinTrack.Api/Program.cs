@@ -5,7 +5,6 @@ using FinTrack.Api.Extensions;
 using FinTrack.Infrastructure;
 using FinTrack.Application;
 using FinTrack.Api;
-using Scalar.AspNetCore;
 using FinTrack.Api.Constants;
 using Zylo.Api.Extensions;
 using Asp.Versioning.Builder;
@@ -43,20 +42,8 @@ app.UseBackgroundJobs();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options
-            .WithTitle("FinTrack API")
-            .WithTheme(ScalarTheme.DeepSpace)
-            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
-
-        options
-            .WithPreferredScheme("Bearer")
-            .WithHttpBearerAuthentication(bearer =>
-            {
-                bearer.Token = "your-bearer-token";
-            });
-    });
+    app.UseSwaggerWithUi();
+    app.UseScalarApiReference();
 
     app.UseHangfireDashboard(options: new DashboardOptions
     {
