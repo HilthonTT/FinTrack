@@ -1,4 +1,5 @@
-﻿using FinTrack.Api.Constants;
+﻿using Asp.Versioning;
+using FinTrack.Api.Constants;
 using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
@@ -18,7 +19,8 @@ public static class DependencyInjection
             .AddServices()
             .ConfigureCors()
             .ConfigureProblemDetails()
-            .ConfigureRateLimiter();
+            .ConfigureRateLimiter()
+            .ConfigureApiVersioning();
 
         return services;
     }
@@ -26,6 +28,23 @@ public static class DependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddOpenApi();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureApiVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1);
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
+        })
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'V";
+            options.SubstituteApiVersionInUrl = true;
+        });
 
         return services;
     }

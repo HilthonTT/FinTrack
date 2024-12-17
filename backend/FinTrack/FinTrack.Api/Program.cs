@@ -8,6 +8,9 @@ using FinTrack.Api;
 using Scalar.AspNetCore;
 using FinTrack.Api.Constants;
 using Zylo.Api.Extensions;
+using Asp.Versioning.Builder;
+using Asp.Versioning;
+using Hangfire;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +25,16 @@ builder.Services
 
 WebApplication app = builder.Build();
 
-app.MapEndpoints();
+ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .ReportApiVersions()
+    .Build();
+
+RouteGroupBuilder versionedGroup = app
+    .MapGroup("api/v{version:apiVersion}")
+    .WithApiVersionSet(apiVersionSet);
+
+app.MapEndpoints(versionedGroup);
 
 app.MapDefaultEndpoints();
 
@@ -37,6 +49,12 @@ if (app.Environment.IsDevelopment())
             .WithTitle("FinTrack API")
             .WithTheme(ScalarTheme.DeepSpace)
             .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
+
+    app.UseHangfireDashboard(options: new DashboardOptions
+    {
+        Authorization = [],
+        DarkModeEnabled = true
     });
 
     app.ApplyMigrations();
