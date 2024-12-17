@@ -1,5 +1,6 @@
 ﻿using FinTrack.Domain.Expenses.Events;
 using FinTrack.Domain.Shared.ValueObjects;
+using FinTrack.Domain.Users.ValueObjects;
 using SharedKernel;
 
 namespace FinTrack.Domain.Expenses;
@@ -118,6 +119,23 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
         Date = date;
 
         Raise(new ExpenseDateChangedDomainEvent(Id, Date));
+
+        return Result.Success();
+    }
+
+    public Result ChangeName(string name)
+    {
+        if (Name == name)
+        {
+            return Result.Success();
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return Result.Failure(NameErrors.Empty);
+        }
+
+        Name = name;
 
         return Result.Success();
     }

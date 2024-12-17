@@ -25,7 +25,7 @@ internal sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.OwnsOne(x => x.Money, moneyBuilder =>
         {
             moneyBuilder.Property(money => money.Currency)
-                .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
+                .HasConversion(currency => currency.Code, code => Currency.FromCode(code) ?? Currency.None);
         });
 
         builder.Property(e => e.IsDeleted).HasDefaultValue(false);

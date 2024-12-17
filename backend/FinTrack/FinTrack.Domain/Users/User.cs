@@ -48,4 +48,9 @@ public sealed class User : Entity, IAuditable
     {
         EmailVerified = true;
     }
+
+    public void AddRole(Role role)
+    {
+        _roles.Add(role);
+    }
 }

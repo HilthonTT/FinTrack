@@ -12,6 +12,8 @@ internal sealed class EmailVerificationTokenRepository(AppDbContext dbContext) :
         return dbContext.EmailVerificationTokens
             .Where(e => e.Id == id)
             .Include(e => e.User)
+            .ThenInclude(u => u.Roles)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
     }
 
