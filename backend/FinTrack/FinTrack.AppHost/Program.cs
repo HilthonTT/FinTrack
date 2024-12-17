@@ -14,6 +14,7 @@ IResourceBuilder<RedisResource> redis = builder.AddRedis("fintrack-redis")
 builder.AddProject<Projects.FinTrack_Api>("fintrack-api")
     .WithReference(postgres)
     .WithReference(rabbitMq)
-    .WithReference(redis);
+    .WithReference(redis)
+    .WaitFor(postgres);
 
 await builder.Build().RunAsync();

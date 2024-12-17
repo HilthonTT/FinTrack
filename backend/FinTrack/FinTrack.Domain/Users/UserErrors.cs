@@ -20,6 +20,10 @@ public static class UserErrors
         "User.EmailAlreadyVerified",
         "The user already has been verified");
 
+    public static readonly Error EmailNotVerified = Error.Problem(
+        "User.EmailNotVerified",
+        "The email has not been verified");
+
     public static readonly Error Unauthorized = Error.Problem(
         "User.Unauthorized",
         "You are unauthorized to perform this action");

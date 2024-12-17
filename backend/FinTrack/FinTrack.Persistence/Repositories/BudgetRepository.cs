@@ -15,7 +15,9 @@ internal sealed class BudgetRepository(AppDbContext dbContext) : IBudgetReposito
 
     public Task<Budget?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return dbContext.Budgets.FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
+        return dbContext.Budgets
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
     }
 
     public void Insert(Budget budget)

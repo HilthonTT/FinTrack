@@ -49,6 +49,13 @@ if (app.Environment.IsDevelopment())
             .WithTitle("FinTrack API")
             .WithTheme(ScalarTheme.DeepSpace)
             .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+
+        options
+            .WithPreferredScheme("Bearer")
+            .WithHttpBearerAuthentication(bearer =>
+            {
+                bearer.Token = "your-bearer-token";
+            });
     });
 
     app.UseHangfireDashboard(options: new DashboardOptions

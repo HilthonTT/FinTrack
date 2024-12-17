@@ -29,13 +29,17 @@ internal sealed class CreateExpenseCommandHandler(
 
         var money = new Money(request.Amount, currency);
 
+        ExpenseCategory category = ValidateEnumValue<ExpenseCategory>(request.ExpenseCategory);
+        SubscriptionType subscription = ValidateEnumValue<SubscriptionType>(request.SubscriptionType);
+        TransactionType transaction = ValidateEnumValue<TransactionType>(request.TransactionType);
+
         Result<Expense> expenseResult = Expense.Create(
             request.UserId, 
             request.Name, 
-            money, 
-            request.ExpenseCategory, 
-            request.SubscriptionType, 
-            request.TransactionType, 
+            money,
+            category,
+            subscription,
+            transaction, 
             request.Date);
 
         if (expenseResult.IsFailure)
@@ -50,5 +54,15 @@ internal sealed class CreateExpenseCommandHandler(
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return expense.Id;
+    }
+
+    private static TEnum ValidateEnumValue<TEnum>(int value) where TEnum : struct, Enum
+    {
+        if (Enum.IsDefined(typeof(TEnum), value))
+        {
+            return (TEnum)Enum.ToObject(typeof(TEnum), value);
+        }
+
+        throw new ArgumentException($"Invalid {typeof(TEnum).Name}: {value}");
     }
 }

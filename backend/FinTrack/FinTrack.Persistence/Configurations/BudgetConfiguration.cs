@@ -18,13 +18,13 @@ internal sealed class BudgetConfiguration : IEntityTypeConfiguration<Budget>
         builder.OwnsOne(x => x.Amount, amountBuilder =>
         {
             amountBuilder.Property(money => money.Currency)
-                .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
+                .HasConversion(currency => currency.Code, code => Currency.FromCode(code) ?? Currency.None);
         });
 
         builder.OwnsOne(x => x.Spent, spentBuilder =>
         {
             spentBuilder.Property(money => money.Currency)
-                .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
+                .HasConversion(currency => currency.Code, code => Currency.FromCode(code) ?? Currency.None);
         });
 
         builder.HasOne<User>()

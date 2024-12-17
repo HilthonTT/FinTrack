@@ -49,7 +49,7 @@ public sealed class Budget : Entity, IAuditable
         DateOnly start = new(utcNow.Year, utcNow.Month, 1);
         DateOnly end = start.AddMonths(1).AddDays(-1);
 
-        var budget = new Budget(Guid.NewGuid(), userId, amount, Money.Zero(), DateRange.Create(start, end));
+        var budget = new Budget(Guid.NewGuid(), userId, amount, Money.Zero(amount.Currency), DateRange.Create(start, end));
 
         budget.Raise(new BudgetCreatedDomainEvent(budget.Id));
 
@@ -58,7 +58,7 @@ public sealed class Budget : Entity, IAuditable
 
     public Result Withdraw(Money amount)
     {
-        if (amount < Money.Zero())
+        if (amount < Money.Zero(amount.Currency))
         {
             return Result.Failure(BudgetErrors.AmountMustBePositive);
         }
@@ -77,17 +77,12 @@ public sealed class Budget : Entity, IAuditable
 
     public Result Deposit(Money amount)
     {
-        if (amount < Money.Zero())
+        if (amount < Money.Zero(amount.Currency))
         {
             return Result.Failure(BudgetErrors.AmountMustBePositive);
         }
 
-        if (amount > Spent)
-        {
-            return Result.Failure(BudgetErrors.ExceedsSpentAmount);
-        }
-
-        Spent -= amount;
+        Spent += amount;
 
         Raise(new BudgetAmountDepositedDomainEvent(Id, amount.Amount));
 
