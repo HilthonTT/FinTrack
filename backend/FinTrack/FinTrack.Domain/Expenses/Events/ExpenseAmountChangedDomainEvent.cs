@@ -3,4 +3,4 @@ using SharedKernel;
 
 namespace FinTrack.Domain.Expenses.Events;
 
-public sealed record ExpenseAmountChangedDomainEvent(Guid Id, Money Money) : IDomainEvent;
+public sealed record ExpenseAmountChangedDomainEvent(Guid ExpenseId, Money Money) : IDomainEvent;

@@ -6,10 +6,10 @@ namespace FinTrack.Persistence.Repositories;
 
 internal sealed class BudgetRepository(AppDbContext dbContext) : IBudgetRepository
 {
-    public Task<List<Budget>> GetByDateAsync(DateOnly dateOnly, CancellationToken cancellationToken = default)
+    public Task<List<Budget>> GetByDateAsync(Guid userId, DateOnly dateOnly, CancellationToken cancellationToken = default)
     {
         return dbContext.Budgets
-            .Where(b => b.DateRange.Start >= dateOnly && b.DateRange.End <= dateOnly)
+            .Where(b => b.DateRange.Start >= dateOnly && b.DateRange.End <= dateOnly && b.UserId == userId)
             .ToListAsync(cancellationToken);
     }
 

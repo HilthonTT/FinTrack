@@ -4,7 +4,7 @@ public interface IBudgetRepository
 {
     Task<Budget?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<List<Budget>> GetByDateAsync(DateOnly dateOnly, CancellationToken cancellationToken = default);
+    Task<List<Budget>> GetByDateAsync(Guid userId, DateOnly dateOnly, CancellationToken cancellationToken = default);
 
     void Insert(Budget budget);
 
