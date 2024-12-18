@@ -4,14 +4,22 @@ namespace FinTrack.Domain.Users.ValueObjects;
 
 public sealed record Password
 {
-    public const int MinimumLength = 6;
+    public const int MinimumPasswordLength = 6;
+
+    public static readonly Func<char, bool> IsLower = c => c >= 'a' && c <= 'z';
+
+    public static readonly Func<char, bool> IsUpper = c => c >= 'A' && c <= 'Z';
+
+    public static readonly Func<char, bool> IsDigit = c => c >= '0' && c <= '9';
+
+    public static readonly Func<char, bool> IsNonAlphaNumeric = c => !(IsLower(c) || IsUpper(c) || IsDigit(c));
 
     private Password(string value)
     {
         Value = value;
     }
 
-    public string Value { get; init; }
+    public string Value { get; }
 
     public static Result<Password> Create(string? password)
     {
@@ -20,42 +28,33 @@ public sealed record Password
             return Result.Failure<Password>(PasswordErrors.Empty);
         }
 
-        if (password.Length < MinimumLength)
+        if (password.Length < MinimumPasswordLength)
         {
             return Result.Failure<Password>(PasswordErrors.TooShort);
         }
 
-        if (!ContainUppercase(password))
+        if (!password.Any(p => IsLower(p)))
         {
-            return Result.Failure<Password>(PasswordErrors.MissingUppercase);
+            return Result.Failure<Password>(PasswordErrors.MissingLowercaseLetter);
         }
 
-        if (!ContainLowercase(password))
+        if (!password.Any(p => IsUpper(p)))
         {
-            return Result.Failure<Password>(PasswordErrors.MissingLowercase);
+            return Result.Failure<Password>(PasswordErrors.MissingUppercaseLetter);
         }
 
-        if (!ContainNumber(password))
+        if (!password.Any(p => IsDigit(p)))
         {
-            return Result.Failure<Password>(PasswordErrors.MissingNumber);
+            return Result.Failure<Password>(PasswordErrors.MissingDigit);
         }
 
-        if (!ContainSpecialCharacter(password))
+        if (!password.Any(p => IsNonAlphaNumeric(p)))
         {
-            return Result.Failure<Password>(PasswordErrors.MissingSpecialCharacter);
+            return Result.Failure<Password>(PasswordErrors.MissingNonAlphaNumeric);
         }
 
         return new Password(password);
     }
-
-    public static bool ContainUppercase(string password) => password.Any(char.IsUpper);
-
-    public static bool ContainLowercase(string password) => password.Any(char.IsLower);
-
-    public static bool ContainNumber(string password) => password.Any(char.IsDigit);
-
-    public static bool ContainSpecialCharacter(string password) =>
-        password.Any(ch => !char.IsLetterOrDigit(ch));
 
     public static implicit operator string(Password password) => password.Value;
 }

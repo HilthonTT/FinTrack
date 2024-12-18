@@ -114,26 +114,25 @@ public class BudgetTests
     public void Deposit_Should_Succeed_WhenValid()
     {
         // Arrange
-        var amount = new Money(DummyAmount, TestCurrency);
+        var amount = new Money(1000M, TestCurrency); // Example amount
         var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
-        var withdrawAmount = new Money(DummyWithdrawAmount, TestCurrency);
-        budget.Withdraw(withdrawAmount); // Withdraw some amount to allow deposit
-
-        // Clear any existing domain events before deposit
+        var withdrawAmount = new Money(300M, TestCurrency); // Example withdrawal
+        budget.Withdraw(withdrawAmount);
         budget.ClearDomainEvents();
 
-        var depositAmount = new Money(DummyDepositAmount, TestCurrency);
+        var depositAmount = new Money(50M, TestCurrency);
 
         // Act
         Result result = budget.Deposit(depositAmount);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        budget.Spent.Should().Be(withdrawAmount - depositAmount);
-        budget.Remaining.Should().Be(amount - (withdrawAmount - depositAmount));
+        budget.Spent.Should().Be(withdrawAmount - depositAmount); // 300M - 50M = 250M
+        budget.Remaining.Should().Be(amount - budget.Spent);      // 1000M - 250M = 750M
         budget.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<BudgetAmountDepositedDomainEvent>();
     }
+
 
     [Fact]
     public void Deposit_Should_Fail_When_AmountIsNegative()
@@ -155,9 +154,12 @@ public class BudgetTests
     public void Deposit_Should_Fail_When_ExceedsSpentAmount()
     {
         // Arrange
-        var amount = new Money(DummyAmount, TestCurrency);
+        var amount = new Money(1000M, TestCurrency); // Example amount
         var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
-        var depositAmount = new Money(DummyDepositAmount, TestCurrency);
+        var withdrawAmount = new Money(300M, TestCurrency); // Example withdrawal
+        budget.Withdraw(withdrawAmount);
+
+        var depositAmount = new Money(350M, TestCurrency); // Deposit exceeds Spent
 
         // Act
         Result result = budget.Deposit(depositAmount);

@@ -14,10 +14,10 @@ internal sealed class LoginUserCommandValidator : AbstractValidator<LoginUserCom
 
         RuleFor(x => x.Password)
             .NotEmpty().WithError(UserValidationErrors.PasswordEmpty)
-            .MinimumLength(Password.MinimumLength).WithError(UserValidationErrors.PasswordTooShort)
-            .Must(Password.ContainUppercase).WithError(UserValidationErrors.PasswordMissingUppercase)
-            .Must(Password.ContainLowercase).WithError(UserValidationErrors.PasswordMissingLowercase)
-            .Must(Password.ContainNumber).WithError(UserValidationErrors.PasswordMissingNumber)
-            .Must(Password.ContainSpecialCharacter).WithError(UserValidationErrors.PasswordMissingSpecialCharacter);
+            .MinimumLength(Password.MinimumPasswordLength).WithError(UserValidationErrors.PasswordTooShort)
+            .Must(password => password.Any(Password.IsUpper)).WithError(UserValidationErrors.PasswordMissingUppercase)
+            .Must(password => password.Any(Password.IsLower)).WithError(UserValidationErrors.PasswordMissingLowercase)
+            .Must(password => password.Any(Password.IsDigit)).WithError(UserValidationErrors.PasswordMissingNumber)
+            .Must(password => password.Any(Password.IsNonAlphaNumeric)).WithError(UserValidationErrors.PasswordMissingSpecialCharacter);
     }
 }

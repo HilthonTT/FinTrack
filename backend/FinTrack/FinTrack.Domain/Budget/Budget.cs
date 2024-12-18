@@ -82,11 +82,15 @@ public sealed class Budget : Entity, IAuditable
             return Result.Failure(BudgetErrors.AmountMustBePositive);
         }
 
-        Spent += amount;
+        if (amount > Spent)
+        {
+            return Result.Failure(BudgetErrors.ExceedsSpentAmount);
+        }
+
+        Spent -= amount;
 
         Raise(new BudgetAmountDepositedDomainEvent(Id, amount.Amount));
 
         return Result.Success();
     }
-
 }
