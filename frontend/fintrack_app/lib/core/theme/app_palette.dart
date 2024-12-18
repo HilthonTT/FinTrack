@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 
 final class AppPalette {
-  static const Color backgroundColor = Colors.white;
-  static const Color primaryColor = Color(0xFF7B61FF); // Purple
-  static const Color secondaryColor = Color(0xFFFF6B6B); // Red/Orange
-  static const Color accentColor = Color(0xFF4A90E2); // Blue
-  static const Color textColorPrimary = Color(0xFF333333); // Dark Gray
-  static const Color textColorSecondary = Color(0xFF666666); // Medium Gray
-  static const Color cardBackgroundColor = Color(0xFFF5F5F5); // Light Gray
-  static const Color successColor = Color(0xFF2ECC71); // Green
-  static const Color expenseColor = Color(0xFFFF5A5F); // Expense Red
-  static const Color pieChartOrange = Color(0xFFFF7A59); // Shopping Pie Segment
-  static const Color pieChartPurple =
-      Color(0xFF7B61FF); // Healthcare Pie Segment
-  static const Color pieChartRed =
-      Color(0xFFFF5A5F); // Food and Drinks Pie Segment
+  static Color get primary => const Color(0xff5E00F5);
+  static Color get primary500 => const Color(0xff7722FF);
+  static Color get primary20 => const Color(0xff924EFF);
+  static Color get primary10 => const Color(0xffAD7BFF);
+  static Color get primary5 => const Color(0xffC9A7FF);
+  static Color get primary0 => const Color(0xffE4D3FF);
+
+  static Color get secondary => const Color(0xffFF7966);
+  static Color get secondary50 => const Color(0xffFFA699);
+  static Color get secondary0 => const Color(0xffFFD2CC);
+
+  static Color get secondaryG => const Color(0xff00FAD9);
+  static Color get secondaryG50 => const Color(0xff7DFFEE);
+
+  static Color get gray => const Color(0xff0E0E12);
+  static Color get gray80 => const Color(0xff1C1C23);
+  static Color get gray70 => const Color(0xff353542);
+  static Color get gray60 => const Color(0xff4E4E61);
+  static Color get gray50 => const Color(0xff666680);
+  static Color get gray40 => const Color(0xff83839C);
+  static Color get gray30 => const Color(0xffA2A2B5);
+  static Color get gray20 => const Color(0xffC1C1CD);
+  static Color get gray10 => const Color(0xffE0E0E6);
+
+  static Color get border => const Color(0xffCFCFFC);
+  static Color get primaryText => Colors.white;
+  static Color get secondaryText => gray60;
+
+  static Color get white => Colors.white;
 }

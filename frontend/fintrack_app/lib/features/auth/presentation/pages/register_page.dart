@@ -3,6 +3,7 @@ import 'package:fintrack_app/features/auth/presentation/pages/login_page.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_field.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_footer.dart';
+import 'package:fintrack_app/features/expenses/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 final class RegisterPage extends StatefulWidget {
@@ -24,7 +25,9 @@ final class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
 
   void _onRegister() {
-    if (_formKey.currentState!.validate()) {}
+    Navigator.pushAndRemoveUntil(context, HomePage.route(), (route) => false);
+
+    // if (_formKey.currentState!.validate()) {}
   }
 
   @override

@@ -19,6 +19,24 @@ final class _AuthButtonState extends State<AuthButton> {
 
   @override
   Widget build(BuildContext context) {
+    // Replace this with your custom gradient color if `primary20` is defined elsewhere
+    final gradientColors = _isHovering
+        ? [
+            const Color.fromRGBO(173, 178, 255, 1),
+            const Color.fromRGBO(173, 178, 255, 0.8),
+          ]
+        : [
+            const Color.fromRGBO(143, 148, 251, 1),
+            const Color.fromRGBO(143, 148, 251, 0.6),
+          ];
+
+    // Use primary20 gradient if available
+    final primary20Gradient = LinearGradient(
+      colors: gradientColors,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+
     return MouseRegion(
       onEnter: (_) => _updateHoverState(true),
       onExit: (_) => _updateHoverState(false),
@@ -30,17 +48,7 @@ final class _AuthButtonState extends State<AuthButton> {
           height: 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
-              colors: _isHovering
-                  ? [
-                      const Color.fromRGBO(173, 178, 255, 1),
-                      const Color.fromRGBO(173, 178, 255, 0.8),
-                    ]
-                  : [
-                      const Color.fromRGBO(143, 148, 251, 1),
-                      const Color.fromRGBO(143, 148, 251, 0.6),
-                    ],
-            ),
+            gradient: primary20Gradient,
             boxShadow: _isHovering
                 ? [
                     BoxShadow(

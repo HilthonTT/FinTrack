@@ -20,7 +20,7 @@ final class AuthFooter extends StatelessWidget {
         children: <Widget>[
           Text(
             "$label ",
-            style: const TextStyle(color: AppPalette.primaryColor),
+            style: TextStyle(color: AppPalette.primary20),
           ),
         ],
       ),

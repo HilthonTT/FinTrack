@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fintrack',
-      theme: AppTheme.lightThemeMode,
+      theme: AppTheme.darkThemeMode,
       home: const LoginPage(),
     );
   }
