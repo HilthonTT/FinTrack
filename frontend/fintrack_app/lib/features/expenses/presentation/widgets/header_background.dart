@@ -12,17 +12,19 @@ final class HeaderBackground extends StatelessWidget {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        SizedBox(
-          width: arcSize,
-          height: arcSize,
-          child: const CustomPaint(
-            painter: CustomArcPainter(
-              end: 220,
+        Center(
+          child: SizedBox(
+            width: arcSize,
+            height: arcSize,
+            child: const CustomPaint(
+              painter: CustomArcPainter(
+                end: 220,
+              ),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
               const Spacer(),
