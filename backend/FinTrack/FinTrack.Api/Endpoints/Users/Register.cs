@@ -19,9 +19,9 @@ internal sealed class Register : IEndpoint
         {
             var command = new RegisterUserCommand(request.Email, request.Name, request.Password);
 
-            Result result = await sender.Send(command, cancellationToken);
+            Result<Guid> result = await sender.Send(command, cancellationToken);
 
-            return result.Match(Results.NoContent, CustomResults.Problem);
+            return result.Match(Results.Ok, CustomResults.Problem);
         })
         .WithTags(Tags.Users)
         .RequireCors(CorsPolicy.AllowAllHeaders);

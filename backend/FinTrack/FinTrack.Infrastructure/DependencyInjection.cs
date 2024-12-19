@@ -43,11 +43,13 @@ public static class DependencyInjection
 
     private static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
     {
-        string? redisConnectionString = configuration.GetConnectionString("fintrack-redis");
-        Ensure.NotNullOrWhitespace(redisConnectionString);
-
         services.AddStackExchangeRedisCache(options =>
-            options.Configuration = redisConnectionString);
+        {
+            string? redisConnectionString = configuration.GetConnectionString("fintrack-redis");
+            Ensure.NotNullOrWhitespace(redisConnectionString);
+
+            options.Configuration = redisConnectionString;
+        });
 
         services.AddSingleton<ICacheService, CacheService>();
 
@@ -65,12 +67,14 @@ public static class DependencyInjection
 
     private static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration)
     {
-        string? connectionString = configuration.GetConnectionString("fintrack-db");
-        Ensure.NotNullOrWhitespace(connectionString, nameof(connectionString));
-
         services.AddHangfire(config =>
+        {
+            string? connectionString = configuration.GetConnectionString("fintrack-db");
+            Ensure.NotNullOrWhitespace(connectionString, nameof(connectionString));
+
             config.UsePostgreSqlStorage(options =>
-                options.UseNpgsqlConnection(connectionString)));
+                options.UseNpgsqlConnection(connectionString));
+        });
 
         services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromSeconds(1));
 

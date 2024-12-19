@@ -13,6 +13,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddEvents(this IServiceCollection services, IConfiguration configuration)
     {
+        string? mqConnectionString = configuration.GetConnectionString("fintrack-mq");
+        Ensure.NotNullOrWhitespace(mqConnectionString, nameof(mqConnectionString));
+
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
@@ -23,10 +26,7 @@ public static class DependencyInjection
 
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
-                string? connectionString = configuration.GetConnectionString("fintrack-mq");
-                Ensure.NotNullOrWhitespace(connectionString, nameof(connectionString));
-
-                configurator.Host(connectionString);
+                configurator.Host(mqConnectionString);
 
                 configurator.ReceiveEndpoint(nameof(UserCreatedIntegrationEventHandler), e =>
                 {

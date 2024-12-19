@@ -14,4 +14,8 @@
     <ProjectReference Include="..\FinTrack.Application\FinTrack.Application.csproj" />
   </ItemGroup>
 
+   <ItemGroup>
+     <InternalsVisibleTo Include="Application.IntegrationTests" />
+   </ItemGroup>
+
 </Project>

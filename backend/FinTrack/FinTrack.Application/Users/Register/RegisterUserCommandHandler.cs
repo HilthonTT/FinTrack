@@ -17,9 +17,9 @@ internal sealed class RegisterUserCommandHandler(
     IEmailVerificationLinkFactory emailVerificationLinkFactory,
     IEmailVerificationTokenRepository emailVerificationTokenRepository,
     IEmailService emailService,
-    IUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand, Guid>
 {
-    public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         Result<Email> emailResult = Email.Create(request.Email);
         Result<Password> passwordResult = Password.Create(request.Password);
@@ -28,12 +28,12 @@ internal sealed class RegisterUserCommandHandler(
         Result finalResult = Result.FirstFailureOrSuccess(emailResult, passwordResult, nameResult);
         if (finalResult.IsFailure)
         {
-            return finalResult;
+            return Result.Failure<Guid>(finalResult.Error);
         }
 
         if (!await userRepository.IsEmailUniqueAsync(emailResult.Value, cancellationToken))
         {
-            return Result.Failure(EmailErrors.NotUnique);
+            return Result.Failure<Guid>(UserErrors.EmailNotUnique);
         }
 
         string hashedPassword = passwordHasher.Hash(passwordResult.Value);
@@ -63,6 +63,6 @@ internal sealed class RegisterUserCommandHandler(
             isHtml: true,
             cancellationToken: cancellationToken);
 
-        return Result.Success();
+        return user.Id;
     }
 }
