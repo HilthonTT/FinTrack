@@ -42,14 +42,21 @@ final class AuthField extends StatelessWidget {
       child: TextFormField(
         textInputAction: TextInputAction.done,
         obscureText: isPassword,
-        cursorColor: AppPalette.primary20,
+        cursorColor: AppPalette.secondary50,
         style: TextStyle(color: AppPalette.white),
         decoration: InputDecoration(
           hintText: hintText,
           fillColor: AppPalette.white,
           prefixIcon: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Icon(icon, color: AppPalette.primary20),
+            child: Icon(icon, color: AppPalette.secondary),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppPalette.secondary),
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide:
+                BorderSide(color: AppPalette.secondary.withOpacity(0.7)),
           ),
         ),
         validator: handleValidator,

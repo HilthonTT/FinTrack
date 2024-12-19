@@ -1,4 +1,5 @@
 import 'package:fintrack_app/core/common/widgets/responsive_svg.dart';
+import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/auth/presentation/pages/login_page.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_field.dart';
@@ -42,12 +43,13 @@ final class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppPalette.gray,
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Row(
           children: [
             // First Column: Illustration and Title
-            const Expanded(
+            Expanded(
               flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -60,6 +62,7 @@ final class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
+                      color: AppPalette.white,
                     ),
                     textAlign: TextAlign.center,
                   ),
