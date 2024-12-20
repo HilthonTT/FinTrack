@@ -3,7 +3,7 @@ using FinTrack.Domain.Users.Repositories;
 using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinTrack.Persistence.Repositories;
+namespace FinTrack.Persistence.Users.Repositories;
 
 internal sealed class RefreshTokenRepository(AppDbContext dbContext) : IRefreshTokenRepository
 {

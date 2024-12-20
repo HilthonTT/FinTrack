@@ -1,5 +1,6 @@
 ﻿using FinTrack.Api;
 using FinTrack.Application.Abstractions.Data;
+using FinTrack.Persistence.Context;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Hosting;
@@ -7,16 +8,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Npgsql;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
-using FinTrack.Persistence.Context;
-using Npgsql;
 
-namespace Application.IntegrationTests.Abstractions;
+namespace Api.FunctionalTests.Abstractions;
 
-public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
        .WithImage("postgres:latest")

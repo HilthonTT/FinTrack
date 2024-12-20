@@ -2,7 +2,7 @@
 using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinTrack.Persistence.Repositories;
+namespace FinTrack.Persistence.Budgets.Repositories;
 
 internal sealed class BudgetRepository(AppDbContext dbContext) : IBudgetRepository
 {

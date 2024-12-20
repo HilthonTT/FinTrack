@@ -3,7 +3,7 @@ using FinTrack.Persistence.Idempotency;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FinTrack.Persistence.Configurations;
+namespace FinTrack.Persistence.Idempotency.Configurations;
 
 internal sealed class IdempotentRequestConfiguration : IEntityTypeConfiguration<IdempotentRequest>
 {

@@ -5,7 +5,7 @@ using FinTrack.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FinTrack.Persistence.Configurations;
+namespace FinTrack.Persistence.Subscriptions.Configurations;
 
 internal sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
 {

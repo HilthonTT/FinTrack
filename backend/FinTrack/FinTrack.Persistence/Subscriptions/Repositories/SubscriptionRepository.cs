@@ -3,7 +3,7 @@ using FinTrack.Domain.Subscriptions.Repositories;
 using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinTrack.Persistence.Repositories;
+namespace FinTrack.Persistence.Subscriptions.Repositories;
 
 internal sealed class SubscriptionRepository(AppDbContext dbContext) : ISubscriptionRepository
 {

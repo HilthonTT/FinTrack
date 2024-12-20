@@ -1,9 +1,8 @@
 ﻿using FinTrack.Persistence.Constants;
-using FinTrack.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FinTrack.Persistence.Configurations;
+namespace FinTrack.Persistence.Outbox.Configurations;
 
 internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
 {

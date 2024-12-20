@@ -3,7 +3,7 @@ using FinTrack.Domain.Expenses.Repositories;
 using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinTrack.Persistence.Repositories;
+namespace FinTrack.Persistence.Expenses.Repositories;
 
 internal sealed class ExpenseRepository(AppDbContext dbContext) : IExpenseRepository
 {

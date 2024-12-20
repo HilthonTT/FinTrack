@@ -4,7 +4,7 @@ using FinTrack.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FinTrack.Persistence.Configurations;
+namespace FinTrack.Persistence.Users.Configurations;
 
 internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {

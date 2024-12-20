@@ -4,7 +4,7 @@ using FinTrack.Domain.Users.ValueObjects;
 using FinTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinTrack.Persistence.Repositories;
+namespace FinTrack.Persistence.Users.Repositories;
 
 internal sealed class UserRepository(AppDbContext dbContext) : IUserRepository
 {
@@ -38,7 +38,7 @@ internal sealed class UserRepository(AppDbContext dbContext) : IUserRepository
             .ToArrayAsync(cancellationToken);
 
         return roles;
-    } 
+    }
 
     public void Insert(User user)
     {
