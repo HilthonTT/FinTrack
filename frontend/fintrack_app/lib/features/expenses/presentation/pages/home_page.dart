@@ -1,6 +1,7 @@
 import 'package:fintrack_app/core/common/widgets/bottom_bar.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_list.dart';
+import 'package:fintrack_app/features/expenses/presentation/widgets/expense_subscription_switcher.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/header_section.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,7 @@ final class HomePage extends StatelessWidget {
                       imageHeight: imageHeight,
                       arcSize: arcSize,
                     ),
-                    const SizedBox(height: 24),
+                    ExpenseSubscriptionSwitcher(),
                     ExpenseList(),
                     const SizedBox(height: 150),
                   ],
