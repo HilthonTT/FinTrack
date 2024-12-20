@@ -2,4 +2,4 @@
 
 namespace FinTrack.Application.Users.VerifyEmail;
 
-public sealed record VerifyEmailCommand(Guid TokenId) : ICommand;
+public sealed record VerifyEmailCommand(int Code) : ICommand;

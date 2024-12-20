@@ -15,6 +15,16 @@ public static class Ensure
         }
     }
 
+    public static void NotEmpty(
+       [NotNull] Guid value,
+       [CallerArgumentExpression(nameof(value))] string? paramName = default)
+    {
+        if (value == Guid.Empty)
+        {
+            throw new InvalidOperationException(paramName);
+        }
+    }
+
     public static void NotNullOrWhitespace(
         [NotNull] string? value, 
         [CallerArgumentExpression(nameof(value))] string? paramName = default)

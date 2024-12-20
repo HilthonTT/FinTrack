@@ -23,8 +23,7 @@ internal sealed class Create : IEndpoint
                 request.Amount,
                 request.CurrencyCode,
                 request.ExpenseCategory,
-                request.SubscriptionType,
-                request.TransactionType,
+                request.Company,
                 request.Date);
 
             Result<Guid> result = await sender.Send(command, cancellationToken);

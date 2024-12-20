@@ -13,7 +13,7 @@ internal sealed class VerifyEmailCommandHandler(
 {
     public async Task<Result> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
     {
-        EmailVerificationToken? token = await emailVerificationTokenRepository.GetByIdAsync(request.TokenId, cancellationToken);
+        EmailVerificationToken? token = await emailVerificationTokenRepository.GetByCodeAsync(request.Code, cancellationToken);
 
         if (token is null || token.ExpiresOnUtc < dateTimeProvider.UtcNow)
         {

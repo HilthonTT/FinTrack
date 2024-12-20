@@ -23,7 +23,6 @@ public class RegisterUserCommandTests
     private readonly IUserRepository _userRepositoryMock;
     private readonly IPasswordHasher _passwordHasherMock;
     private readonly IDateTimeProvider _dateTimeProviderMock;
-    private readonly IEmailVerificationLinkFactory _emailVerificationLinkFactoryMock;
     private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepositoryMock;
     private readonly IEmailService _emailServiceMock;
     private readonly IUnitOfWork _unitOfWorkMock;
@@ -33,7 +32,6 @@ public class RegisterUserCommandTests
         _userRepositoryMock = Substitute.For<IUserRepository>();
         _passwordHasherMock = Substitute.For<IPasswordHasher>();
         _dateTimeProviderMock = Substitute.For<IDateTimeProvider>();
-        _emailVerificationLinkFactoryMock = Substitute.For<IEmailVerificationLinkFactory>();
         _emailVerificationTokenRepositoryMock = Substitute.For<IEmailVerificationTokenRepository>();
         _emailServiceMock = Substitute.For<IEmailService>();
         _unitOfWorkMock = Substitute.For<IUnitOfWork>();
@@ -42,7 +40,6 @@ public class RegisterUserCommandTests
             _userRepositoryMock,
             _passwordHasherMock,
             _dateTimeProviderMock,
-            _emailVerificationLinkFactoryMock,
             _emailVerificationTokenRepositoryMock,
             _emailServiceMock,
             _unitOfWorkMock);

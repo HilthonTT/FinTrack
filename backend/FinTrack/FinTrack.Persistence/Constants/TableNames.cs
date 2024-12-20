@@ -21,4 +21,6 @@ internal static class TableNames
     public const string RolePermissions = "role_permissions";
 
     public const string Permissions = "permissions";
+
+    public const string Subscriptions = "subscriptions";
 }

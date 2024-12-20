@@ -7,6 +7,16 @@ namespace FinTrack.Persistence.Repositories;
 
 internal sealed class EmailVerificationTokenRepository(AppDbContext dbContext) : IEmailVerificationTokenRepository
 {
+    public Task<EmailVerificationToken?> GetByCodeAsync(int code, CancellationToken cancellationToken = default)
+    {
+        return dbContext.EmailVerificationTokens
+           .Where(e => e.Code == code)
+           .Include(e => e.User)
+           .ThenInclude(u => u.Roles)
+           .AsSplitQuery()
+           .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public Task<EmailVerificationToken?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return dbContext.EmailVerificationTokens

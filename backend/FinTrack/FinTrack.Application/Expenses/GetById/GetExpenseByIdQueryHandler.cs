@@ -25,8 +25,7 @@ internal sealed class GetExpenseByIdQueryHandler(
                 e.money_amount AS Amount,
                 e.money_currency AS CurrencyCode,
                 e.category AS Category,
-                e.subscription_type AS SubscriptionType,
-                e.transaction_type AS TransactionType,
+                e.company AS Company
                 e.date AS Date,
                 e.created_on_utc AS CreatedOnUtc,
                 e.modified_on_utc AS ModifiedOnUtc

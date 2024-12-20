@@ -6,6 +6,5 @@ public sealed record CreateExpenseRequest(
     decimal Amount, 
     string CurrencyCode, 
     int ExpenseCategory,
-    int SubscriptionType,
-    int TransactionType,
+    int Company,
     DateTime Date);

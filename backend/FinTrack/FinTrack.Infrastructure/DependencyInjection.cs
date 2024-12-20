@@ -1,10 +1,12 @@
 ﻿using FinTrack.Application.Abstractions.Authentication;
 using FinTrack.Application.Abstractions.Caching;
 using FinTrack.Application.Abstractions.Emails;
+using FinTrack.Application.Abstractions.Notifications;
 using FinTrack.Infrastructure.Authentication;
 using FinTrack.Infrastructure.Authorization;
 using FinTrack.Infrastructure.Caching;
 using FinTrack.Infrastructure.Emails;
+using FinTrack.Infrastructure.Notifications;
 using FinTrack.Infrastructure.Outbox;
 using FinTrack.Infrastructure.Time;
 using Hangfire;
@@ -62,6 +64,8 @@ public static class DependencyInjection
 
         services.AddTransient<IEmailService, EmailService>();
 
+        services.AddTransient<IEmailNotificationService, EmailNotificationService>();
+
         return services;
     }
 
@@ -108,8 +112,6 @@ public static class DependencyInjection
         services.AddScoped<IUserContext, UserContext>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<ITokenProvider, TokenProvider>();
-
-        services.AddScoped<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
 
         return services;
     }

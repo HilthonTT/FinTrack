@@ -61,6 +61,10 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("category");
 
+                    b.Property<int>("Company")
+                        .HasColumnType("integer")
+                        .HasColumnName("company");
+
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_on_utc");
@@ -89,14 +93,6 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("name");
 
-                    b.Property<int>("SubscriptionType")
-                        .HasColumnType("integer")
-                        .HasColumnName("subscription_type");
-
-                    b.Property<int>("TransactionType")
-                        .HasColumnType("integer")
-                        .HasColumnName("transaction_type");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
@@ -110,12 +106,96 @@ namespace FinTrack.Persistence.Migrations
                     b.ToTable("expenses", (string)null);
                 });
 
+            modelBuilder.Entity("FinTrack.Domain.Subscriptions.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Company")
+                        .HasColumnType("integer")
+                        .HasColumnName("company");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on_utc");
+
+                    b.Property<DateTime?>("DeletedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_on_utc");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("integer")
+                        .HasColumnName("frequency");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("modified_on_utc");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<DateOnly>("NextDueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("next_due_date");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer")
+                        .HasColumnName("status_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_subscriptions");
+
+                    b.HasIndex("StatusId")
+                        .HasDatabaseName("ix_subscriptions_status_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_subscriptions_user_id");
+
+                    b.ToTable("subscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("FinTrack.Domain.Subscriptions.ValueObjects.SubscriptionStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_subscription_status");
+
+                    b.ToTable("subscription_status", (string)null);
+                });
+
             modelBuilder.Entity("FinTrack.Domain.Users.EmailVerificationToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("integer")
+                        .HasColumnName("code");
 
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone")
@@ -131,6 +211,10 @@ namespace FinTrack.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_email_verification_tokens");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_email_verification_tokens_code");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_email_verification_tokens_user_id");
@@ -397,6 +481,29 @@ namespace FinTrack.Persistence.Migrations
                                 .HasConstraintName("fk_budgets_budgets_id");
                         });
 
+                    b.OwnsOne("FinTrack.Domain.Shared.ValueObjects.DateRange", "DateRange", b1 =>
+                        {
+                            b1.Property<Guid>("BudgetId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateOnly>("End")
+                                .HasColumnType("date")
+                                .HasColumnName("date_range_end");
+
+                            b1.Property<DateOnly>("Start")
+                                .HasColumnType("date")
+                                .HasColumnName("date_range_start");
+
+                            b1.HasKey("BudgetId");
+
+                            b1.ToTable("budgets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BudgetId")
+                                .HasConstraintName("fk_budgets_budgets_id");
+                        });
+
                     b.OwnsOne("FinTrack.Domain.Shared.ValueObjects.Money", "Spent", b1 =>
                         {
                             b1.Property<Guid>("BudgetId")
@@ -411,29 +518,6 @@ namespace FinTrack.Persistence.Migrations
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("spent_currency");
-
-                            b1.HasKey("BudgetId");
-
-                            b1.ToTable("budgets");
-
-                            b1.WithOwner()
-                                .HasForeignKey("BudgetId")
-                                .HasConstraintName("fk_budgets_budgets_id");
-                        });
-
-                    b.OwnsOne("FinTrack.Domain.Shared.ValueObjects.DateRange", "DateRange", b1 =>
-                        {
-                            b1.Property<Guid>("BudgetId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<DateOnly>("End")
-                                .HasColumnType("date")
-                                .HasColumnName("date_range_end");
-
-                            b1.Property<DateOnly>("Start")
-                                .HasColumnType("date")
-                                .HasColumnName("date_range_start");
 
                             b1.HasKey("BudgetId");
 
@@ -488,6 +572,78 @@ namespace FinTrack.Persistence.Migrations
                         });
 
                     b.Navigation("Money")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FinTrack.Domain.Subscriptions.Subscription", b =>
+                {
+                    b.HasOne("FinTrack.Domain.Subscriptions.ValueObjects.SubscriptionStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_subscriptions_subscription_status_status_id");
+
+                    b.HasOne("FinTrack.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_subscriptions_users_user_id");
+
+                    b.OwnsOne("FinTrack.Domain.Shared.ValueObjects.Money", "Amount", b1 =>
+                        {
+                            b1.Property<Guid>("SubscriptionId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("numeric")
+                                .HasColumnName("amount_amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("amount_currency");
+
+                            b1.HasKey("SubscriptionId");
+
+                            b1.ToTable("subscriptions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SubscriptionId")
+                                .HasConstraintName("fk_subscriptions_subscriptions_id");
+                        });
+
+                    b.OwnsOne("FinTrack.Domain.Shared.ValueObjects.DateRange", "SubscriptionPeriod", b1 =>
+                        {
+                            b1.Property<Guid>("SubscriptionId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateOnly>("End")
+                                .HasColumnType("date")
+                                .HasColumnName("subscription_period_end");
+
+                            b1.Property<DateOnly>("Start")
+                                .HasColumnType("date")
+                                .HasColumnName("subscription_period_start");
+
+                            b1.HasKey("SubscriptionId");
+
+                            b1.ToTable("subscriptions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SubscriptionId")
+                                .HasConstraintName("fk_subscriptions_subscriptions_id");
+                        });
+
+                    b.Navigation("Amount")
+                        .IsRequired();
+
+                    b.Navigation("Status");
+
+                    b.Navigation("SubscriptionPeriod")
                         .IsRequired();
                 });
 

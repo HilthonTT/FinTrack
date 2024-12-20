@@ -68,6 +68,19 @@ namespace FinTrack.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "subscription_status",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_subscription_status", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
@@ -140,6 +153,7 @@ namespace FinTrack.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    code = table.Column<int>(type: "integer", nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     expires_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -164,8 +178,7 @@ namespace FinTrack.Persistence.Migrations
                     money_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     money_currency = table.Column<string>(type: "text", nullable: false),
                     category = table.Column<int>(type: "integer", nullable: false),
-                    subscription_type = table.Column<int>(type: "integer", nullable: false),
-                    transaction_type = table.Column<int>(type: "integer", nullable: false),
+                    company = table.Column<int>(type: "integer", nullable: false),
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -227,6 +240,43 @@ namespace FinTrack.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "subscriptions",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    amount_amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    amount_currency = table.Column<string>(type: "text", nullable: false),
+                    frequency = table.Column<int>(type: "integer", nullable: false),
+                    company = table.Column<int>(type: "integer", nullable: false),
+                    subscription_period_start = table.Column<DateOnly>(type: "date", nullable: false),
+                    subscription_period_end = table.Column<DateOnly>(type: "date", nullable: false),
+                    next_due_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    status_id = table.Column<int>(type: "integer", nullable: false),
+                    created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    modified_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    deleted_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_subscriptions", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_subscriptions_subscription_status_status_id",
+                        column: x => x.status_id,
+                        principalTable: "subscription_status",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_subscriptions_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "permissions",
                 columns: new[] { "id", "name" },
@@ -246,6 +296,12 @@ namespace FinTrack.Persistence.Migrations
                 name: "ix_budgets_user_id",
                 table: "budgets",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_email_verification_tokens_code",
+                table: "email_verification_tokens",
+                column: "code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_email_verification_tokens_user_id",
@@ -285,6 +341,16 @@ namespace FinTrack.Persistence.Migrations
                 column: "users_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_subscriptions_status_id",
+                table: "subscriptions",
+                column: "status_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_subscriptions_user_id",
+                table: "subscriptions",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_users_email",
                 table: "users",
                 column: "email",
@@ -319,10 +385,16 @@ namespace FinTrack.Persistence.Migrations
                 name: "role_user");
 
             migrationBuilder.DropTable(
+                name: "subscriptions");
+
+            migrationBuilder.DropTable(
                 name: "permissions");
 
             migrationBuilder.DropTable(
                 name: "roles");
+
+            migrationBuilder.DropTable(
+                name: "subscription_status");
 
             migrationBuilder.DropTable(
                 name: "users");

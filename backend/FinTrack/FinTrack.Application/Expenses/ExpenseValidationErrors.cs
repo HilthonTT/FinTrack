@@ -32,11 +32,7 @@ internal static class ExpenseValidationErrors
         "ExpenseValidationErrors.InvalidExpenseCategory",
         "The expense category is invalid");
 
-    public static readonly Error InvalidSubscriptionType = Error.Problem(
-        "ExpenseValidationErrors.InvalidSubscriptionType",
-        "The subscription type is invalid");
-
-    public static readonly Error InvalidTransactionType = Error.Problem(
-        "ExpenseValidationErrors.InvalidTransactionType",
-        "The transaction type is invalid");
+    public static readonly Error InvalidCompany = Error.Problem(
+         "ExpenseValidationErrors.InvalidCompany",
+         "The company is invalid");
 }

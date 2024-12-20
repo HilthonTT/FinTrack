@@ -13,6 +13,8 @@ internal sealed class EmailVerificationTokenConfiguration : IEntityTypeConfigura
 
         builder.HasKey(e => e.Id);
 
+        builder.HasIndex(e => e.Code).IsUnique();
+
         builder.HasOne(e => e.User)
             .WithMany()
             .HasForeignKey(e => e.UserId);

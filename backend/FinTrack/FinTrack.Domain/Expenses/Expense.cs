@@ -1,5 +1,7 @@
 ﻿using FinTrack.Domain.Expenses.Events;
+using FinTrack.Domain.Shared.Enums;
 using FinTrack.Domain.Shared.ValueObjects;
+using FinTrack.Domain.Subscriptions.Enums;
 using FinTrack.Domain.Users.ValueObjects;
 using SharedKernel;
 
@@ -13,17 +15,22 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
         string name,
         Money money, 
         ExpenseCategory category,
-        SubscriptionType subscriptionType, 
-        TransactionType transactionType,
+        Company company,
         DateTime date) 
         : base(id)
     {
+        Ensure.NotNull(userId, nameof(userId));
+        Ensure.NotNullOrWhitespace(name, nameof(name));
+        Ensure.NotNull(money, nameof(money));
+        Ensure.NotNull(category, nameof(category));
+        Ensure.NotNull(company, nameof(company));
+        Ensure.NotNull(date, nameof(date));
+
         UserId = userId;
         Name = name;
         Money = money;
         Category = category;
-        SubscriptionType = subscriptionType;
-        TransactionType = transactionType;
+        Company = company;
         Date = date;
     }
 
@@ -40,9 +47,7 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
 
     public ExpenseCategory Category { get; private set; }
 
-    public SubscriptionType SubscriptionType { get; private set; }
-
-    public TransactionType TransactionType { get; private set; }
+    public Company Company { get; private set; }
 
     public DateTime Date { get; private set; }
 
@@ -59,8 +64,7 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
         string name, 
         Money money, 
         ExpenseCategory category,
-        SubscriptionType subscriptionType, 
-        TransactionType transactionType,
+        Company company,
         DateTime date)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -79,8 +83,7 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
             name, 
             money, 
             category,
-            subscriptionType, 
-            transactionType, 
+            company,
             date);
 
         expense.Raise(new ExpenseCreatedDomainEvent(expense.Id));

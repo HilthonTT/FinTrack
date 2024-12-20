@@ -48,9 +48,8 @@ internal static class UserValidationErrors
         "UserValidationErrors.PasswordMissingSpecialCharacter",
         "The password must contain at least one special character");
 
-    public static readonly Error TokenIdEmpty = Error.Problem(
-        "UserValidationErrors.TokenIdEmpty",
-        "The token identifier is empty");
+    public static readonly Error CodeEmpty = Error.Problem(
+        "UserValidationErrors.CodeEmpty", "The code is empty");
 
     public static readonly Error RefreshTokenEmpty = Error.Problem(
         "UserValidationErrors.RefreshTokenEmpty",

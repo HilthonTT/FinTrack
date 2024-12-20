@@ -7,6 +7,6 @@ internal sealed class VerifyEmailCommandValidator : AbstractValidator<VerifyEmai
 {
     public VerifyEmailCommandValidator()
     {
-        RuleFor(x => x.TokenId).NotEmpty().WithError(UserValidationErrors.TokenIdEmpty);
+        RuleFor(x => x.Code).NotEmpty().WithError(UserValidationErrors.CodeEmpty);
     }
 }

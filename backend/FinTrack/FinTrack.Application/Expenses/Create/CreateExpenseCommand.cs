@@ -8,6 +8,5 @@ public sealed record CreateExpenseCommand(
     decimal Amount, 
     string CurrencyCode, 
     int ExpenseCategory,
-    int SubscriptionType,
-    int TransactionType,
+    int Company,
     DateTime Date) : ICommand<Guid>;

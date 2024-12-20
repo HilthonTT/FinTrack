@@ -13,11 +13,11 @@ internal sealed class VerifyEmail : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("users/verify-email", async (
-            Guid token,
+            int code,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var command = new VerifyEmailCommand(token);
+            var command = new VerifyEmailCommand(code);
 
             Result result = await sender.Send(command, cancellationToken);
 

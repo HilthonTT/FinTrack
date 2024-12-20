@@ -7,8 +7,7 @@ public sealed record ExpenseResponse(
     decimal Amount, 
     string CurrencyCode,
     int Category,
-    int SubscriptionType,
-    int TransactionType,
+    int Company,
     DateTime Date,
     DateTime CreatedOnUtc,
     DateTime? ModifiedOnUtc);

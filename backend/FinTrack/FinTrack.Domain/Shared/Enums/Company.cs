@@ -1,6 +1,6 @@
-﻿namespace FinTrack.Domain.Expenses;
+﻿namespace FinTrack.Domain.Shared.Enums;
 
-public enum SubscriptionType
+public enum Company
 {
     Google = 0,
     Netflix = 1,
