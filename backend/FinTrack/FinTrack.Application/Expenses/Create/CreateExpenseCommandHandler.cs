@@ -3,7 +3,6 @@ using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Domain.Expenses;
 using FinTrack.Domain.Expenses.Repositories;
-using FinTrack.Domain.Shared.Enums;
 using FinTrack.Domain.Shared.ValueObjects;
 using FinTrack.Domain.Users;
 using SharedKernel;
@@ -30,15 +29,12 @@ internal sealed class CreateExpenseCommandHandler(
 
         var money = new Money(request.Amount, currency);
 
-        ExpenseCategory category = ValidateEnumValue<ExpenseCategory>(request.ExpenseCategory);
-        Company company = ValidateEnumValue<Company>(request.Company);
-
         Result<Expense> expenseResult = Expense.Create(
             request.UserId, 
             request.Name, 
             money,
-            category,
-            company, 
+            request.Category,
+            request.Company, 
             request.Date);
 
         if (expenseResult.IsFailure)

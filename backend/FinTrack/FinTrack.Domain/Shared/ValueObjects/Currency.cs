@@ -20,10 +20,10 @@ public sealed record Currency
 
     public static Currency? FromCode(string code)
     {
-        return All.FirstOrDefault(x => x.Code == code);
+        return All.FirstOrDefault(x => x.Code.Equals(code, StringComparison.InvariantCultureIgnoreCase));
     }
 
-    public static readonly IReadOnlyCollection<Currency> All =
+    private static readonly IReadOnlyCollection<Currency> All =
     [
         Usd, Eur, Gbp, Jpy, Aud, Cad, Chf, Cny, Inr, Zar
     ];
