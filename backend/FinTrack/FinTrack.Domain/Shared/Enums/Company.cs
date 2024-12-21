@@ -11,5 +11,6 @@ public enum Company
     Hulu = 6,
     YouTubePremium = 7,
     Microsoft = 8,
-    Dropbox = 9
+    Dropbox = 9,
+    None = 10,
 }

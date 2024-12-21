@@ -1,17 +1,17 @@
 import 'package:fintrack_app/core/common/widgets/segment_button.dart';
 import 'package:flutter/material.dart';
 
-final class ExpenseSubscriptionSwitcher extends StatefulWidget {
-  const ExpenseSubscriptionSwitcher({super.key});
+final class ExpenseSubscriptionSwitcher extends StatelessWidget {
+  final bool isSubscriptions;
+  final VoidCallback switchToSubscriptions;
+  final VoidCallback switchToExpenses;
 
-  @override
-  State<ExpenseSubscriptionSwitcher> createState() =>
-      _ExpenseSubscriptionSwitcherState();
-}
-
-final class _ExpenseSubscriptionSwitcherState
-    extends State<ExpenseSubscriptionSwitcher> {
-  bool isSubscription = true;
+  const ExpenseSubscriptionSwitcher({
+    super.key,
+    required this.switchToSubscriptions,
+    required this.switchToExpenses,
+    required this.isSubscriptions,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +27,15 @@ final class _ExpenseSubscriptionSwitcherState
           Expanded(
             child: SegmentButton(
               title: "Your subscriptions",
-              onPressed: () {
-                setState(() {
-                  isSubscription = true;
-                });
-              },
-              isActive: isSubscription,
+              onPressed: switchToSubscriptions,
+              isActive: isSubscriptions,
             ),
           ),
           Expanded(
             child: SegmentButton(
               title: "Your expenses",
-              isActive: !isSubscription,
-              onPressed: () {
-                setState(() {
-                  isSubscription = !isSubscription;
-                });
-              },
+              isActive: !isSubscriptions,
+              onPressed: switchToExpenses,
             ),
           )
         ],
