@@ -39,7 +39,6 @@ internal sealed class UpdateAuditableInterceptor : SaveChangesInterceptor
             if (entry.State == EntityState.Modified)
             {
                 entry.Property(e => e.ModifiedOnUtc).CurrentValue = utcNow;
-
             }
         }
     }

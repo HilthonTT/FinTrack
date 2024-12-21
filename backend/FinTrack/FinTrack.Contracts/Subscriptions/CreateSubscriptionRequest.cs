@@ -1,6 +1,5 @@
 ﻿using FinTrack.Domain.Shared.Enums;
 using FinTrack.Domain.Subscriptions.Enums;
-using FinTrack.Domain.Subscriptions.ValueObjects;
 
 namespace FinTrack.Contracts.Subscriptions;
 
@@ -12,5 +11,4 @@ public sealed record CreateSubscriptionRequest(
     Frequency Frequency,
     Company Company,
     DateOnly StartDate,
-    DateOnly EndDate,
-    SubscriptionStatus Status);
+    DateOnly EndDate);

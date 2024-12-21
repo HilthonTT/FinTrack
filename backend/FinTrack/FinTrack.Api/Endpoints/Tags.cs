@@ -7,4 +7,6 @@ internal static class Tags
     public const string Budgets = "Budgets";
 
     public const string Expenses = "Expenses";
+
+    public const string Subscriptions = "Subscriptions";
 }

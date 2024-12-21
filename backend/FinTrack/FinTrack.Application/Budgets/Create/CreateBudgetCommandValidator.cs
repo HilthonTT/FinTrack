@@ -19,7 +19,7 @@ internal sealed class CreateBudgetCommandValidator : AbstractValidator<CreateBud
         RuleFor(x => x.CurrencyCode)
             .NotEmpty()
             .WithError(BudgetValidationErrors.CurrencyCodeEmpty)
-            .Must(code => Currency.All.Any(c => c.Code == code))
+            .Must(Currency.Any)
             .WithError(BudgetValidationErrors.CurrencyCodeInvalid);
 
         RuleFor(x => x.StartDate)

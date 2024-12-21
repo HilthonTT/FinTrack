@@ -1,6 +1,6 @@
 ﻿using FinTrack.Application.Abstractions.Authentication;
 using FinTrack.Application.Abstractions.Data;
-using FinTrack.Application.Abstractions.Emails;
+using FinTrack.Application.Abstractions.Notifications;
 using FinTrack.Application.Users.Register;
 using FinTrack.Contracts.Emails;
 using FinTrack.Domain.Users;
@@ -24,7 +24,7 @@ public class RegisterUserCommandTests
     private readonly IPasswordHasher _passwordHasherMock;
     private readonly IDateTimeProvider _dateTimeProviderMock;
     private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepositoryMock;
-    private readonly IEmailService _emailServiceMock;
+    private readonly IEmailNotificationService _emailNotificationServiceMock;
     private readonly IUnitOfWork _unitOfWorkMock;
 
     public RegisterUserCommandTests()
@@ -33,7 +33,7 @@ public class RegisterUserCommandTests
         _passwordHasherMock = Substitute.For<IPasswordHasher>();
         _dateTimeProviderMock = Substitute.For<IDateTimeProvider>();
         _emailVerificationTokenRepositoryMock = Substitute.For<IEmailVerificationTokenRepository>();
-        _emailServiceMock = Substitute.For<IEmailService>();
+        _emailNotificationServiceMock = Substitute.For<IEmailNotificationService>();
         _unitOfWorkMock = Substitute.For<IUnitOfWork>();
 
         _handler = new(
@@ -41,7 +41,7 @@ public class RegisterUserCommandTests
             _passwordHasherMock,
             _dateTimeProviderMock,
             _emailVerificationTokenRepositoryMock,
-            _emailServiceMock,
+            _emailNotificationServiceMock,
             _unitOfWorkMock);
     }
 
@@ -123,6 +123,8 @@ public class RegisterUserCommandTests
         await _handler.Handle(Command, default);
 
         // Assert
-        await _emailServiceMock.Received(1).SendEmailAsync(Arg.Any<MailRequest>(), true, Arg.Any<CancellationToken>());
+        await _emailNotificationServiceMock.Received(1).SendEmailVerificationEmailAsync(
+            Arg.Any<EmailVerificationEmailRequest>(), 
+            Arg.Any<CancellationToken>());
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinTrack.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241220173928_Create_Database")]
+    [Migration("20241221173323_Create_Database")]
     partial class Create_Database
     {
         /// <inheritdoc />
@@ -142,51 +142,35 @@ namespace FinTrack.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("name");
 
                     b.Property<DateOnly>("NextDueDate")
                         .HasColumnType("date")
                         .HasColumnName("next_due_date");
 
-                    b.Property<int>("StatusId")
+                    b.Property<int>("Status")
                         .HasColumnType("integer")
-                        .HasColumnName("status_id");
+                        .HasColumnName("status");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id")
                         .HasName("pk_subscriptions");
-
-                    b.HasIndex("StatusId")
-                        .HasDatabaseName("ix_subscriptions_status_id");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_subscriptions_user_id");
 
                     b.ToTable("subscriptions", (string)null);
-                });
-
-            modelBuilder.Entity("FinTrack.Domain.Subscriptions.ValueObjects.SubscriptionStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_subscription_status");
-
-                    b.ToTable("subscription_status", (string)null);
                 });
 
             modelBuilder.Entity("FinTrack.Domain.Users.EmailVerificationToken", b =>
@@ -580,13 +564,6 @@ namespace FinTrack.Persistence.Migrations
 
             modelBuilder.Entity("FinTrack.Domain.Subscriptions.Subscription", b =>
                 {
-                    b.HasOne("FinTrack.Domain.Subscriptions.ValueObjects.SubscriptionStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_subscriptions_subscription_status_status_id");
-
                     b.HasOne("FinTrack.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -643,8 +620,6 @@ namespace FinTrack.Persistence.Migrations
 
                     b.Navigation("Amount")
                         .IsRequired();
-
-                    b.Navigation("Status");
 
                     b.Navigation("SubscriptionPeriod")
                         .IsRequired();

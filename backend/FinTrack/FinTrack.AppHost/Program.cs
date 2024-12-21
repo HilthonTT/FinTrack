@@ -15,6 +15,7 @@ builder.AddProject<Projects.FinTrack_Api>("fintrack-api")
     .WithReference(postgres)
     .WithReference(rabbitMq)
     .WithReference(redis)
-    .WaitFor(postgres);
+    .WaitFor(postgres)
+    .WaitFor(rabbitMq);
 
 await builder.Build().RunAsync();

@@ -1,6 +1,4 @@
 ﻿using FinTrack.Application.Core.Extensions;
-using FinTrack.Domain.Expenses;
-using FinTrack.Domain.Shared.Enums;
 using FluentValidation;
 
 namespace FinTrack.Application.Expenses.Create;
@@ -27,12 +25,12 @@ internal sealed class CreateExpenseCommandValidator : AbstractValidator<CreateEx
             .NotEmpty()
             .WithError(ExpenseValidationErrors.DateEmpty);
 
-        RuleFor(c => c.ExpenseCategory)
-            .Must(value => Enum.IsDefined(typeof(ExpenseCategory), value))
+        RuleFor(c => c.Category)
+            .Must(value => Enum.IsDefined(value))
             .WithError(ExpenseValidationErrors.InvalidExpenseCategory);
 
         RuleFor(c => c.Company)
-            .Must(value => Enum.IsDefined(typeof(Company), value))
+            .Must(value => Enum.IsDefined(value))
             .WithError(ExpenseValidationErrors.InvalidCompany);
     }
 }

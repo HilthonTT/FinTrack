@@ -36,6 +36,11 @@ public static class DependencyInjection
 
         services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+        });
+
         return services;
     }
 

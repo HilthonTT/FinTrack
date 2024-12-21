@@ -23,6 +23,11 @@ public sealed record Currency
         return All.FirstOrDefault(x => x.Code.Equals(code, StringComparison.InvariantCultureIgnoreCase));
     }
 
+    public static bool Any(string code)
+    {
+        return All.Any(x => x.Code.Equals(code, StringComparison.InvariantCultureIgnoreCase));
+    }
+
     private static readonly IReadOnlyCollection<Currency> All =
     [
         Usd, Eur, Gbp, Jpy, Aud, Cad, Chf, Cny, Inr, Zar

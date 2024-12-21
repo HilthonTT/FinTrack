@@ -27,6 +27,7 @@ internal sealed class SoftDeleteInterceptor : SaveChangesInterceptor
         List<EntityEntry<ISoftDeletable>> entities = context
             .ChangeTracker
             .Entries<ISoftDeletable>()
+            .Where(e => e.State == EntityState.Deleted)
             .ToList();
 
         foreach (EntityEntry<ISoftDeletable> entry in entities)

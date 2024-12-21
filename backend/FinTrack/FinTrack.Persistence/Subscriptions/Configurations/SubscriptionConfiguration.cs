@@ -15,6 +15,8 @@ internal sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subsc
 
         builder.HasKey(s => s.Id);
 
+        builder.Property(s => s.Name).HasMaxLength(256).IsRequired();
+
         builder.OwnsOne(x => x.Amount, amountBuilder =>
         {
             amountBuilder.Property(money => money.Currency)
@@ -27,5 +29,8 @@ internal sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subsc
             .IsRequired();
 
         builder.OwnsOne(x => x.SubscriptionPeriod);
+
+        // optimistic concurrency support
+        builder.Property<uint>("Version").IsRowVersion();
     }
 }

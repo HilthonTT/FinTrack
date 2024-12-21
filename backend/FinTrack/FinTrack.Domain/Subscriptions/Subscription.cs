@@ -2,7 +2,6 @@
 using FinTrack.Domain.Shared.ValueObjects;
 using FinTrack.Domain.Subscriptions.Enums;
 using FinTrack.Domain.Subscriptions.Events;
-using FinTrack.Domain.Subscriptions.ValueObjects;
 using SharedKernel;
 
 namespace FinTrack.Domain.Subscriptions;
@@ -29,9 +28,10 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
         Name = name;
         Amount = amount;
         Frequency = frequency;
+        Company = company;
         SubscriptionPeriod = subscriptionPeriod;
         NextDueDate = CalculateNextDueDate(subscriptionPeriod.Start, frequency);
-        Status = SubscriptionStatus.Active;
+        Status = Status.Active;
     }
 
     private Subscription()
@@ -52,7 +52,7 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
 
     public DateOnly NextDueDate { get; private set; }
 
-    public SubscriptionStatus Status { get; private set; }
+    public Status Status { get; private set; }
 
     public DateTime CreatedOnUtc { get; set; }
 
@@ -84,7 +84,7 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
             return Result.Failure(SubscriptionErrors.DueDateMustMatchPaymentDate);
         }
 
-        if (Status != SubscriptionStatus.Active)
+        if (Status != Status.Active)
         {
             return Result.Failure(SubscriptionErrors.OnlyActiveSubscriptionsCanBeCanceled);
         }
@@ -98,12 +98,12 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
 
     public Result Cancel()
     {
-        if (Status != SubscriptionStatus.Canceled)
+        if (Status != Status.Canceled)
         {
             return Result.Failure(SubscriptionErrors.OnlyActiveSubscriptionsCanBeCanceled);
         }
 
-        Status = SubscriptionStatus.Canceled;
+        Status = Status.Canceled;
 
         Raise(new SubscriptionCanceledDomainEvent(Id)); 
         
@@ -122,14 +122,22 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
         return Result.Success();
     }
 
-    public void ChangeFrequencey(Frequency frequency)
+    public void ChangeFrequency(Frequency frequency)
     {
         Ensure.NotNull(frequency, nameof(frequency));
 
         Frequency = frequency;
+        NextDueDate = CalculateNextDueDate(SubscriptionPeriod.Start, frequency);
     }
 
-    public bool IsPaymentDue(DateOnly today) => Status == SubscriptionStatus.Active && today == NextDueDate;
+    public void ChangeCompany(Company company)
+    {
+        Ensure.NotNull(company, nameof(company));
+
+        Company = company;
+    }
+
+    public bool IsPaymentDue(DateOnly today) => Status == Status.Active && today == NextDueDate;
 
     private static DateOnly CalculateNextDueDate(DateOnly fromDate, Frequency frequency)
     {

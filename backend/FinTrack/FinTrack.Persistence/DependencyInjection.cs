@@ -39,8 +39,8 @@ public static class DependencyInjection
                     npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Default))
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(
-                    sp.GetRequiredService<SoftDeleteInterceptor>(),
                     sp.GetRequiredService<UpdateAuditableInterceptor>(),
+                    sp.GetRequiredService<SoftDeleteInterceptor>(),
                     sp.GetRequiredService<InsertOutboxMessagesInterceptor>());
         });
 

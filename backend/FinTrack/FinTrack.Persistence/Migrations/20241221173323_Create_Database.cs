@@ -68,19 +68,6 @@ namespace FinTrack.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "subscription_status",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_subscription_status", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
@@ -246,7 +233,7 @@ namespace FinTrack.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     amount_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     amount_currency = table.Column<string>(type: "text", nullable: false),
                     frequency = table.Column<int>(type: "integer", nullable: false),
@@ -254,21 +241,16 @@ namespace FinTrack.Persistence.Migrations
                     subscription_period_start = table.Column<DateOnly>(type: "date", nullable: false),
                     subscription_period_end = table.Column<DateOnly>(type: "date", nullable: false),
                     next_due_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    status_id = table.Column<int>(type: "integer", nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    deleted_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    deleted_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_subscriptions", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_subscriptions_subscription_status_status_id",
-                        column: x => x.status_id,
-                        principalTable: "subscription_status",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_subscriptions_users_user_id",
                         column: x => x.user_id,
@@ -341,11 +323,6 @@ namespace FinTrack.Persistence.Migrations
                 column: "users_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_subscriptions_status_id",
-                table: "subscriptions",
-                column: "status_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_subscriptions_user_id",
                 table: "subscriptions",
                 column: "user_id");
@@ -392,9 +369,6 @@ namespace FinTrack.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "roles");
-
-            migrationBuilder.DropTable(
-                name: "subscription_status");
 
             migrationBuilder.DropTable(
                 name: "users");

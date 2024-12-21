@@ -1,36 +1,37 @@
 ﻿using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
-using FinTrack.Application.Expenses.Create;
-using FinTrack.Contracts.Expenses;
+using FinTrack.Application.Subscriptions.Create;
+using FinTrack.Contracts.Subscriptions;
 using FinTrack.Domain.Users;
 using MediatR;
 using SharedKernel;
 
-namespace FinTrack.Api.Endpoints.Expenses;
+namespace FinTrack.Api.Endpoints.Subscriptions;
 
 internal sealed class Create : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("expenses", async (
-            CreateExpenseRequest request,
+        app.MapPost("subscriptions", async (
+            CreateSubscriptionRequest request,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var command = new CreateExpenseCommand(
+            var command = new CreateSubscriptionCommand(
                 request.UserId,
                 request.Name,
                 request.Amount,
                 request.CurrencyCode,
-                request.Category,
+                request.Frequency,
                 request.Company,
-                request.Date);
+                request.StartDate,
+                request.EndDate);
 
             Result<Guid> result = await sender.Send(command, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
-        .WithTags(Tags.Expenses)
+        .WithTags(Tags.Subscriptions)
         .RequireAuthorization()
         .HasPermission(Permission.UsersRead.Name);
     }

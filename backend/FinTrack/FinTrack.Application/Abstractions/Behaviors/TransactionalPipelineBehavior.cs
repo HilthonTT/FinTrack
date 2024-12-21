@@ -8,8 +8,7 @@ namespace FinTrack.Application.Abstractions.Behaviors;
 
 internal sealed class TransactionalPipelineBehavior<TRequest, TResponse>(
     ILogger<TransactionalPipelineBehavior<TRequest, TResponse>> logger,
-    IUnitOfWork unitOfWork)
-    : IPipelineBehavior<TRequest, TResponse>
+    IUnitOfWork unitOfWork) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand
 {
     public async Task<TResponse> Handle(
@@ -23,12 +22,20 @@ internal sealed class TransactionalPipelineBehavior<TRequest, TResponse>(
 
         using IDbTransaction transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        TResponse response = await next();
+        try
+        {
+            TResponse response = await next();
 
-        transaction.Commit();
+            transaction.Commit();
 
-        logger.LogInformation("Committed transaction for {RequestName}", requestName);
+            logger.LogInformation("Committed transaction for {RequestName}", requestName);
 
-        return response;
+            return response;
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 }

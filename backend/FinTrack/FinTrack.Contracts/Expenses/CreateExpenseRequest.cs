@@ -1,10 +1,13 @@
-﻿namespace FinTrack.Contracts.Expenses;
+﻿using FinTrack.Domain.Expenses;
+using FinTrack.Domain.Shared.Enums;
+
+namespace FinTrack.Contracts.Expenses;
 
 public sealed record CreateExpenseRequest(
     Guid UserId, 
     string Name, 
     decimal Amount, 
     string CurrencyCode, 
-    int ExpenseCategory,
-    int Company,
+    ExpenseCategory Category,
+    Company Company,
     DateTime Date);
