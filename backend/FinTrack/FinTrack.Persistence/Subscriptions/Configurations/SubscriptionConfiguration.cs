@@ -30,6 +30,10 @@ internal sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subsc
 
         builder.OwnsOne(x => x.SubscriptionPeriod);
 
+        builder.HasIndex(b => new { b.Name })
+            .HasMethod("GIN")
+            .IsTsVectorExpressionIndex("english");
+
         // optimistic concurrency support
         builder.Property<uint>("Version").IsRowVersion();
     }

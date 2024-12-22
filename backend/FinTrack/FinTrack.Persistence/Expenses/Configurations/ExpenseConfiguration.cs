@@ -29,5 +29,9 @@ internal sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         });
 
         builder.Property(e => e.IsDeleted).HasDefaultValue(false);
+
+        builder.HasIndex(b => new { b.Name })
+            .HasMethod("GIN")
+            .IsTsVectorExpressionIndex("english");
     }
 }

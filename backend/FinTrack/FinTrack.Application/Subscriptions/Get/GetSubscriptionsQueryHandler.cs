@@ -1,47 +1,67 @@
-﻿using Dapper;
-using FinTrack.Application.Abstractions.Authentication;
+﻿using FinTrack.Application.Abstractions.Authentication;
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Contracts.Subscriptions;
+using FinTrack.Domain.Subscriptions;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel;
-using System.Data;
 
 namespace FinTrack.Application.Subscriptions.Get;
 
 internal sealed class GetSubscriptionsQueryHandler(
     IUserContext userContext,
-    IDbConnectionFactory factory) : IQueryHandler<GetSubscriptionsQuery, List<SubscriptionResponse>>
+    IDbContext dbContext) : IQueryHandler<GetSubscriptionsQuery, List<SubscriptionResponse>>
 {
     public async Task<Result<List<SubscriptionResponse>>> Handle(
-        GetSubscriptionsQuery request, 
+        GetSubscriptionsQuery request,
         CancellationToken cancellationToken)
     {
-        const string sql =
-            """
-            SELECT
-                s.id AS Id,
-                s.user_id AS UserId,
-                s.name AS Name,
-                s.amount_amount AS Amount,
-                s.amount_currency AS Currency,
-                s.frequency AS Frequency,
-                s.company AS Company,
-                s.subscription_period_start AS PeriodStart,
-                s.subscription_period_end AS PeriodEnd,
-                s.next_due_date AS NextDueDate,
-                s.status AS Status,
-                s.created_on_utc AS CreatedOnUtc,
-                s.modified_on_utc AS ModifiedOnUtc
-            FROM subscriptions s
-            WHERE s.user_id = @UserId
-            """;
+        IQueryable<Subscription> subscriptionsQuery = BuildSubscriptionsQuery(request);
 
-        using IDbConnection connection = await factory.GetOpenConnectionAsync(cancellationToken);
+        List<SubscriptionResponse> subscriptions = await GetSubscriptionResponsesAsync(subscriptionsQuery, cancellationToken);
 
-        IEnumerable<SubscriptionResponse> subscriptions = await connection.QueryAsync<SubscriptionResponse>(
-            sql,
-            new { UserId = userContext.UserId });
+        return subscriptions;
+    }
 
-        return subscriptions.ToList();
+    private IQueryable<Subscription> BuildSubscriptionsQuery(GetSubscriptionsQuery request)
+    {
+        IQueryable<Subscription> query = dbContext.Subscriptions.Where(s => s.UserId == userContext.UserId);
+
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            query = query
+                .Where(s => EF.Functions.ToTsVector("english", s.Name).Matches(EF.Functions.PhraseToTsQuery("english", request.SearchTerm)))
+                .Select(s => new
+                {
+                    Subscription = s,
+                    Rank = EF.Functions.ToTsVector("english", s.Name).Rank(EF.Functions.PhraseToTsQuery("english", request.SearchTerm))
+                })
+                .OrderByDescending(x => x.Rank)
+                .Select(x => x.Subscription);
+        }
+
+        return query;
+    }
+
+    private static async Task<List<SubscriptionResponse>> GetSubscriptionResponsesAsync(
+        IQueryable<Subscription> query,
+        CancellationToken cancellationToken)
+    {
+        return await query.Select(s => new SubscriptionResponse
+        {
+            Id = s.Id,
+            UserId = s.UserId,
+            Name = s.Name,
+            Amount = s.Amount.Amount,
+            Currency = s.Amount.Currency.Code,
+            Frequency = s.Frequency,
+            Company = s.Company,
+            PeriodStart = s.SubscriptionPeriod.Start.ToDateTime(TimeOnly.MinValue),
+            PeriodEnd = s.SubscriptionPeriod.End.ToDateTime(TimeOnly.MinValue),
+            NextDueDate = s.NextDueDate.ToDateTime(TimeOnly.MinValue),
+            Status = s.Status,
+            CreatedOnUtc = s.CreatedOnUtc,
+            ModifiedOnUtc = s.ModifiedOnUtc,
+        }).ToListAsync(cancellationToken);
     }
 }

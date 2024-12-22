@@ -1,13 +1,27 @@
-﻿namespace FinTrack.Contracts.Expenses;
+﻿using FinTrack.Domain.Expenses;
+using FinTrack.Domain.Shared.Enums;
 
-public sealed record ExpenseResponse(
-    Guid Id, 
-    Guid UserId, 
-    string Name, 
-    decimal Amount, 
-    string CurrencyCode,
-    int Category,
-    int Company,
-    DateTime Date,
-    DateTime CreatedOnUtc,
-    DateTime? ModifiedOnUtc);
+namespace FinTrack.Contracts.Expenses;
+
+public sealed class ExpenseResponse
+{
+    public required Guid Id { get; set; }
+
+    public required Guid UserId { get; set; }
+
+    public required string Name { get; set; }
+
+    public required decimal Amount { get; set; }
+
+    public required string Currency { get; set; }
+
+    public required ExpenseCategory Category { get; set; }
+
+    public required Company Company { get; set; }
+
+    public required DateTime Date { get; set; }
+
+    public required DateTime CreatedOnUtc { get; set; }
+
+    public required DateTime? ModifiedOnUtc { get; set; }
+}

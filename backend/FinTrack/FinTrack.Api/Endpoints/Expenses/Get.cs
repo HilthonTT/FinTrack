@@ -4,6 +4,7 @@ using FinTrack.Application.Expenses.Get;
 using FinTrack.Contracts.Expenses;
 using FinTrack.Domain.Users;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SharedKernel;
 
 namespace FinTrack.Api.Endpoints.Expenses;
@@ -12,9 +13,12 @@ internal sealed class Get : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("expenses", async (ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("expenses", async (
+            [FromQuery] string? searchTerm,
+            ISender sender, 
+            CancellationToken cancellationToken) =>
         {
-            var query = new GetExpensesQuery();
+            var query = new GetExpensesQuery(searchTerm);
 
             Result<List<ExpenseResponse>> result = await sender.Send(query, cancellationToken);
 

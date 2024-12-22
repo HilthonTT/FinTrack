@@ -11,7 +11,7 @@ using System.Data;
 
 namespace FinTrack.Persistence.Context;
 
-public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IUnitOfWork
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IUnitOfWork, IDbContext
 {
     public DbSet<User> Users { get; set; }
 
