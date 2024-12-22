@@ -1,4 +1,3 @@
-import 'package:fintrack_app/core/common/widgets/bottom_bar.dart';
 import 'package:fintrack_app/core/common/widgets/load_more_button.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_list.dart';
@@ -68,7 +67,6 @@ final class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              const BottomBar(),
             ],
           );
         },

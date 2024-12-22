@@ -1,15 +1,23 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
+import 'package:fintrack_app/features/tabs/enums/main_tab_page.dart';
 import 'package:flutter/material.dart';
 
-final class BottomBar extends StatefulWidget {
-  const BottomBar({super.key});
+final class BottomBar extends StatelessWidget {
+  final MainTabPage selectedPage;
 
-  @override
-  State<BottomBar> createState() => _BottomBarState();
-}
+  final VoidCallback onHomePressed;
+  final VoidCallback onBudgetPressed;
+  final VoidCallback onCalendarPressed;
+  final VoidCallback onCardPressed;
 
-class _BottomBarState extends State<BottomBar> {
-  int _selectedTab = 0;
+  const BottomBar({
+    super.key,
+    required this.selectedPage,
+    required this.onHomePressed,
+    required this.onBudgetPressed,
+    required this.onCalendarPressed,
+    required this.onCardPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +44,21 @@ class _BottomBarState extends State<BottomBar> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             IconButton(
-                              onPressed: () => _onPress(0),
+                              onPressed: onHomePressed,
                               icon: Image.asset(
                                 "assets/images/home.png",
                                 width: 20,
                                 height: 20,
-                                color: _getTabColor(0),
+                                color: _getTabColor(MainTabPage.home),
                               ),
                             ),
                             IconButton(
-                              onPressed: () => _onPress(1),
+                              onPressed: onBudgetPressed,
                               icon: Image.asset(
                                 "assets/images/budgets.png",
                                 width: 20,
                                 height: 20,
-                                color: _getTabColor(1),
+                                color: _getTabColor(MainTabPage.budget),
                               ),
                             ),
                             InkWell(
@@ -75,21 +83,21 @@ class _BottomBarState extends State<BottomBar> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () => _onPress(2),
+                              onPressed: onCalendarPressed,
                               icon: Image.asset(
                                 "assets/images/calendar.png",
                                 width: 20,
                                 height: 20,
-                                color: _getTabColor(2),
+                                color: _getTabColor(MainTabPage.calendar),
                               ),
                             ),
                             IconButton(
-                              onPressed: () => _onPress(3),
+                              onPressed: onCardPressed,
                               icon: Image.asset(
                                 "assets/images/creditcards.png",
                                 width: 20,
                                 height: 20,
-                                color: _getTabColor(3),
+                                color: _getTabColor(MainTabPage.cards),
                               ),
                             ),
                           ],
@@ -106,14 +114,8 @@ class _BottomBarState extends State<BottomBar> {
     );
   }
 
-  void _onPress(int tab) {
-    setState(() {
-      _selectedTab = tab;
-    });
-  }
-
-  Color _getTabColor(int tab) {
-    if (tab == _selectedTab) {
+  Color _getTabColor(MainTabPage page) {
+    if (page == selectedPage) {
       return AppPalette.white;
     }
 
