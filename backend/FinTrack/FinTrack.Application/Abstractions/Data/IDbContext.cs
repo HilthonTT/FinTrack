@@ -1,4 +1,5 @@
-﻿using FinTrack.Domain.Expenses;
+﻿using FinTrack.Domain.Budget;
+using FinTrack.Domain.Expenses;
 using FinTrack.Domain.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,4 +10,6 @@ public interface IDbContext
     DbSet<Subscription> Subscriptions { get; }
 
     DbSet<Expense> Expenses { get; }
+
+    DbSet<Budget> Budgets { get; }
 }

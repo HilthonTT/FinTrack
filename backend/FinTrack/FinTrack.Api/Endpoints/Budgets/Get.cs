@@ -1,33 +1,32 @@
 ﻿using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
-using FinTrack.Application.Subscriptions.Get;
-using FinTrack.Contracts.Subscriptions;
+using FinTrack.Application.Budgets.Get;
+using FinTrack.Contracts.Budgets;
 using FinTrack.Domain.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel;
 
-namespace FinTrack.Api.Endpoints.Subscriptions;
+namespace FinTrack.Api.Endpoints.Budgets;
 
 internal sealed class Get : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("subscriptions", async (
+        app.MapGet("budgets", async (
             [FromQuery] string? searchTerm,
             ISender sender,
             CancellationToken cancellationToken,
             [FromQuery] int take = 10) =>
         {
-            var query = new GetSubscriptionsQuery(searchTerm, take);
+            var query = new GetBudgetsQuery(searchTerm, take);
 
-            Result<List<SubscriptionResponse>> result = await sender.Send(query, cancellationToken);
+            Result<List<BudgetResponse>> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
-        .WithTags(Tags.Subscriptions)
+        .WithTags(Tags.Budgets)
         .RequireAuthorization()
-        .HasPermission(Permission.UsersRead.Name)
-        .WithTags(Tags.Subscriptions);
+        .HasPermission(Permission.UsersRead.Name);
     }
 }

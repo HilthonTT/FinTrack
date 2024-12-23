@@ -40,6 +40,8 @@ internal sealed class GetSubscriptionsQueryHandler(
                 .Select(x => x.Subscription);
         }
 
+        query = query.Take(request.Take);
+
         return query;
     }
 

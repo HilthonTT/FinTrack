@@ -2,9 +2,7 @@
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Contracts.Expenses;
-using FinTrack.Contracts.Subscriptions;
 using FinTrack.Domain.Expenses;
-using FinTrack.Domain.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 using System.Data;
@@ -15,9 +13,7 @@ internal sealed class GetExpensesQueryHandler(
     IUserContext userContext,
     IDbContext dbContext) : IQueryHandler<GetExpensesQuery, List<ExpenseResponse>>
 {
-    public async Task<Result<List<ExpenseResponse>>> Handle(
-        GetExpensesQuery request, 
-        CancellationToken cancellationToken)
+    public async Task<Result<List<ExpenseResponse>>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Expense> query = BuildExpensesQuery(request);
 
@@ -42,6 +38,8 @@ internal sealed class GetExpensesQueryHandler(
                 .OrderByDescending(x => x.Rank)
                 .Select(x => x.Subscription);
         }
+
+        query = query.Take(request.Take);
 
         return query;
     }

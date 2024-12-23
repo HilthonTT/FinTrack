@@ -18,7 +18,7 @@ public sealed class BudgetResponse
 
     public required decimal Spent { get; set; }
 
-    public required decimal AmountLeft { get; set; }
+    public required decimal Remaining { get; set; }
 
     public required DateOnly StartDate { get; set; }
 

@@ -49,7 +49,7 @@ internal sealed class GetBudgetByIdQueryHandler(IDbConnectionFactory factory, IU
             return Result.Failure<BudgetResponse>(UserErrors.Unauthorized);
         }
 
-        budget.AmountLeft = budget.Amount - budget.Spent;
+        budget.Remaining = budget.Amount - budget.Spent;
 
         return budget;
     }

@@ -13,7 +13,7 @@ internal sealed class GetByDates : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("budgets", async (
+        app.MapGet("budgets/dates", async (
             [FromQuery] Guid userId,
             [FromQuery] DateOnly startDate,
             [FromQuery] DateOnly endDate,

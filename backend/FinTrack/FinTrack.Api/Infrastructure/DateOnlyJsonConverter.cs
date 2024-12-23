@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace FinTrack.Api.Infrastructure;
@@ -23,13 +24,14 @@ internal sealed class DateOnlyJsonConverter : JsonConverter<DateOnly>
 
         foreach (string format in SupportedFormats)
         {
-            if (DateOnly.TryParseExact(value, format, null, System.Globalization.DateTimeStyles.None, out DateOnly date))
+            if (DateOnly.TryParseExact(value, format, null, DateTimeStyles.None, out DateOnly date))
             {
                 return date;
             }
         }
 
-        throw new JsonException($"Unable to convert \"{value}\" to {nameof(DateOnly)}. Supported formats: {string.Join(", ", SupportedFormats)}.");
+        throw new JsonException(
+            $"Unable to convert \"{value}\" to {nameof(DateOnly)}. Supported formats: {string.Join(", ", SupportedFormats)}.");
     }
 
     public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)

@@ -16,9 +16,10 @@ internal sealed class Get : IEndpoint
         app.MapGet("expenses", async (
             [FromQuery] string? searchTerm,
             ISender sender, 
-            CancellationToken cancellationToken) =>
+            CancellationToken cancellationToken,
+            [FromQuery] int take = 10) =>
         {
-            var query = new GetExpensesQuery(searchTerm);
+            var query = new GetExpensesQuery(searchTerm, take);
 
             Result<List<ExpenseResponse>> result = await sender.Send(query, cancellationToken);
 

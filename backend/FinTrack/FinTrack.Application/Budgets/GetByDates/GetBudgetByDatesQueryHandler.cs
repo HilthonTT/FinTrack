@@ -49,7 +49,7 @@ internal sealed class GetBudgetByDatesQueryHandler(IDbConnectionFactory factory)
             return Result.Failure<BudgetResponse>(BudgetErrors.NotFound(request.StartDate, request.EndDate));
         }
 
-        budget.AmountLeft = budget.Amount - budget.Spent;
+        budget.Remaining = budget.Amount - budget.Spent;
 
         return budget;
     }
