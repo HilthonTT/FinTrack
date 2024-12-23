@@ -1,13 +1,13 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
-class StatusButton extends StatelessWidget {
+class ExpenseStatusButton extends StatelessWidget {
   final String title;
   final String value;
   final Color statusColor;
   final VoidCallback onPressed;
 
-  const StatusButton({
+  const ExpenseStatusButton({
     super.key,
     required this.title,
     required this.value,

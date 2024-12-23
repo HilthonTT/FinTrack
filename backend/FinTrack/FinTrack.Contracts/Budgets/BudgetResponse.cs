@@ -1,13 +1,24 @@
 ﻿namespace FinTrack.Contracts.Budgets;
 
-public sealed record BudgetResponse(
-    Guid Id, 
-    Guid UserId, 
-    decimal Amount, 
-    string AmountCurrency, 
-    decimal Spent, 
-    string SpentCurrency,
-    DateOnly StartDate,
-    DateOnly EndDate,
-    DateTime CreatedOnUtc,
-    DateTime? ModifiedOnUtc);
+public sealed class BudgetResponse
+{
+    public required Guid Id { get; set; }
+
+    public required Guid UserId { get; set; }
+
+    public required decimal Amount { get; set; }
+
+    public required string Currency { get; set; }
+
+    public required decimal Spent { get; set; }
+
+    public required decimal AmountLeft { get; set; }
+
+    public required DateOnly StartDate { get; set; }
+
+    public required DateOnly EndDate { get; set; }
+
+    public required DateTime CreatedOnUtc { get; set; }
+
+    public DateTime? ModifiedOnUtc { get; set; }
+}

@@ -19,9 +19,8 @@ internal sealed class GetBudgetByDatesQueryHandler(IDbConnectionFactory factory)
                 b.id AS Id,
                 b.user_id AS UserId,
                 b.amount_amount AS Amount,
-                b.amount_currency AS AmountCurrency,
+                b.amount_currency AS Currency,
                 b.spent_amount AS Spent,
-                b.spent_currency AS SpentCurrency,
                 b.date_range_start AS StartDate,
                 b.date_range_end AS EndDate,
                 b.created_on_utc AS CreatedOnUtc,
@@ -47,6 +46,8 @@ internal sealed class GetBudgetByDatesQueryHandler(IDbConnectionFactory factory)
         {
             return Result.Failure<BudgetResponse>(BudgetErrors.NotFound(request.StartDate, request.EndDate));
         }
+
+        budget.AmountLeft = budget.Amount - budget.Spent;
 
         return budget;
     }

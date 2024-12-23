@@ -2,15 +2,15 @@ import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/balance_display.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/budget_button.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_statistics.dart';
-import 'package:fintrack_app/features/expenses/presentation/widgets/header_background.dart';
+import 'package:fintrack_app/features/expenses/presentation/widgets/expense_header_background.dart';
 import 'package:flutter/material.dart';
 
-final class HeaderSection extends StatelessWidget {
+final class ExpenseHeaderSection extends StatelessWidget {
   final double containerWidth;
   final double imageHeight;
   final double arcSize;
 
-  const HeaderSection({
+  const ExpenseHeaderSection({
     super.key,
     required this.containerWidth,
     required this.imageHeight,
@@ -32,7 +32,7 @@ final class HeaderSection extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          HeaderBackground(arcSize: arcSize),
+          ExpenseHeaderBackground(arcSize: arcSize),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [

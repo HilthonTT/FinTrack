@@ -2,7 +2,7 @@ import 'package:fintrack_app/core/common/widgets/load_more_button.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_list.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_subscription_switcher.dart';
-import 'package:fintrack_app/features/expenses/presentation/widgets/header_section.dart';
+import 'package:fintrack_app/features/expenses/presentation/widgets/expense_header_section.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/subscriptions_list.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +51,7 @@ final class _HomePageState extends State<HomePage> {
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    HeaderSection(
+                    ExpenseHeaderSection(
                       containerWidth: containerWidth,
                       imageHeight: imageHeight,
                       arcSize: arcSize,

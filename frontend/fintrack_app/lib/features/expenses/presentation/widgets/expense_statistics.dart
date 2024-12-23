@@ -1,5 +1,5 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
-import 'package:fintrack_app/features/expenses/presentation/widgets/status_button.dart';
+import 'package:fintrack_app/features/expenses/presentation/widgets/expense_status_button.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseStatistics extends StatelessWidget {
@@ -15,7 +15,7 @@ class ExpenseStatistics extends StatelessWidget {
           Row(
             children: <Widget>[
               Expanded(
-                child: StatusButton(
+                child: ExpenseStatusButton(
                   title: "Recent expenses",
                   value: "20",
                   statusColor: AppPalette.secondary,
@@ -26,7 +26,7 @@ class ExpenseStatistics extends StatelessWidget {
                 width: 8,
               ),
               Expanded(
-                child: StatusButton(
+                child: ExpenseStatusButton(
                   title: "Highest expense",
                   value: "\$19.99",
                   statusColor: AppPalette.primary10,
@@ -37,7 +37,7 @@ class ExpenseStatistics extends StatelessWidget {
                 width: 8,
               ),
               Expanded(
-                child: StatusButton(
+                child: ExpenseStatusButton(
                   title: "Lowest expense",
                   value: "\$5.99",
                   statusColor: AppPalette.secondaryG,
