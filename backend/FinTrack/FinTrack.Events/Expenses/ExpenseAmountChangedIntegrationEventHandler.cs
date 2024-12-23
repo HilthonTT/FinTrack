@@ -1,6 +1,7 @@
 ﻿using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Expenses.Update;
 using FinTrack.Domain.Budget;
+using FinTrack.Domain.Budget.Repositories;
 using FinTrack.Domain.Expenses;
 using FinTrack.Domain.Expenses.Repositories;
 using FinTrack.Events.Abstractions.Messaging;

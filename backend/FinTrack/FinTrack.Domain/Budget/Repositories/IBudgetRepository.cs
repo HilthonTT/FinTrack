@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Domain.Budget;
+﻿namespace FinTrack.Domain.Budget.Repositories;
 
 public interface IBudgetRepository
 {

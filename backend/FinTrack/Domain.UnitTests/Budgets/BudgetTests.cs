@@ -1,4 +1,5 @@
 ﻿using FinTrack.Domain.Budget;
+using FinTrack.Domain.Budget.Enums;
 using FinTrack.Domain.Budget.Events;
 using FinTrack.Domain.Shared.ValueObjects;
 using FluentAssertions;
@@ -29,7 +30,7 @@ public class BudgetTests
         var amount = new Money(DummyAmount, TestCurrency);
 
         // Act
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
 
         // Assert
         budget.Should().NotBeNull();
@@ -47,7 +48,7 @@ public class BudgetTests
         var amount = new Money(DummyAmount, TestCurrency);
 
         // Act
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
 
         // Assert
         budget.DomainEvents
@@ -61,7 +62,7 @@ public class BudgetTests
     {
         // Arrange
         var amount = new Money(DummyAmount, TestCurrency);
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
         var withdrawAmount = new Money(DummyWithdrawAmount, TestCurrency);
 
         // Clear any existing domain events before deposit
@@ -83,7 +84,7 @@ public class BudgetTests
     {
         // Arrange
         var amount = new Money(DummyAmount, TestCurrency);
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
         var withdrawAmount = new Money(-DummyWithdrawAmount, TestCurrency);
 
         // Act
@@ -99,7 +100,7 @@ public class BudgetTests
     {
         // Arrange
         var amount = new Money(DummyAmount, TestCurrency);
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
         var withdrawAmount = new Money(DummyAmount + 100m, TestCurrency); // Exceeds the amount
 
         // Act
@@ -115,7 +116,7 @@ public class BudgetTests
     {
         // Arrange
         var amount = new Money(1000M, TestCurrency); // Example amount
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
         var withdrawAmount = new Money(300M, TestCurrency); // Example withdrawal
         budget.Withdraw(withdrawAmount);
         budget.ClearDomainEvents();
@@ -139,7 +140,7 @@ public class BudgetTests
     {
         // Arrange
         var amount = new Money(DummyAmount, TestCurrency);
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
         var depositAmount = new Money(-DummyDepositAmount, TestCurrency);
 
         // Act
@@ -155,7 +156,7 @@ public class BudgetTests
     {
         // Arrange
         var amount = new Money(1000M, TestCurrency); // Example amount
-        var budget = Budget.CreateForCurrentMonth(DummyUserId, amount, _dateTimeProviderMock);
+        var budget = Budget.CreateForCurrentMonth(DummyUserId, "Weekly", BudgetType.Weekly, amount, _dateTimeProviderMock);
         var withdrawAmount = new Money(300M, TestCurrency); // Example withdrawal
         budget.Withdraw(withdrawAmount);
 

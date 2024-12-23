@@ -22,6 +22,8 @@ internal sealed class Create : IEndpoint
             var command = new CreateBudgetCommand(
                 requestId, 
                 request.UserId,
+                request.Name,
+                request.Type,
                 request.Amount,
                 request.CurrencyCode, 
                 request.StartDate, 

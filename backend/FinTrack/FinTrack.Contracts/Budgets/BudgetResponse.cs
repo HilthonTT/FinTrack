@@ -1,10 +1,16 @@
-﻿namespace FinTrack.Contracts.Budgets;
+﻿using FinTrack.Domain.Budget.Enums;
+
+namespace FinTrack.Contracts.Budgets;
 
 public sealed class BudgetResponse
 {
     public required Guid Id { get; set; }
 
     public required Guid UserId { get; set; }
+
+    public required string Name { get; set; }
+
+    public required BudgetType Type { get; set; }
 
     public required decimal Amount { get; set; }
 

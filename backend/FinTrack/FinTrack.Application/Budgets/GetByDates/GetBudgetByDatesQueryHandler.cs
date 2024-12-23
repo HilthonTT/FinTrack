@@ -18,6 +18,8 @@ internal sealed class GetBudgetByDatesQueryHandler(IDbConnectionFactory factory)
             SELECT 
                 b.id AS Id,
                 b.user_id AS UserId,
+                b.name AS Name,
+                b.type AS Type,
                 b.amount_amount AS Amount,
                 b.amount_currency AS Currency,
                 b.spent_amount AS Spent,
@@ -29,7 +31,7 @@ internal sealed class GetBudgetByDatesQueryHandler(IDbConnectionFactory factory)
             WHERE b.user_id = @UserId
               AND b.date_range_start <= @EndDate
               AND b.date_range_end >= @StartDate
-        """;
+            """;
 
         using IDbConnection connection = await factory.GetOpenConnectionAsync(cancellationToken);
 

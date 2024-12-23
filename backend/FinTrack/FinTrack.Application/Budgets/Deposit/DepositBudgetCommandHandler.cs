@@ -2,6 +2,7 @@
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Domain.Budget;
+using FinTrack.Domain.Budget.Repositories;
 using FinTrack.Domain.Shared.ValueObjects;
 using FinTrack.Domain.Users;
 using SharedKernel;

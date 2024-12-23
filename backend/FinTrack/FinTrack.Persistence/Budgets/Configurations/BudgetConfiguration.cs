@@ -15,6 +15,8 @@ internal sealed class BudgetConfiguration : IEntityTypeConfiguration<Budget>
 
         builder.HasKey(b => b.Id);
 
+        builder.Property(b => b.Name).HasMaxLength(256);
+
         builder.OwnsOne(x => x.Amount, amountBuilder =>
         {
             amountBuilder.Property(money => money.Currency)
@@ -35,5 +37,9 @@ internal sealed class BudgetConfiguration : IEntityTypeConfiguration<Budget>
         builder.OwnsOne(x => x.DateRange);
 
         builder.Ignore(b => b.Remaining);
+
+        builder.HasIndex(b => new { b.Name })
+            .HasMethod("GIN")
+            .IsTsVectorExpressionIndex("english");
     }
 }

@@ -20,6 +20,8 @@ internal sealed class GetBudgetByIdQueryHandler(IDbConnectionFactory factory, IU
             SELECT 
                 b.id AS Id,
                 b.user_id AS UserId,
+                b.name AS Name,
+                b.type AS Type,
                 b.amount_amount AS Amount,
                 b.amount_currency AS Currency,
                 b.spent_amount AS Spent,

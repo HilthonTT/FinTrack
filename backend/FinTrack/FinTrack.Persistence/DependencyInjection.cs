@@ -1,6 +1,6 @@
 ﻿using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Idempotency;
-using FinTrack.Domain.Budget;
+using FinTrack.Domain.Budget.Repositories;
 using FinTrack.Domain.Expenses.Repositories;
 using FinTrack.Domain.Subscriptions.Repositories;
 using FinTrack.Domain.Users.Repositories;

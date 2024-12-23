@@ -1,4 +1,5 @@
-﻿using FinTrack.Domain.Budget.Events;
+﻿using FinTrack.Domain.Budget.Enums;
+using FinTrack.Domain.Budget.Events;
 using FinTrack.Domain.Shared.ValueObjects;
 using SharedKernel;
 
@@ -8,7 +9,9 @@ public sealed class Budget : Entity, IAuditable
 {
     private Budget(
         Guid id,
-        Guid userId, 
+        Guid userId,
+        string name,
+        BudgetType type,
         Money amount, 
         Money spent, 
         DateRange dateRange)
@@ -17,7 +20,12 @@ public sealed class Budget : Entity, IAuditable
         Ensure.GreaterThanOrEqualToZero(amount.Amount, nameof(amount));
         Ensure.GreaterThanOrEqualToZero(spent.Amount, nameof(spent));
 
+        Ensure.NotNullOrWhitespace(name, nameof(name));
+        Ensure.NotNull(type, nameof(type));
+
         UserId = userId;
+        Name = name;
+        Type = type;
         Amount = amount;
         Spent = spent;
         DateRange = dateRange;
@@ -31,6 +39,10 @@ public sealed class Budget : Entity, IAuditable
 
     public Guid UserId { get; private set; }
 
+    public string Name { get; private set; }
+
+    public BudgetType Type { get; private set; }
+
     public Money Amount { get; private set; }
 
     public Money Spent { get; private set; }
@@ -43,13 +55,25 @@ public sealed class Budget : Entity, IAuditable
 
     public DateTime? ModifiedOnUtc { get; set; }
 
-    public static Budget CreateForCurrentMonth(Guid userId, Money amount, IDateTimeProvider dateTimeProvider)
+    public static Budget CreateForCurrentMonth(
+        Guid userId,
+        string name,
+        BudgetType type,
+        Money amount, 
+        IDateTimeProvider dateTimeProvider)
     {
         DateTime utcNow = dateTimeProvider.UtcNow;
         DateOnly start = new(utcNow.Year, utcNow.Month, 1);
         DateOnly end = start.AddMonths(1).AddDays(-1);
 
-        var budget = new Budget(Guid.NewGuid(), userId, amount, Money.Zero(amount.Currency), DateRange.Create(start, end));
+        var budget = new Budget(
+            Guid.NewGuid(),
+            userId, 
+            name, 
+            type,
+            amount, 
+            Money.Zero(amount.Currency),
+            DateRange.Create(start, end));
 
         budget.Raise(new BudgetCreatedDomainEvent(budget.Id));
 
@@ -92,5 +116,12 @@ public sealed class Budget : Entity, IAuditable
         Raise(new BudgetAmountDepositedDomainEvent(Id, amount.Amount));
 
         return Result.Success();
+    }
+
+    public void ChangeName(string name)
+    {
+        Ensure.NotNullOrWhitespace(name, nameof(name));
+
+        Name = name;
     }
 }

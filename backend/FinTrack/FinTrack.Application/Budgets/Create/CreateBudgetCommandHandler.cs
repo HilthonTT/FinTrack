@@ -2,6 +2,7 @@
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Domain.Budget;
+using FinTrack.Domain.Budget.Repositories;
 using FinTrack.Domain.Shared.ValueObjects;
 using FinTrack.Domain.Users;
 using SharedKernel;
@@ -29,7 +30,12 @@ internal sealed class CreateBudgetCommandHandler(
 
         var money = new Money(request.Amount, currency);
 
-        var budget = Budget.CreateForCurrentMonth(request.UserId, money, dateTimeProvider);
+        var budget = Budget.CreateForCurrentMonth(
+            request.UserId, 
+            request.Name, 
+            request.Type,
+            money, 
+            dateTimeProvider);
 
         budgetRepository.Insert(budget);
 
