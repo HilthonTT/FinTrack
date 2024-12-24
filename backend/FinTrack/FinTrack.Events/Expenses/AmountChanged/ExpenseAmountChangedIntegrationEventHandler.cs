@@ -8,7 +8,7 @@ using FinTrack.Events.Abstractions.Messaging;
 using MassTransit;
 using SharedKernel;
 
-namespace FinTrack.Events.Expenses;
+namespace FinTrack.Events.Expenses.AmountChanged;
 
 internal sealed class ExpenseAmountChangedIntegrationEventHandler(
     IExpenseRepository expenseRepository,

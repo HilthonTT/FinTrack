@@ -142,4 +142,14 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
 
         return Result.Success();
     }
+
+    public void RaiseDelete()
+    {
+        Raise(new ExpenseDeletedDomainEvent(Id));
+    }
+
+    public void RaiseUpdate()
+    {
+        Raise(new ExpenseDeletedDomainEvent(Id));
+    }
 }

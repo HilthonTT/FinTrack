@@ -26,6 +26,8 @@ internal sealed class DeleteExpenseCommandHandler(
             return Result.Failure(UserErrors.Unauthorized);
         }
 
+        expense.RaiseDelete();
+
         expenseRepository.Remove(expense);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

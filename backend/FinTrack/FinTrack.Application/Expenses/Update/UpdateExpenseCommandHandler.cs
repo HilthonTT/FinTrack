@@ -36,6 +36,8 @@ internal sealed class UpdateExpenseCommandHandler(
             return Result.Failure(firstFailureOrSuccess.Error);
         }
 
+        expense.RaiseUpdate();
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

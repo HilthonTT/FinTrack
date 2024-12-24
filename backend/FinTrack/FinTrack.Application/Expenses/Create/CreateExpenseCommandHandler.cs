@@ -50,14 +50,4 @@ internal sealed class CreateExpenseCommandHandler(
 
         return expense.Id;
     }
-
-    private static TEnum ValidateEnumValue<TEnum>(int value) where TEnum : struct, Enum
-    {
-        if (Enum.IsDefined(typeof(TEnum), value))
-        {
-            return (TEnum)Enum.ToObject(typeof(TEnum), value);
-        }
-
-        throw new ArgumentException($"Invalid {typeof(TEnum).Name}: {value}");
-    }
 }
