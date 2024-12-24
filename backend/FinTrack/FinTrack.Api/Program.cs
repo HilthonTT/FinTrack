@@ -54,6 +54,8 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 }
 
+app.UseRequestContextLogging();
+
 app.UseCors(CorsPolicy.AllowAllHeaders);
 
 app.UseHttpsRedirection();
