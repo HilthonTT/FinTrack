@@ -1,14 +1,17 @@
+import 'package:fintrack_app/core/common/utils/toast_helper.dart';
 import 'package:fintrack_app/core/common/widgets/loader.dart';
 import 'package:fintrack_app/core/common/widgets/responsive_svg.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fintrack_app/features/tabs/widgets/main_tab.dart';
+import 'package:fintrack_app/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fintrack_app/features/auth/presentation/pages/register_page.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_field.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_footer.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final class LoginPage extends StatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => const LoginPage());
@@ -20,6 +23,8 @@ final class LoginPage extends StatefulWidget {
 }
 
 final class _LoginPageState extends State<LoginPage> {
+  late FToast fToast;
+
   final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
@@ -34,6 +39,14 @@ final class _LoginPageState extends State<LoginPage> {
 
       context.read<AuthBloc>().add(event);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    fToast = FToast();
+    fToast.init(navigatorKey.currentContext!);
   }
 
   @override
@@ -57,6 +70,8 @@ final class _LoginPageState extends State<LoginPage> {
                 MainTab.route(),
                 (route) => false,
               );
+            } else if (state is AuthFailure) {
+              showToast(fToast, state.message, Icons.error);
             }
           },
           builder: (context, state) {

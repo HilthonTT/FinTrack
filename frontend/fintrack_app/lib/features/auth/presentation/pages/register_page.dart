@@ -1,3 +1,4 @@
+import 'package:fintrack_app/core/common/utils/toast_helper.dart';
 import 'package:fintrack_app/core/common/widgets/loader.dart';
 import 'package:fintrack_app/core/common/widgets/responsive_svg.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
@@ -7,8 +8,10 @@ import 'package:fintrack_app/features/auth/presentation/pages/otp_verification_p
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_field.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_footer.dart';
+import 'package:fintrack_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final class RegisterPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -22,6 +25,8 @@ final class RegisterPage extends StatefulWidget {
 }
 
 final class _RegisterPageState extends State<RegisterPage> {
+  late FToast fToast;
+
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
@@ -38,6 +43,14 @@ final class _RegisterPageState extends State<RegisterPage> {
 
       context.read<AuthBloc>().add(event);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    fToast = FToast();
+    fToast.init(navigatorKey.currentContext!);
   }
 
   @override
@@ -63,6 +76,8 @@ final class _RegisterPageState extends State<RegisterPage> {
                 OtpVerificationPage.route(),
                 (route) => false,
               );
+            } else if (state is AuthFailure) {
+              showToast(fToast, state.message, Icons.error);
             }
           },
           builder: (context, state) {

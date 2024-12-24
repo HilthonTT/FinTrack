@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:fintrack_app/core/common/utils/error_parser.dart';
+import 'package:fintrack_app/core/common/utils/status_codes.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
 import 'package:fintrack_app/core/constants/server_constants.dart';
 import 'package:fintrack_app/features/auth/data/models/user_model.dart';
@@ -23,12 +27,11 @@ abstract class AuthRemoteDataSource {
   Future<void> verifyEmail({required int code});
 }
 
-class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final String _baseUrl = ServerConstants.baseUrl;
 
   @override
   Future<UserModel?> getCurrentUserData() {
-    // TODO: Implement getCurrentUserData
     throw UnimplementedError();
   }
 
@@ -42,8 +45,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       'password': password,
     });
 
-    if (!_isSuccessfulResponse(response.statusCode)) {
-      throw const ServerException("Failed to login");
+    if (!isSuccessfulResponse(response.statusCode)) {
+      throw parseError(response);
     }
 
     final data = jsonDecode(response.body);
@@ -69,8 +72,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       'password': password,
     });
 
-    if (!_isSuccessfulResponse(response.statusCode)) {
-      throw const ServerException("Failed to register");
+    if (!isSuccessfulResponse(response.statusCode)) {
+      throw parseError(response);
     }
   }
 
@@ -80,8 +83,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       'code': code,
     });
 
-    if (!_isSuccessfulResponse(response.statusCode)) {
-      throw const ServerException("Failed to verify email");
+    if (!isSuccessfulResponse(response.statusCode)) {
+      throw parseError(response);
     }
   }
 
@@ -91,18 +94,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   ) async {
     final url = Uri.parse("$_baseUrl$path");
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(body),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
 
-    return response;
-  }
-
-  bool _isSuccessfulResponse(int statusCode) {
-    return statusCode >= 200 && statusCode < 300;
+      return response;
+    } on SocketException catch (_) {
+      throw ServerException(
+          "No internet connection. Please check your network.");
+    } on TimeoutException catch (_) {
+      throw ServerException("Request timeout. Please try again later.");
+    } on http.ClientException catch (_) {
+      throw ServerException(
+          "Failed to connect to the server. Please try again.");
+    } catch (e) {
+      throw ServerException("An unexpected error occurred: ${e.toString()}");
+    }
   }
 }
