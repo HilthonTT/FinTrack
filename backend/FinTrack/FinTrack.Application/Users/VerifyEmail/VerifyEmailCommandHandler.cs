@@ -8,6 +8,7 @@ namespace FinTrack.Application.Users.VerifyEmail;
 
 internal sealed class VerifyEmailCommandHandler(
     IEmailVerificationTokenRepository emailVerificationTokenRepository,
+    IUserRepository userRepository,
     IDateTimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork) : ICommandHandler<VerifyEmailCommand>
 {
@@ -25,9 +26,15 @@ internal sealed class VerifyEmailCommandHandler(
             return Result.Failure(UserErrors.EmailAlreadyVerified);
         }
 
-        token.User.VerifyEmail();
+        User? user = await userRepository.GetByEmailAsync(token.User.Email, cancellationToken);
+        if (user is null)
+        {
+            return Result.Failure(UserErrors.NotFoundByEmail);
+        }
 
-        token.User.AddRole(Role.Registered);
+        user.VerifyEmail();
+
+        user.AddRole(Role.Registered);
 
         emailVerificationTokenRepository.Remove(token);
 

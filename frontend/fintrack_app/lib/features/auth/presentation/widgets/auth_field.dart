@@ -40,6 +40,7 @@ final class AuthField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: TextFormField(
+        controller: controller,
         textInputAction: TextInputAction.done,
         obscureText: isPassword,
         cursorColor: AppPalette.secondary50,

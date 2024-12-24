@@ -8,3 +8,27 @@ sealed class AuthState {
 final class AuthInitial extends AuthState {
   const AuthInitial();
 }
+
+final class AuthLoading extends AuthState {
+  const AuthLoading();
+}
+
+final class AuthLoggedIn extends AuthState {
+  final User user;
+
+  const AuthLoggedIn(this.user);
+}
+
+final class AuthRegistered extends AuthState {
+  const AuthRegistered();
+}
+
+final class AuthEmailVerified extends AuthState {
+  const AuthEmailVerified();
+}
+
+final class AuthFailure extends AuthState {
+  final String message;
+
+  const AuthFailure(this.message);
+}

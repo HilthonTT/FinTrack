@@ -3,6 +3,7 @@ using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
 using FinTrack.Application.Users;
 using FinTrack.Application.Users.VerifyEmail;
+using FinTrack.Contracts.Users;
 using MediatR;
 using SharedKernel;
 
@@ -12,12 +13,12 @@ internal sealed class VerifyEmail : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("users/verify-email", async (
-            int code,
+        app.MapPost("users/verify-email", async (
+            VerifyEmailRequest request,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var command = new VerifyEmailCommand(code);
+            var command = new VerifyEmailCommand(request.Code);
 
             Result result = await sender.Send(command, cancellationToken);
 

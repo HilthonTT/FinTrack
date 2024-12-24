@@ -4,10 +4,10 @@ import 'package:fintrack_app/core/constants/exceptions.dart';
 import 'package:fintrack_app/core/constants/server_constants.dart';
 import 'package:fintrack_app/features/auth/data/models/user_model.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import "package:http/http.dart" as http;
+import 'package:http/http.dart' as http;
 
-abstract interface class AuthRemoteDataSource {
-  Future register({
+abstract class AuthRemoteDataSource {
+  Future<void> register({
     required String email,
     required String password,
     required String name,
@@ -19,12 +19,16 @@ abstract interface class AuthRemoteDataSource {
   });
 
   Future<UserModel?> getCurrentUserData();
+
+  Future<void> verifyEmail({required int code});
 }
 
-final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final String _baseUrl = ServerConstants.baseUrl;
+
   @override
   Future<UserModel?> getCurrentUserData() {
-    // TODO: implement getCurrentUserData
+    // TODO: Implement getCurrentUserData
     throw UnimplementedError();
   }
 
@@ -33,56 +37,72 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String email,
     required String password,
   }) async {
-    final url = Uri.parse("${ServerConstants.baseUrl}/users/login");
+    final response = await _postRequest("/users/login", {
+      'email': email,
+      'password': password,
+    });
 
-    final response = await http.post(
-      url,
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
-    );
-
-    if (response.statusCode != 200) {
+    if (!_isSuccessfulResponse(response.statusCode)) {
       throw const ServerException("Failed to login");
     }
 
-    final dynamic data = jsonDecode(response.body);
-
+    final data = jsonDecode(response.body);
     final String accessToken = data['accessToken'];
 
     final JWT jwt = JWT.decode(accessToken);
+    final String userId = jwt.payload['sub'];
+    final String userEmail = jwt.payload['email'];
+    final String userName = jwt.payload['name'];
 
-    final String subject = jwt.payload['sub'];
-    final String jwtEmail = jwt.payload['email'];
-    final String name = jwt.payload['name'];
-
-    return UserModel(
-      id: subject,
-      email: jwtEmail,
-      name: name,
-    );
+    return UserModel(id: userId, email: userEmail, name: userName);
   }
 
   @override
-  Future register({
+  Future<void> register({
     required String email,
     required String password,
     required String name,
   }) async {
-    final url = Uri.parse("${ServerConstants.baseUrl}/users/register");
+    final response = await _postRequest("/users/register", {
+      'email': email,
+      'name': name,
+      'password': password,
+    });
+
+    if (!_isSuccessfulResponse(response.statusCode)) {
+      throw const ServerException("Failed to register");
+    }
+  }
+
+  @override
+  Future<void> verifyEmail({required int code}) async {
+    final response = await _postRequest("/users/verify-email", {
+      'code': code,
+    });
+
+    if (!_isSuccessfulResponse(response.statusCode)) {
+      throw const ServerException("Failed to verify email");
+    }
+  }
+
+  Future<http.Response> _postRequest(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
+    final url = Uri.parse("$_baseUrl$path");
 
     final response = await http.post(
       url,
-      body: jsonEncode({
-        'email': email,
-        'name': name,
-        'password': password,
-      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
     );
 
-    if (response.statusCode != 200) {
-      throw const ServerException("Failed to register");
-    }
+    return response;
+  }
+
+  bool _isSuccessfulResponse(int statusCode) {
+    return statusCode >= 200 && statusCode < 300;
   }
 }

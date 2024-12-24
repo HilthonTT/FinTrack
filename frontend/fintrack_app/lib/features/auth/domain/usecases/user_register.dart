@@ -9,11 +9,11 @@ final class UserRegister implements UseCase<Unit, UserRegisterCommand> {
   const UserRegister(this.authRepository);
 
   @override
-  Future<Either<Failure, Unit>> handle(UserRegisterCommand params) {
+  Future<Either<Failure, Unit>> call(UserRegisterCommand command) {
     return authRepository.register(
-      email: params.email,
-      password: params.password,
-      name: params.name,
+      email: command.email,
+      password: command.password,
+      name: command.name,
     );
   }
 }

@@ -10,8 +10,11 @@ final class UserLogin implements UseCase<User, UserLoginCommand> {
   const UserLogin(this.authRepository);
 
   @override
-  Future<Either<Failure, User>> handle(UserLoginCommand params) {
-    return authRepository.login(email: params.email, password: params.password);
+  Future<Either<Failure, User>> call(UserLoginCommand command) {
+    return authRepository.login(
+      email: command.email,
+      password: command.password,
+    );
   }
 }
 

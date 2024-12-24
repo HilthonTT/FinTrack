@@ -60,4 +60,15 @@ final class AuthRepositoryImpl implements AuthRepository {
       return left(Failure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> verifyEmail({required int code}) async {
+    try {
+      await remoteDataSource.verifyEmail(code: code);
+
+      return right(unit);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

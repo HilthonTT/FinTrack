@@ -1,11 +1,14 @@
+import 'package:fintrack_app/core/common/widgets/loader.dart';
 import 'package:fintrack_app/core/common/widgets/responsive_svg.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
+import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fintrack_app/features/auth/presentation/pages/login_page.dart';
+import 'package:fintrack_app/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_field.dart';
 import 'package:fintrack_app/features/auth/presentation/widgets/auth_footer.dart';
-import 'package:fintrack_app/features/tabs/widgets/main_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class RegisterPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -26,9 +29,15 @@ final class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
 
   void _onRegister() {
-    Navigator.pushAndRemoveUntil(context, MainTab.route(), (route) => false);
+    if (_formKey.currentState!.validate()) {
+      final event = AuthRegister(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+        name: _nameController.text.trim(),
+      );
 
-    // if (_formKey.currentState!.validate()) {}
+      context.read<AuthBloc>().add(event);
+    }
   }
 
   @override
@@ -46,80 +55,97 @@ final class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: AppPalette.gray,
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Row(
-          children: [
-            // First Column: Illustration and Title
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ResponsiveSvg(assetName: 'assets/images/investing.svg'),
-                  SizedBox(height: 20),
-                  Text(
-                    "Register to Fintrack",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppPalette.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Create an account to start managing your finances.",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            // Second Column: Login Form
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthRegistered) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                OtpVerificationPage.route(),
+                (route) => false,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Loader();
+            }
+
+            return Row(
+              children: [
+                // First Column: Illustration and Title
+                Expanded(
+                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      AuthField(
-                        hintText: "Name",
-                        controller: _nameController,
-                        icon: Icons.person,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ResponsiveSvg(assetName: 'assets/images/investing.svg'),
+                      SizedBox(height: 20),
+                      Text(
+                        "Register to Fintrack",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: AppPalette.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      AuthField(
-                        hintText: "Email Address",
-                        controller: _emailController,
-                        icon: Icons.email,
-                        isEmail: true,
+                      SizedBox(height: 10),
+                      Text(
+                        "Create an account to start managing your finances.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      AuthField(
-                        hintText: "Password",
-                        controller: _passwordController,
-                        icon: Icons.password,
-                        isPassword: true,
-                      ),
-                      const SizedBox(height: 10),
-                      AuthButton(label: "Register", onPressed: _onRegister),
-                      const SizedBox(height: 15),
-                      AuthFooter(
-                        onPressed: () {
-                          Navigator.push(context, LoginPage.route());
-                        },
-                        label: "Already have an account?",
-                      )
                     ],
                   ),
                 ),
-              ),
-            ),
-          ],
+                // Second Column: Login Form
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          AuthField(
+                            hintText: "Name",
+                            controller: _nameController,
+                            icon: Icons.person,
+                          ),
+                          AuthField(
+                            hintText: "Email Address",
+                            controller: _emailController,
+                            icon: Icons.email,
+                            isEmail: true,
+                          ),
+                          AuthField(
+                            hintText: "Password",
+                            controller: _passwordController,
+                            icon: Icons.password,
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 10),
+                          AuthButton(label: "Register", onPressed: _onRegister),
+                          const SizedBox(height: 15),
+                          AuthFooter(
+                            onPressed: () {
+                              Navigator.push(context, LoginPage.route());
+                            },
+                            label: "Already have an account?",
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
