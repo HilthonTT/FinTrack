@@ -21,10 +21,10 @@ internal sealed class CreateSubscriptionCommandHandler(
             return Result.Failure<Guid>(UserErrors.Unauthorized);
         }
 
-        Currency? currency = Currency.FromCode(request.CurrencyCode);
+        Currency? currency = Currency.FromCode(request.Currency);
         if (currency is null)
         {
-            return Result.Failure<Guid>(CurrencyErrors.NotFound(request.CurrencyCode));
+            return Result.Failure<Guid>(CurrencyErrors.NotFound(request.Currency));
         }
 
         var amount = new Money(request.Amount, currency);

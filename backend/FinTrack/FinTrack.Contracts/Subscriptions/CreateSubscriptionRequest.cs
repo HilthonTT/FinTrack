@@ -7,7 +7,7 @@ public sealed record CreateSubscriptionRequest(
     Guid UserId,
     string Name,
     decimal Amount,
-    string CurrencyCode,
+    string Currency,
     Frequency Frequency,
     Company Company,
     DateOnly StartDate,

@@ -2,7 +2,7 @@ import 'package:fintrack_app/core/common/widgets/loader.dart';
 import 'package:fintrack_app/core/common/widgets/responsive_svg.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:fintrack_app/features/tabs/widgets/main_tab.dart';
+import 'package:fintrack_app/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +36,7 @@ final class _OtpVerificationPageState extends State<OtpVerificationPage> {
           if (state is AuthEmailVerified) {
             Navigator.pushAndRemoveUntil(
               context,
-              MainTab.route(),
+              LoginPage.route(),
               (route) => false,
             );
           }

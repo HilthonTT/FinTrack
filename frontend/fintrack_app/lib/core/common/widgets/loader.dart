@@ -1,3 +1,4 @@
+import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 final class Loader extends StatelessWidget {
@@ -5,8 +6,10 @@ final class Loader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
+    return Center(
+      child: CircularProgressIndicator(
+        color: AppPalette.secondary,
+      ),
     );
   }
 }

@@ -21,7 +21,7 @@ internal sealed class CreateSubscriptionCommandValidator : AbstractValidator<Cre
             .NotEmpty()
             .WithError(SubscriptionValidationErrors.AmountEmpty);
 
-        RuleFor(x => x.CurrencyCode)
+        RuleFor(x => x.Currency)
             .NotEmpty()
             .WithError(SubscriptionValidationErrors.CurrencyCodeEmpty);
 

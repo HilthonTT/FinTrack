@@ -1,6 +1,6 @@
 String? getImagePath(int company) {
   switch (company) {
-    case 0: // Netflix
+    case 0: // Google logo
       return 'assets/images/google_logo.png';
     case 1: // Netflix
       return 'assets/images/netflix_logo.png';

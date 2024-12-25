@@ -1,4 +1,5 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/pages/create_subscription_page.dart';
 import 'package:fintrack_app/features/tabs/enums/main_tab_page.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,12 @@ final class BottomBar extends StatelessWidget {
                               ),
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CreateSubscriptionPage.route(),
+                                );
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   boxShadow: [

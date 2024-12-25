@@ -106,7 +106,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return response;
     } on SocketException catch (_) {
       throw ServerException(
-          "No internet connection. Please check your network.");
+          "Failed to connect to the server. Please try again.");
     } on TimeoutException catch (_) {
       throw ServerException("Request timeout. Please try again later.");
     } on http.ClientException catch (_) {

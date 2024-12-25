@@ -21,7 +21,7 @@ internal sealed class Create : IEndpoint
                 request.UserId,
                 request.Name,
                 request.Amount,
-                request.CurrencyCode,
+                request.Currency,
                 request.Frequency,
                 request.Company,
                 request.StartDate,

@@ -1,4 +1,5 @@
 import 'package:fintrack_app/core/common/widgets/custom_arc_180_painter.dart';
+import 'package:fintrack_app/core/common/widgets/settings_button.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
@@ -38,15 +39,7 @@ final class BudgetHeaderBackground extends StatelessWidget {
           child: Row(
             children: [
               const Spacer(),
-              IconButton(
-                onPressed: () {},
-                icon: Image.asset(
-                  "assets/images/settings.png",
-                  width: 25,
-                  height: 25,
-                  color: AppPalette.gray30,
-                ),
-              ),
+              SettingsButton(),
             ],
           ),
         ),

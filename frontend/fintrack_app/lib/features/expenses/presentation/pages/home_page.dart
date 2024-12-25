@@ -3,7 +3,7 @@ import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_list.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_subscription_switcher.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_header_section.dart';
-import 'package:fintrack_app/features/expenses/presentation/widgets/subscriptions_list.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/widgets/subscriptions_list.dart';
 import 'package:flutter/material.dart';
 
 final class HomePage extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:fintrack_app/core/common/utils/image_path.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
-class SubscriptionsList extends StatelessWidget {
+final class SubscriptionsList extends StatelessWidget {
   SubscriptionsList({super.key});
 
   final List<Map<String, dynamic>> subscriptions = [
