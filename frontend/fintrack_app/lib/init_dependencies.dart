@@ -2,6 +2,7 @@ import 'package:fintrack_app/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:fintrack_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:fintrack_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:fintrack_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:fintrack_app/features/auth/domain/usecases/current_user.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_email_verify.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_login.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_register.dart';
@@ -32,6 +33,7 @@ void _initAuth() {
   serviceLocator.registerFactory(() => UserLogin(serviceLocator()));
   serviceLocator.registerFactory(() => UserRegister(serviceLocator()));
   serviceLocator.registerFactory(() => UserEmailVerify(serviceLocator()));
+  serviceLocator.registerFactory(() => CurrentUser(serviceLocator()));
 
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
@@ -39,6 +41,7 @@ void _initAuth() {
       userLogin: serviceLocator(),
       appUserCubit: serviceLocator(),
       userEmailVerify: serviceLocator(),
+      currentUser: serviceLocator(),
     ),
   );
 }

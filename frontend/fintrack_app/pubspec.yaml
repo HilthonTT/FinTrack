@@ -46,6 +46,7 @@ dependencies:
   flutter_otp_text_field: ^1.4.0+2
   fluttertoast: ^8.2.10
   carousel_slider: ^5.0.0
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:

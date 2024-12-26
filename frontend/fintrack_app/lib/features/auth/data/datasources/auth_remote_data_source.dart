@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:fintrack_app/core/common/utils/error_parser.dart';
+import 'package:fintrack_app/core/common/utils/http_helper.dart';
+import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
 import 'package:fintrack_app/core/common/utils/status_codes.dart';
-import 'package:fintrack_app/core/constants/exceptions.dart';
-import 'package:fintrack_app/core/constants/server_constants.dart';
 import 'package:fintrack_app/features/auth/data/models/user_model.dart';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class AuthRemoteDataSource {
   Future<void> register({
@@ -28,11 +25,13 @@ abstract class AuthRemoteDataSource {
 }
 
 final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final String _baseUrl = ServerConstants.baseUrl;
+  final _secureStorage = FlutterSecureStorage();
 
   @override
-  Future<UserModel?> getCurrentUserData() {
-    throw UnimplementedError();
+  Future<UserModel?> getCurrentUserData() async {
+    final user = await getUserInfo(_secureStorage);
+
+    return user;
   }
 
   @override
@@ -40,7 +39,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String email,
     required String password,
   }) async {
-    final response = await _postRequest("/users/login", {
+    final response = await postRequest("/users/login", {
       'email': email,
       'password': password,
     });
@@ -49,15 +48,9 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw parseError(response);
     }
 
-    final data = jsonDecode(response.body);
-    final String accessToken = data['accessToken'];
+    final user = await decodeJwtToken(_secureStorage, response.body);
 
-    final JWT jwt = JWT.decode(accessToken);
-    final String userId = jwt.payload['sub'];
-    final String userEmail = jwt.payload['email'];
-    final String userName = jwt.payload['name'];
-
-    return UserModel(id: userId, email: userEmail, name: userName);
+    return user;
   }
 
   @override
@@ -66,7 +59,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
     required String name,
   }) async {
-    final response = await _postRequest("/users/register", {
+    final response = await postRequest("/users/register", {
       'email': email,
       'name': name,
       'password': password,
@@ -79,41 +72,12 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> verifyEmail({required int code}) async {
-    final response = await _postRequest("/users/verify-email", {
+    final response = await postRequest("/users/verify-email", {
       'code': code,
     });
 
     if (!isSuccessfulResponse(response.statusCode)) {
       throw parseError(response);
-    }
-  }
-
-  Future<http.Response> _postRequest(
-    String path,
-    Map<String, dynamic> body,
-  ) async {
-    final url = Uri.parse("$_baseUrl$path");
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(body),
-      );
-
-      return response;
-    } on SocketException catch (_) {
-      throw ServerException(
-          "Failed to connect to the server. Please try again.");
-    } on TimeoutException catch (_) {
-      throw ServerException("Request timeout. Please try again later.");
-    } on http.ClientException catch (_) {
-      throw ServerException(
-          "Failed to connect to the server. Please try again.");
-    } catch (e) {
-      throw ServerException("An unexpected error occurred: ${e.toString()}");
     }
   }
 }

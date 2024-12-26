@@ -29,3 +29,7 @@ final class AuthVerifyEmail extends AuthEvent {
 
   const AuthVerifyEmail({required this.code});
 }
+
+final class AuthIsUserLoggedIn extends AuthEvent {
+  const AuthIsUserLoggedIn();
+}

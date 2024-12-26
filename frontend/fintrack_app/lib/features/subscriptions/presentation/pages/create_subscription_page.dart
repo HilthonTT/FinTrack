@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fintrack_app/core/common/widgets/primary_button.dart';
 import 'package:fintrack_app/core/constants/companies.dart';
-import 'package:fintrack_app/core/constants/currencies.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/image_button.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/round_text_field.dart';
@@ -22,7 +21,6 @@ final class _CreateSubscriptionPageState extends State<CreateSubscriptionPage> {
   final _nameController = TextEditingController();
 
   double _amount = 0.99;
-  String _currency = currencies.first;
 
   @override
   Widget build(BuildContext context) {

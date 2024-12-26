@@ -1,6 +1,8 @@
 import 'package:fintrack_app/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:fintrack_app/core/entities/user.dart';
 import 'package:fintrack_app/core/errors/failure.dart';
+import 'package:fintrack_app/core/usecase/usecase.dart';
+import 'package:fintrack_app/features/auth/domain/usecases/current_user.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_email_verify.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_login.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_register.dart';
@@ -16,18 +18,21 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserRegister userRegister;
   final UserLogin userLogin;
   final UserEmailVerify userEmailVerify;
+  final CurrentUser currentUser;
 
   AuthBloc({
     required this.userRegister,
     required this.userLogin,
     required this.appUserCubit,
     required this.userEmailVerify,
+    required this.currentUser,
   }) : super(const AuthInitial()) {
     on<AuthEvent>((event, emit) => emit(AuthLoading()));
 
     on<AuthRegister>(_onAuthRegister);
     on<AuthLogin>(_onAuthLogin);
     on<AuthVerifyEmail>(_onAuthEmailVerify);
+    on<AuthIsUserLoggedIn>(_isUserLoggedIn);
   }
 
   Future<void> _onAuthRegister(
@@ -83,6 +88,22 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit,
       successState: const AuthEmailVerified(),
       failureAction: (message) => AuthFailure(message),
+    );
+  }
+
+  Future<void> _isUserLoggedIn(
+    AuthIsUserLoggedIn event,
+    Emitter<AuthState> emit,
+  ) async {
+    final response = await currentUser(NoParams());
+
+    response.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (user) {
+        appUserCubit.updateUser(user);
+
+        emit(AuthSuccess(user));
+      },
     );
   }
 
