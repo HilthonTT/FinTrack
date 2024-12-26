@@ -2,9 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
 import 'package:fintrack_app/core/constants/server_constants.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+
+final _secureStorage = FlutterSecureStorage();
 
 Future<http.Response> postRequest(
   String path,
@@ -13,10 +17,13 @@ Future<http.Response> postRequest(
   final url = Uri.parse("${ServerConstants.baseUrl}$path");
 
   try {
+    final jwtToken = await getJwtToken(_secureStorage);
+
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
       },
       body: jsonEncode(body),
     );
@@ -37,10 +44,13 @@ Future<http.Response> getRequest(String path) async {
   final url = Uri.parse("${ServerConstants.baseUrl}$path");
 
   try {
+    final jwtToken = await getJwtToken(_secureStorage);
+
     final response = await http.get(
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
       },
     );
 
@@ -60,10 +70,13 @@ Future<http.Response> deleteRequest(String path) async {
   final url = Uri.parse("${ServerConstants.baseUrl}$path");
 
   try {
+    final jwtToken = await getJwtToken(_secureStorage);
+
     final response = await http.delete(
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
       },
     );
 
@@ -86,10 +99,13 @@ Future<http.Response> patchRequest(
   final url = Uri.parse("${ServerConstants.baseUrl}$path");
 
   try {
+    final jwtToken = await getJwtToken(_secureStorage);
+
     final response = await http.patch(
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
       },
       body: jsonEncode(body),
     );

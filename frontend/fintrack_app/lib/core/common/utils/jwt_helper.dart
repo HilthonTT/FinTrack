@@ -4,13 +4,20 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fintrack_app/features/auth/data/models/user_model.dart';
 
+const accessTokenKey = "accessToken";
+const refreshTokenKey = "refreshToken";
+
 Future<void> saveTokens(
   FlutterSecureStorage secureStorage,
   String accessToken,
   String refreshToken,
 ) async {
-  await secureStorage.write(key: 'accessToken', value: accessToken);
-  await secureStorage.write(key: 'refreshToken', value: refreshToken);
+  await secureStorage.write(key: accessTokenKey, value: accessToken);
+  await secureStorage.write(key: refreshTokenKey, value: refreshToken);
+}
+
+Future<String?> getJwtToken(FlutterSecureStorage secureStorage) async {
+  return await secureStorage.read(key: accessTokenKey);
 }
 
 Future<UserModel> decodeJwtToken(
@@ -36,7 +43,7 @@ Future<UserModel> decodeJwtToken(
 }
 
 Future<bool> isStillLoggedIn(FlutterSecureStorage secureStorage) async {
-  final accessToken = await secureStorage.read(key: 'accessToken');
+  final accessToken = await secureStorage.read(key: accessTokenKey);
 
   if (accessToken == null) {
     return false;
@@ -65,7 +72,7 @@ Future<UserModel?> getUserInfo(FlutterSecureStorage secureStorage) async {
     return null;
   }
 
-  final accessToken = await secureStorage.read(key: 'accessToken');
+  final accessToken = await secureStorage.read(key: accessTokenKey);
   if (accessToken == null) {
     return null;
   }

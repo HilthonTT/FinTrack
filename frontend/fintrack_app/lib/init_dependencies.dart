@@ -7,6 +7,9 @@ import 'package:fintrack_app/features/auth/domain/usecases/user_email_verify.dar
 import 'package:fintrack_app/features/auth/domain/usecases/user_login.dart';
 import 'package:fintrack_app/features/auth/domain/usecases/user_register.dart';
 import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:fintrack_app/features/expenses/data/datasources/expense_remote_data_source.dart';
+import 'package:fintrack_app/features/expenses/data/repositories/expense_repository_impl.dart';
+import 'package:fintrack_app/features/expenses/domain/repositories/expense_repository.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt serviceLocator = GetIt.instance;
@@ -15,6 +18,7 @@ void initDependencies() {
   _initServices();
 
   _initAuth();
+  _initExpenses();
 }
 
 void _initServices() {
@@ -43,5 +47,15 @@ void _initAuth() {
       userEmailVerify: serviceLocator(),
       currentUser: serviceLocator(),
     ),
+  );
+}
+
+void _initExpenses() {
+  serviceLocator.registerFactory<ExpenseRemoteDataSource>(
+    () => ExpenseRemoteDataSourceImpl(),
+  );
+
+  serviceLocator.registerFactory<ExpenseRepository>(
+    () => ExpenseRepositoryImpl(serviceLocator()),
   );
 }
