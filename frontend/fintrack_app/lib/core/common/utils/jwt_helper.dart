@@ -38,8 +38,6 @@ Future<UserModel> decodeJwtToken(
 Future<bool> isStillLoggedIn(FlutterSecureStorage secureStorage) async {
   final accessToken = await secureStorage.read(key: 'accessToken');
 
-  print("Read ");
-
   if (accessToken == null) {
     return false;
   }
@@ -61,11 +59,7 @@ Future<bool> isStillLoggedIn(FlutterSecureStorage secureStorage) async {
 }
 
 Future<UserModel?> getUserInfo(FlutterSecureStorage secureStorage) async {
-  print("Hit");
-
   final isLoggedIn = await isStillLoggedIn(secureStorage);
-
-  print("Logged");
 
   if (!isLoggedIn) {
     return null;

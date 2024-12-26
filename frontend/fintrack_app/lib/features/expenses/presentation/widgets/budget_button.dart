@@ -1,7 +1,7 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
-class BudgetButton extends StatelessWidget {
+final class BudgetButton extends StatelessWidget {
   const BudgetButton({super.key});
 
   @override
@@ -12,9 +12,9 @@ class BudgetButton extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(
-            color: AppPalette.border.withOpacity(0.15),
+            color: AppPalette.border.withValues(alpha: .15),
           ),
-          color: AppPalette.gray60.withOpacity(0.3),
+          color: AppPalette.gray60.withValues(alpha: .3),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(

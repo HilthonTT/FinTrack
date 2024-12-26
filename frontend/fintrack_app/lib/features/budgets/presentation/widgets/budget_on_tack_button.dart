@@ -16,7 +16,7 @@ final class BudgetOnTackButton extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             border: Border.all(
-              color: AppPalette.border.withOpacity(0.1),
+              color: AppPalette.border.withValues(alpha: .1),
             ),
             borderRadius: BorderRadius.circular(16),
           ),

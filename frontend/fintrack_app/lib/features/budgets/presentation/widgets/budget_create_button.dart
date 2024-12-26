@@ -17,7 +17,7 @@ final class BudgetCreateButton extends StatelessWidget {
           strokeWidth: 1,
           borderType: BorderType.RRect,
           radius: const Radius.circular(16),
-          color: AppPalette.border.withOpacity(0.1),
+          color: AppPalette.border.withValues(alpha: .1),
           child: Container(
             height: 64,
             padding: const EdgeInsets.all(10),

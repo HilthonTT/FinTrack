@@ -30,4 +30,5 @@ final class AppPalette {
   static Color get secondaryText => gray60;
 
   static Color get white => Colors.white;
+  static Color get transparent => Colors.transparent;
 }

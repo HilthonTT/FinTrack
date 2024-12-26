@@ -56,8 +56,9 @@ final class AuthField extends StatelessWidget {
             borderSide: BorderSide(color: AppPalette.secondary),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide:
-                BorderSide(color: AppPalette.secondary.withOpacity(0.7)),
+            borderSide: BorderSide(
+              color: AppPalette.secondary.withValues(alpha: .7),
+            ),
           ),
         ),
         validator: handleValidator,

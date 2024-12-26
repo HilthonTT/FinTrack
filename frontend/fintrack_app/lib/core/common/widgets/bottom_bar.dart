@@ -74,7 +74,7 @@ final class BottomBar extends StatelessWidget {
                                   boxShadow: [
                                     BoxShadow(
                                       color: AppPalette.secondary
-                                          .withOpacity(0.25),
+                                          .withValues(alpha: .25),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
                                     )

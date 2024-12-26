@@ -125,9 +125,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppPalette.border.withOpacity(0.1),
+                              color: AppPalette.border.withValues(alpha: .1),
                             ),
-                            color: AppPalette.gray60.withOpacity(0.2),
+                            color: AppPalette.gray60.withValues(alpha: .2),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
@@ -157,9 +157,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppPalette.border.withOpacity(0.1),
+                              color: AppPalette.border.withValues(alpha: .1),
                             ),
-                            color: AppPalette.gray60.withOpacity(0.2),
+                            color: AppPalette.gray60.withValues(alpha: .2),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
@@ -193,9 +193,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppPalette.border.withOpacity(0.1),
+                              color: AppPalette.border.withValues(alpha: .1),
                             ),
-                            color: AppPalette.gray60.withOpacity(0.2),
+                            color: AppPalette.gray60.withValues(alpha: .2),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
@@ -244,9 +244,9 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           border: Border.all(
-            color: AppPalette.border.withOpacity(0.15),
+            color: AppPalette.border.withValues(alpha: .15),
           ),
-          color: AppPalette.gray60.withOpacity(0.2),
+          color: AppPalette.gray60.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Text(

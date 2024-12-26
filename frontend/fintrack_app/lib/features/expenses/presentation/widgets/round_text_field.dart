@@ -41,7 +41,7 @@ final class RoundTextField extends StatelessWidget {
           height: 48,
           width: double.maxFinite,
           decoration: BoxDecoration(
-            color: AppPalette.gray60.withOpacity(0.05),
+            color: AppPalette.gray60.withValues(alpha: .05),
             border: Border.all(color: AppPalette.gray70),
             borderRadius: BorderRadius.circular(15),
           ),

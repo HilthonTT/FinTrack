@@ -33,7 +33,7 @@ final class _CreateSubscriptionPageState extends State<CreateSubscriptionPage> {
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
-                color: AppPalette.gray70.withOpacity(0.5),
+                color: AppPalette.gray70.withValues(alpha: .5),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(25),
                   bottomRight: Radius.circular(25),
@@ -224,7 +224,7 @@ final class _CreateSubscriptionPageState extends State<CreateSubscriptionPage> {
       width: 200,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: AppPalette.gray70.withOpacity(0.5),
+        color: AppPalette.gray70.withValues(alpha: .5),
         borderRadius: BorderRadius.circular(30),
       ),
       alignment: Alignment.center,

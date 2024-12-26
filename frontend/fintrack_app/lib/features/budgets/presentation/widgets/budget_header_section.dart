@@ -22,7 +22,7 @@ final class BudgetHeaderSection extends StatelessWidget {
       height: 500,
       width: containerWidth,
       decoration: BoxDecoration(
-        color: AppPalette.gray70.withOpacity(0.5),
+        color: AppPalette.gray70.withValues(alpha: .5),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(25),
           bottomRight: Radius.circular(25),

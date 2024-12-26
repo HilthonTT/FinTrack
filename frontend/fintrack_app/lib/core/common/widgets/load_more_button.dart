@@ -37,9 +37,9 @@ final class LoadMoreButton extends StatelessWidget {
     if (hasMore) {
       return BoxDecoration(
         border: Border.all(
-          color: AppPalette.border.withOpacity(0.15),
+          color: AppPalette.border.withValues(alpha: .15),
         ),
-        color: AppPalette.gray60.withOpacity(0.2),
+        color: AppPalette.gray60.withValues(alpha: .2),
         borderRadius: BorderRadius.circular(12),
       );
     }

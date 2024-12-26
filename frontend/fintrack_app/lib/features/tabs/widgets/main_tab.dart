@@ -2,6 +2,7 @@ import 'package:fintrack_app/core/common/widgets/bottom_bar.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/budgets/presentation/pages/budget_page.dart';
 import 'package:fintrack_app/features/expenses/presentation/pages/home_page.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/pages/calendar_page.dart';
 import 'package:fintrack_app/features/tabs/enums/main_tab_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,11 +32,9 @@ final class _MainTabState extends State<MainTab> {
         case MainTabPage.budget:
           currentPage = const BudgetPage();
         case MainTabPage.calendar:
-          currentPage = const HomePage();
+          currentPage = const CalendarPage();
         case MainTabPage.cards:
           currentPage = const HomePage();
-        default:
-          break;
       }
     });
   }
@@ -62,8 +61,12 @@ final class _MainTabState extends State<MainTab> {
             onBudgetPressed: () {
               onSelect(MainTabPage.budget);
             },
-            onCalendarPressed: () {},
-            onCardPressed: () {},
+            onCalendarPressed: () {
+              onSelect(MainTabPage.calendar);
+            },
+            onCardPressed: () {
+              onSelect(MainTabPage.cards);
+            },
           ),
         ],
       ),

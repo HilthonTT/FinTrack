@@ -40,7 +40,7 @@ final class CustomArc180Painter extends CustomPainter {
     );
 
     final backgroundPaint = Paint();
-    backgroundPaint.color = AppPalette.gray60.withOpacity(0.5);
+    backgroundPaint.color = AppPalette.gray60.withValues(alpha: .5);
     backgroundPaint.style = PaintingStyle.stroke;
     backgroundPaint.strokeWidth = bgWidth;
     backgroundPaint.strokeCap = StrokeCap.round;
@@ -64,7 +64,7 @@ final class CustomArc180Painter extends CustomPainter {
       activePaint.strokeCap = StrokeCap.round;
 
       final shadowPaint = Paint()
-        ..color = arc.color.withOpacity(0.3)
+        ..color = arc.color.withValues(alpha: 0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = width + blurWidth
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);

@@ -25,7 +25,7 @@ final class AuthButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: AppPalette.secondary.withOpacity(0.5),
+              color: AppPalette.secondary.withValues(alpha: .5),
               blurRadius: 10,
               offset: const Offset(0, 4),
             )

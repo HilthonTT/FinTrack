@@ -34,13 +34,13 @@ final class CustomArcPainter extends CustomPainter {
     activePaint.strokeCap = StrokeCap.round;
 
     Paint backgroundPaint = Paint();
-    backgroundPaint.color = AppPalette.gray60.withOpacity(0.5);
+    backgroundPaint.color = AppPalette.gray60.withValues(alpha: .5);
     backgroundPaint.style = PaintingStyle.stroke;
     backgroundPaint.strokeWidth = width;
     backgroundPaint.strokeCap = StrokeCap.round;
 
     Paint shadowPaint = Paint()
-      ..color = AppPalette.secondary.withOpacity(0.3)
+      ..color = AppPalette.secondary.withValues(alpha: .3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = width + blurWidth
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
