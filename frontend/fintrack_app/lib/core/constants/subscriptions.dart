@@ -1,3 +1,5 @@
+import 'package:fintrack_app/core/enums/company.dart';
+
 final List<Map<String, dynamic>> subscriptions = [
   {
     "id": "1",
@@ -6,7 +8,7 @@ final List<Map<String, dynamic>> subscriptions = [
     "amount": "15.99",
     "currency": "EUR",
     "frequency": 2, // Monthly (based on Frequency enum)
-    "company": 1, // Netflix (based on Company enum)
+    "company": Company.netflix, // Netflix (based on Company enum)
     "periodStart": "2024-01-01", // Example start date
     "periodEnd": "2024-12-31", // Example end date
     "nextDueDate": "2025-01-01", // Next due date
@@ -21,7 +23,7 @@ final List<Map<String, dynamic>> subscriptions = [
     "amount": "9.99",
     "currency": "EUR",
     "frequency": 2, // Monthly (based on Frequency enum)
-    "company": 3, // Spotify (based on Company enum)
+    "company": Company.spotify, // Spotify (based on Company enum)
     "periodStart": "2024-01-01", // Example start date
     "periodEnd": "2024-12-31", // Example end date
     "nextDueDate": "2025-01-01", // Next due date
@@ -36,7 +38,7 @@ final List<Map<String, dynamic>> subscriptions = [
     "amount": "12.99",
     "currency": "EUR",
     "frequency": 3, // Yearly (based on Frequency enum)
-    "company": 2, // AmazonPrime (based on Company enum)
+    "company": Company.amazonPrime, // AmazonPrime (based on Company enum)
     "periodStart": "2024-01-01", // Example start date
     "periodEnd": "2025-01-01", // Example end date
     "nextDueDate": "2025-01-01", // Next due date

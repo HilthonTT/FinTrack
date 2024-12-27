@@ -29,13 +29,15 @@ internal sealed class CreateExpenseCommandHandler(
 
         var money = new Money(request.Amount, currency);
 
+        DateTime dateUtc = request.Date.ToUniversalTime();
+
         Result<Expense> expenseResult = Expense.Create(
             request.UserId, 
             request.Name, 
             money,
             request.Category,
-            request.Company, 
-            request.Date);
+            request.Company,
+            dateUtc);
 
         if (expenseResult.IsFailure)
         {

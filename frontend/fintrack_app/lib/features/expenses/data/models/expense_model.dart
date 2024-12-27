@@ -42,7 +42,9 @@ final class ExpenseModel extends Expense {
       category: ExpenseCategory.values[map['category']],
       date: DateTime.parse(map['date']),
       createdOnUtc: DateTime.parse(map['createdOnUtc']),
-      modifiedOnUtc: DateTime.parse(map['modifiedOnUtc']),
+      modifiedOnUtc: map['modifiedOnUtc'] != null
+          ? DateTime.parse(map['modifiedOnUtc'])
+          : null,
     );
   }
 

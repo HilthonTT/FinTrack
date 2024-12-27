@@ -47,7 +47,10 @@ final class RoundTextField extends StatelessWidget {
           ),
           child: TextField(
             cursorColor: AppPalette.secondary,
-            style: TextStyle(color: AppPalette.white),
+            style: TextStyle(
+              color: AppPalette.white,
+              fontWeight: FontWeight.w500,
+            ),
             cursorErrorColor: AppPalette.secondary,
             controller: controller,
             decoration: const InputDecoration(

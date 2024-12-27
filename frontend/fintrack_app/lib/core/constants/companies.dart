@@ -1,59 +1,60 @@
 import 'package:fintrack_app/core/common/utils/image_path.dart';
+import 'package:fintrack_app/core/enums/company.dart';
 
 final List<Map<String, dynamic>> companies = [
   {
     "id": 1,
     "name": "Google",
-    "icon": getImagePath(0),
+    "icon": getImagePath(Company.google),
   },
   {
     "id": 2,
     "name": "Netflix",
-    "icon": getImagePath(1),
+    "icon": getImagePath(Company.netflix),
   },
   {
     "id": 3,
     "name": "Amazon Prime",
-    "icon": getImagePath(2),
+    "icon": getImagePath(Company.amazonPrime),
   },
   {
     "id": 4,
     "name": "Spotify",
-    "icon": getImagePath(3),
+    "icon": getImagePath(Company.spotify),
   },
   {
     "id": 5,
     "name": "Disney+",
-    "icon": getImagePath(4),
+    "icon": getImagePath(Company.disneyPlus),
   },
   {
     "id": 6,
     "name": "Apple",
-    "icon": getImagePath(5),
+    "icon": getImagePath(Company.apple),
   },
   {
     "id": 7,
     "name": "Hulu",
-    "icon": getImagePath(6),
+    "icon": getImagePath(Company.hulu),
   },
   {
     "id": 8,
     "name": "YouTube Premium",
-    "icon": getImagePath(7),
+    "icon": getImagePath(Company.youTubePremium),
   },
   {
     "id": 9,
     "name": "Microsoft",
-    "icon": getImagePath(8),
+    "icon": getImagePath(Company.microsoft),
   },
   {
     "id": 10,
     "name": "Dropbox",
-    "icon": getImagePath(9),
+    "icon": getImagePath(Company.dropbox),
   },
   {
     "id": 11,
     "name": "None",
-    "icon": getImagePath(10),
+    "icon": getImagePath(Company.none),
   }
 ];

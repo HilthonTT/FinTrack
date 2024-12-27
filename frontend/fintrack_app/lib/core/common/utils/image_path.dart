@@ -1,27 +1,28 @@
-String? getImagePath(int company) {
+import 'package:fintrack_app/core/enums/company.dart';
+
+String? getImagePath(Company company) {
   switch (company) {
-    case 0: // Google logo
+    case Company.google: // Google logo
       return 'assets/images/google_logo.png';
-    case 1: // Netflix
+    case Company.netflix: // Netflix
       return 'assets/images/netflix_logo.png';
-    case 2: // Amazon Prime
+    case Company.amazonPrime: // Amazon Prime
       return 'assets/images/amazon_logo.png';
-    case 3: // Spotify
+    case Company.spotify: // Spotify
       return 'assets/images/spotify_logo.png';
-    case 4: // Disney Plus
+    case Company.disneyPlus: // Disney Plus
       return 'assets/images/disney_logo.png';
-    case 5: // Apple
+    case Company.apple: // Apple
       return 'assets/images/apple_logo.png';
-    case 6: // Hulu
+    case Company.hulu: // Hulu
       return 'assets/images/hulu_logo.png';
-    case 7: // YouTube Premium
+    case Company.youTubePremium: // YouTube Premium
       return 'assets/images/youtube_logo.png';
-    case 8: // Microsoft
+    case Company.microsoft: // Microsoft
       return 'assets/images/microsoft_logo.png';
-    case 9: // Dropbox
+    case Company.dropbox: // Dropbox
       return 'assets/images/dropbox_logo.png';
-    case 10:
-    default:
+    case Company.none:
       return null;
   }
 }

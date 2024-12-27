@@ -3,7 +3,7 @@ import 'package:fintrack_app/core/common/widgets/primary_button.dart';
 import 'package:fintrack_app/core/constants/companies.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/image_button.dart';
-import 'package:fintrack_app/features/expenses/presentation/widgets/round_text_field.dart';
+import 'package:fintrack_app/core/common/widgets/round_text_field.dart';
 import 'package:flutter/material.dart';
 
 final class CreateSubscriptionPage extends StatefulWidget {
