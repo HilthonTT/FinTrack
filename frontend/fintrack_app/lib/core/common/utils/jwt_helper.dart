@@ -7,28 +7,23 @@ import 'package:fintrack_app/features/auth/data/models/user_model.dart';
 const accessTokenKey = "accessToken";
 const refreshTokenKey = "refreshToken";
 
-Future<void> saveTokens(
-  FlutterSecureStorage secureStorage,
-  String accessToken,
-  String refreshToken,
-) async {
-  await secureStorage.write(key: accessTokenKey, value: accessToken);
-  await secureStorage.write(key: refreshTokenKey, value: refreshToken);
+final _secureStorage = FlutterSecureStorage();
+
+Future<void> saveTokens(String accessToken, String refreshToken) async {
+  await _secureStorage.write(key: accessTokenKey, value: accessToken);
+  await _secureStorage.write(key: refreshTokenKey, value: refreshToken);
 }
 
 Future<String?> getJwtToken(FlutterSecureStorage secureStorage) async {
   return await secureStorage.read(key: accessTokenKey);
 }
 
-Future<UserModel> decodeJwtToken(
-  FlutterSecureStorage secureStorage,
-  String body,
-) async {
+Future<UserModel> decodeJwtToken(String body) async {
   final data = jsonDecode(body);
   final String accessToken = data['accessToken'];
   final String refreshToken = data['refreshToken'];
 
-  await saveTokens(secureStorage, accessToken, refreshToken);
+  await saveTokens(accessToken, refreshToken);
 
   final JWT jwt = JWT.decode(accessToken);
   final String userId = jwt.payload['sub'];
@@ -42,8 +37,8 @@ Future<UserModel> decodeJwtToken(
   );
 }
 
-Future<bool> isStillLoggedIn(FlutterSecureStorage secureStorage) async {
-  final accessToken = await secureStorage.read(key: accessTokenKey);
+Future<bool> isStillLoggedIn() async {
+  final accessToken = await _secureStorage.read(key: accessTokenKey);
 
   if (accessToken == null) {
     return false;
@@ -65,14 +60,14 @@ Future<bool> isStillLoggedIn(FlutterSecureStorage secureStorage) async {
   }
 }
 
-Future<UserModel?> getUserInfo(FlutterSecureStorage secureStorage) async {
-  final isLoggedIn = await isStillLoggedIn(secureStorage);
+Future<UserModel?> getUserInfo() async {
+  final isLoggedIn = await isStillLoggedIn();
 
   if (!isLoggedIn) {
     return null;
   }
 
-  final accessToken = await secureStorage.read(key: accessTokenKey);
+  final accessToken = await _secureStorage.read(key: accessTokenKey);
   if (accessToken == null) {
     return null;
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 final class AuthField extends StatelessWidget {
   static const emailRegex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+  static const int minimumPasswordLength = 6;
 
   final String hintText;
   final TextEditingController controller;
@@ -19,17 +20,49 @@ final class AuthField extends StatelessWidget {
     this.isEmail = false,
   });
 
-  String? handleValidator(String? value) {
+  String? _handleValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "$hintText is required!";
     }
 
-    if (isEmail && !RegExp(emailRegex).hasMatch(value)) {
-      return "Please enter a valid email address.";
+    if (isEmail) {
+      return _validateEmail(value);
     }
 
-    if (isPassword && value.length < 6) {
-      return "Password must be at least 6 characters long.";
+    if (isPassword) {
+      return _validatePassword(value);
+    }
+
+    return null;
+  }
+
+  String? _validateEmail(String value) {
+    if (!RegExp(emailRegex).hasMatch(value)) {
+      return "Please enter a valid email address";
+    }
+
+    return null;
+  }
+
+  String? _validatePassword(String value) {
+    if (value.length < minimumPasswordLength) {
+      return "Password must be at least $minimumPasswordLength characters long.";
+    }
+
+    if (!value.contains(RegExp(r'[a-z]'))) {
+      return "Password must contain at least one lowercase letter.";
+    }
+
+    if (!value.contains(RegExp(r'[A-Z]'))) {
+      return "Password must contain at least one uppercase letter.";
+    }
+
+    if (!value.contains(RegExp(r'\d'))) {
+      return "Password must contain at least one digit.";
+    }
+
+    if (!value.contains(RegExp(r'[^\w\s]'))) {
+      return "Password must contain at least one special character.";
     }
 
     return null;
@@ -61,7 +94,7 @@ final class AuthField extends StatelessWidget {
             ),
           ),
         ),
-        validator: handleValidator,
+        validator: _handleValidator,
       ),
     );
   }

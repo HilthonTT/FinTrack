@@ -2,6 +2,7 @@ import 'package:fintrack_app/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:fintrack_app/core/theme/app_theme.dart';
 import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fintrack_app/features/auth/presentation/pages/login_page.dart';
+import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
 import 'package:fintrack_app/features/tabs/widgets/main_tab.dart';
 import 'package:fintrack_app/init_dependencies.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ void main() {
       providers: [
         BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (_) => serviceLocator<ExpensesBloc>()),
       ],
       child: const MyApp(),
     ),

@@ -10,6 +10,12 @@ import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fintrack_app/features/expenses/data/datasources/expense_remote_data_source.dart';
 import 'package:fintrack_app/features/expenses/data/repositories/expense_repository_impl.dart';
 import 'package:fintrack_app/features/expenses/domain/repositories/expense_repository.dart';
+import 'package:fintrack_app/features/expenses/domain/usecases/create_expense.dart';
+import 'package:fintrack_app/features/expenses/domain/usecases/delete_expense.dart';
+import 'package:fintrack_app/features/expenses/domain/usecases/get_expense_by_id.dart';
+import 'package:fintrack_app/features/expenses/domain/usecases/get_expenses.dart';
+import 'package:fintrack_app/features/expenses/domain/usecases/update_expense.dart';
+import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt serviceLocator = GetIt.instance;
@@ -57,5 +63,21 @@ void _initExpenses() {
 
   serviceLocator.registerFactory<ExpenseRepository>(
     () => ExpenseRepositoryImpl(serviceLocator()),
+  );
+
+  serviceLocator.registerFactory(() => CreateExpense(serviceLocator()));
+  serviceLocator.registerFactory(() => UpdateExpense(serviceLocator()));
+  serviceLocator.registerFactory(() => DeleteExpense(serviceLocator()));
+  serviceLocator.registerFactory(() => GetExpenseById(serviceLocator()));
+  serviceLocator.registerFactory(() => GetExpenses(serviceLocator()));
+
+  serviceLocator.registerLazySingleton(
+    () => ExpensesBloc(
+      createExpense: serviceLocator(),
+      deleteExpense: serviceLocator(),
+      getExpenseById: serviceLocator(),
+      getExpenses: serviceLocator(),
+      updateExpense: serviceLocator(),
+    ),
   );
 }

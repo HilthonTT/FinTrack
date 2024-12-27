@@ -5,7 +5,6 @@ import 'package:fintrack_app/core/common/utils/http_helper.dart';
 import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
 import 'package:fintrack_app/core/common/utils/status_codes.dart';
 import 'package:fintrack_app/features/auth/data/models/user_model.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class AuthRemoteDataSource {
   Future<void> register({
@@ -25,11 +24,9 @@ abstract class AuthRemoteDataSource {
 }
 
 final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final _secureStorage = FlutterSecureStorage();
-
   @override
   Future<UserModel?> getCurrentUserData() async {
-    final user = await getUserInfo(_secureStorage);
+    final user = await getUserInfo();
 
     return user;
   }
@@ -48,7 +45,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw parseError(response);
     }
 
-    final user = await decodeJwtToken(_secureStorage, response.body);
+    final user = await decodeJwtToken(response.body);
 
     return user;
   }
