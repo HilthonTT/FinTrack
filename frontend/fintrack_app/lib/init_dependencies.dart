@@ -16,19 +16,27 @@ import 'package:fintrack_app/features/expenses/domain/usecases/get_expense_by_id
 import 'package:fintrack_app/features/expenses/domain/usecases/get_expenses.dart';
 import 'package:fintrack_app/features/expenses/domain/usecases/update_expense.dart';
 import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
+import 'package:fintrack_app/features/settings/data/datasources/settings_local_data_source.dart';
+import 'package:fintrack_app/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:fintrack_app/features/settings/domain/repositories/settings_repository.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 final GetIt serviceLocator = GetIt.instance;
 
-void initDependencies() {
-  _initServices();
+Future<void> initDependencies() async {
+  await _initServices();
 
   _initAuth();
   _initExpenses();
+  _initSettings();
 }
 
-void _initServices() {
+Future<void> _initServices() async {
   serviceLocator.registerLazySingleton(() => AppUserCubit());
+
+  Hive.defaultDirectory = (await getApplicationDocumentsDirectory()).path;
 }
 
 void _initAuth() {
@@ -79,5 +87,17 @@ void _initExpenses() {
       getExpenses: serviceLocator(),
       updateExpense: serviceLocator(),
     ),
+  );
+}
+
+void _initSettings() {
+  serviceLocator.registerLazySingleton(() => Hive.box(name: "Settings"));
+
+  serviceLocator.registerFactory<SettingsLocalDataSource>(
+    () => SettingsLocalDataSourceImpl(serviceLocator()),
+  );
+
+  serviceLocator.registerFactory<SettingsRepository>(
+    () => SettingsRepositoryImpl(serviceLocator()),
   );
 }

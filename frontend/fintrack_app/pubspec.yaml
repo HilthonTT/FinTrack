@@ -48,6 +48,8 @@ dependencies:
   carousel_slider: ^5.0.0
   flutter_secure_storage: ^9.2.2
   calendar_agenda: ^0.0.2+3
+  hive: ^4.0.0-dev.2
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

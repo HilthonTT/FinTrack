@@ -11,10 +11,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initDependencies();
+  await initDependencies();
 
   runApp(
     MultiBlocProvider(

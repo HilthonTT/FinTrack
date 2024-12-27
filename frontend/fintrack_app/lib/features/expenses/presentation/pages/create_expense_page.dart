@@ -271,7 +271,11 @@ final class _CreateExpensePageState extends State<CreateExpensePage> {
                         ),
                         ImageButton(
                           image: "assets/images/plus.png",
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _amount += 0.1;
+                            });
+                          },
                         )
                       ],
                     ),
