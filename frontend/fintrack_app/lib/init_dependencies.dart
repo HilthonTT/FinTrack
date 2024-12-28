@@ -1,4 +1,5 @@
 import 'package:fintrack_app/core/common/cubits/app_user/app_user_cubit.dart';
+import 'package:fintrack_app/core/network/connection_checker.dart';
 import 'package:fintrack_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:fintrack_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:fintrack_app/features/auth/domain/repositories/auth_repository.dart';
@@ -21,6 +22,7 @@ import 'package:fintrack_app/features/settings/data/repositories/settings_reposi
 import 'package:fintrack_app/features/settings/domain/repositories/settings_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 final GetIt serviceLocator = GetIt.instance;
@@ -37,6 +39,12 @@ Future<void> _initServices() async {
   serviceLocator.registerLazySingleton(() => AppUserCubit());
 
   Hive.defaultDirectory = (await getApplicationDocumentsDirectory()).path;
+
+  serviceLocator.registerFactory(() => InternetConnection());
+
+  serviceLocator.registerFactory<ConnectionChecker>(
+    () => ConnectionCheckerImpl(serviceLocator()),
+  );
 }
 
 void _initAuth() {
@@ -45,7 +53,7 @@ void _initAuth() {
   );
 
   serviceLocator.registerFactory<AuthRepository>(
-    () => AuthRepositoryImpl(serviceLocator()),
+    () => AuthRepositoryImpl(serviceLocator(), serviceLocator()),
   );
 
   serviceLocator.registerFactory(() => UserLogin(serviceLocator()));
@@ -70,7 +78,7 @@ void _initExpenses() {
   );
 
   serviceLocator.registerFactory<ExpenseRepository>(
-    () => ExpenseRepositoryImpl(serviceLocator()),
+    () => ExpenseRepositoryImpl(serviceLocator(), serviceLocator()),
   );
 
   serviceLocator.registerFactory(() => CreateExpense(serviceLocator()));

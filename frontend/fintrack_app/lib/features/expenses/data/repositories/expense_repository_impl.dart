@@ -1,6 +1,8 @@
+import 'package:fintrack_app/core/constants/error_messages.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/core/errors/failure.dart';
+import 'package:fintrack_app/core/network/connection_checker.dart';
 import 'package:fintrack_app/features/expenses/data/datasources/expense_remote_data_source.dart';
 import 'package:fintrack_app/features/expenses/domain/entities/expense.dart';
 import 'package:fintrack_app/features/expenses/domain/enums/expense_category.dart';
@@ -9,8 +11,9 @@ import 'package:fpdart/fpdart.dart';
 
 final class ExpenseRepositoryImpl implements ExpenseRepository {
   final ExpenseRemoteDataSource remoteDataSource;
+  final ConnectionChecker connectionChecker;
 
-  const ExpenseRepositoryImpl(this.remoteDataSource);
+  const ExpenseRepositoryImpl(this.remoteDataSource, this.connectionChecker);
 
   @override
   Future<Either<Failure, String>> create({
@@ -22,6 +25,10 @@ final class ExpenseRepositoryImpl implements ExpenseRepository {
     required DateTime date,
   }) async {
     try {
+      if (!await connectionChecker.isConnected) {
+        return left(Failure(ErrorMessages.noInternetConnection));
+      }
+
       final expenseId = await remoteDataSource.create(
         name: name,
         amount: amount,
@@ -40,6 +47,10 @@ final class ExpenseRepositoryImpl implements ExpenseRepository {
   @override
   Future<Either<Failure, Unit>> delete({required String id}) async {
     try {
+      if (!await connectionChecker.isConnected) {
+        return left(Failure(ErrorMessages.noInternetConnection));
+      }
+
       await remoteDataSource.delete(id: id);
 
       return right(unit);
@@ -51,6 +62,10 @@ final class ExpenseRepositoryImpl implements ExpenseRepository {
   @override
   Future<Either<Failure, List<Expense>>> getAll({int take = 10}) async {
     try {
+      if (!await connectionChecker.isConnected) {
+        return left(Failure(ErrorMessages.noInternetConnection));
+      }
+
       final expenses = await remoteDataSource.getAll(take: take);
 
       return right(expenses);
@@ -62,6 +77,10 @@ final class ExpenseRepositoryImpl implements ExpenseRepository {
   @override
   Future<Either<Failure, Expense>> getById({required String id}) async {
     try {
+      if (!await connectionChecker.isConnected) {
+        return left(Failure(ErrorMessages.noInternetConnection));
+      }
+
       final expense = await remoteDataSource.getById(id: id);
 
       return right(expense);
@@ -78,6 +97,10 @@ final class ExpenseRepositoryImpl implements ExpenseRepository {
     required DateTime date,
   }) async {
     try {
+      if (!await connectionChecker.isConnected) {
+        return left(Failure(ErrorMessages.noInternetConnection));
+      }
+
       await remoteDataSource.update(
         id: id,
         name: name,
