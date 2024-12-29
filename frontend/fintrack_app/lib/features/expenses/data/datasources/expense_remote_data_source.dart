@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fintrack_app/core/common/utils/currency_helper.dart';
 import 'package:fintrack_app/core/common/utils/error_parser.dart';
 import 'package:fintrack_app/core/common/utils/http_helper.dart';
 import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
@@ -50,11 +51,13 @@ final class ExpenseRemoteDataSourceImpl implements ExpenseRemoteDataSource {
     }
 
     try {
+      final sanitizedCurrency = sanitizeCurrencyCode(currencyCode);
+
       final response = await postRequest("/expenses", {
         'userId': userInfo.id,
         'name': name,
         'amount': amount,
-        'currencyCode': currencyCode,
+        'currencyCode': sanitizedCurrency,
         'category': category.index,
         'company': company.index,
         'date': date.toIso8601String(),

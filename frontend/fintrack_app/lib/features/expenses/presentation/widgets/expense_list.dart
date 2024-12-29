@@ -4,8 +4,8 @@ import 'package:fintrack_app/core/common/utils/toast_helper.dart';
 import 'package:fintrack_app/core/common/widgets/load_more_button.dart';
 import 'package:fintrack_app/core/common/widgets/loader.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
+import 'package:fintrack_app/features/expenses/domain/entities/expense.dart';
 import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
-import 'package:fintrack_app/features/expenses/presentation/widgets/expense_create_button.dart';
 import 'package:fintrack_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,8 +57,10 @@ final class _ExpenseListState extends State<ExpenseList> {
           return Column(
             children: [
               ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 0,
+                ),
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: state.expenses.length,
@@ -86,49 +88,7 @@ final class _ExpenseListState extends State<ExpenseList> {
                         alignment: Alignment.center,
                         child: Row(
                           children: [
-                            if (imagePath !=
-                                null) // Check if an image path exists
-                              Image.asset(
-                                imagePath,
-                                width: 40,
-                                height: 40,
-                                fit: BoxFit.contain,
-                              ),
-                            if (imagePath == null)
-                              Container(
-                                height: 40,
-                                width: 40,
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color:
-                                      AppPalette.gray70.withValues(alpha: .5),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                alignment: Alignment.center,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      getMonth(expense.date
-                                          .toString()), // Get the month
-                                      style: TextStyle(
-                                        color: AppPalette.gray30,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      getDay(expense.date
-                                          .toString()), // Get the day
-                                      style: TextStyle(
-                                        color: AppPalette.gray30,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            _getImage(imagePath, expense),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -146,7 +106,7 @@ final class _ExpenseListState extends State<ExpenseList> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "\$${expense.amount}",
+                                  "\$${expense.amount.toStringAsPrecision(3)}",
                                   style: TextStyle(
                                     color: AppPalette.white,
                                     fontSize: 14,
@@ -171,8 +131,6 @@ final class _ExpenseListState extends State<ExpenseList> {
                 },
               ),
               const SizedBox(height: 10),
-              ExpenseCreateButton(),
-              const SizedBox(height: 10),
               LoadMoreButton(onPressed: loadMore, hasMore: true),
             ],
           );
@@ -180,6 +138,49 @@ final class _ExpenseListState extends State<ExpenseList> {
 
         return const SizedBox();
       },
+    );
+  }
+
+  Widget _getImage(String? imagePath, Expense expense) {
+    if (imagePath != null) {
+      return Image.asset(
+        imagePath,
+        width: 40,
+        height: 40,
+        fit: BoxFit.contain,
+      );
+    }
+
+    return Container(
+      height: 40,
+      width: 40,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppPalette.gray70.withValues(alpha: .5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            getMonth(expense.date.toString()), // Get the month
+            style: TextStyle(
+              color: AppPalette.gray30,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            getDay(expense.date.toString()), // Get the day
+            style: TextStyle(
+              color: AppPalette.gray30,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

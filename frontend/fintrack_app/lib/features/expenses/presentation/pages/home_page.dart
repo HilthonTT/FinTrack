@@ -1,7 +1,10 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
+import 'package:fintrack_app/features/expenses/presentation/pages/create_expense_page.dart';
+import 'package:fintrack_app/features/expenses/presentation/widgets/create_button.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_list.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_subscription_switcher.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/expense_header_section.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/pages/create_subscription_page.dart';
 import 'package:fintrack_app/features/subscriptions/presentation/widgets/subscriptions_list.dart';
 import 'package:flutter/material.dart';
 
@@ -17,18 +20,26 @@ final class HomePage extends StatefulWidget {
 }
 
 final class _HomePageState extends State<HomePage> {
-  bool isSubscriptions = true;
+  bool _isSubscriptions = true;
 
-  void switchToSubscriptions() {
+  void _switchToSubscriptions() {
     setState(() {
-      isSubscriptions = true;
+      _isSubscriptions = true;
     });
   }
 
-  void switchToExpenses() {
+  void _switchToExpenses() {
     setState(() {
-      isSubscriptions = false;
+      _isSubscriptions = false;
     });
+  }
+
+  void _onCreatePressed() {
+    if (_isSubscriptions) {
+      Navigator.push(context, CreateSubscriptionPage.route());
+    } else {
+      Navigator.push(context, CreateExpensePage.route());
+    }
   }
 
   @override
@@ -58,10 +69,15 @@ final class _HomePageState extends State<HomePage> {
                       arcSize: arcSize,
                     ),
                     ExpenseSubscriptionSwitcher(
-                      isSubscriptions: isSubscriptions,
-                      switchToSubscriptions: switchToSubscriptions,
-                      switchToExpenses: switchToExpenses,
+                      isSubscriptions: _isSubscriptions,
+                      switchToSubscriptions: _switchToSubscriptions,
+                      switchToExpenses: _switchToExpenses,
                     ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: CreateButton(onPressed: _onCreatePressed),
+                    ),
+                    const SizedBox(height: 10),
                     _buildList(),
                     const SizedBox(height: 150),
                   ],
@@ -75,7 +91,7 @@ final class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildList() {
-    if (isSubscriptions) {
+    if (_isSubscriptions) {
       return SubscriptionsList();
     }
 
