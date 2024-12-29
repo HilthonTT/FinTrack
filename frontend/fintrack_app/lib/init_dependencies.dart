@@ -20,6 +20,9 @@ import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.d
 import 'package:fintrack_app/features/settings/data/datasources/settings_local_data_source.dart';
 import 'package:fintrack_app/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:fintrack_app/features/settings/domain/repositories/settings_repository.dart';
+import 'package:fintrack_app/features/settings/domain/usecases/get_settings.dart';
+import 'package:fintrack_app/features/settings/domain/usecases/update_settings.dart';
+import 'package:fintrack_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -107,5 +110,15 @@ void _initSettings() {
 
   serviceLocator.registerFactory<SettingsRepository>(
     () => SettingsRepositoryImpl(serviceLocator()),
+  );
+
+  serviceLocator.registerFactory(() => GetSettings(serviceLocator()));
+  serviceLocator.registerFactory(() => UpdateSettings(serviceLocator()));
+
+  serviceLocator.registerLazySingleton(
+    () => SettingsBloc(
+      getSettings: serviceLocator(),
+      updateSettings: serviceLocator(),
+    ),
   );
 }

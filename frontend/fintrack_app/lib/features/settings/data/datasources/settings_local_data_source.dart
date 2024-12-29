@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 abstract interface class SettingsLocalDataSource {
   SettingsModel get();
 
-  void update({
+  SettingsModel update({
     required String currency,
     required SecurityOption securityOption,
     required SortingOption sortingOption,
@@ -27,7 +27,7 @@ final class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   }
 
   @override
-  void update({
+  SettingsModel update({
     required String currency,
     required SecurityOption securityOption,
     required SortingOption sortingOption,
@@ -47,12 +47,20 @@ final class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
         'currency': defaultSettings.currency,
       });
     } else {
-      settingsData['securityOption'] = securityOption;
-      settingsData['sortingOption'] = sortingOption;
+      settingsData['securityOption'] = securityOption.index;
+      settingsData['sortingOption'] = sortingOption.index;
       settingsData['currency'] = currency;
 
       box.put(settingsKey, settingsData);
     }
+
+    final settings = SettingsModel(
+      securityOption: SecurityOption.values[settingsData['securityOption']],
+      sortingOption: SortingOption.values[settingsData['sortingOption']],
+      currency: settingsData['currency'],
+    );
+
+    return settings;
   }
 
   SettingsModel _getOrCreate() {

@@ -7,7 +7,7 @@ import 'package:fpdart/fpdart.dart';
 abstract interface class SettingsRepository {
   Either<Failure, Settings> get();
 
-  Either<Failure, Unit> update({
+  Either<Failure, Settings> update({
     required SecurityOption securityOption,
     required SortingOption sortingOption,
     required String currency,

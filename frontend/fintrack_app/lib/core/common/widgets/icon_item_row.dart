@@ -32,6 +32,7 @@ final class IconItemRow extends StatelessWidget {
           const SizedBox(width: 15),
           Text(
             title,
+            textAlign: TextAlign.right,
             style: TextStyle(
               color: AppPalette.white,
               fontSize: 14,

@@ -51,6 +51,7 @@ dependencies:
   hive: ^4.0.0-dev.2
   path_provider: ^2.1.5
   internet_connection_checker_plus: ^2.6.0
+  isar_flutter_libs: ^4.0.0-dev.14
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
-import 'package:fintrack_app/features/auth/presentation/pages/settings_page.dart';
+import 'package:fintrack_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 
 final class SettingsButton extends StatelessWidget {

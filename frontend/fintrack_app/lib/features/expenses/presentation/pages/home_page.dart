@@ -6,7 +6,9 @@ import 'package:fintrack_app/features/subscriptions/presentation/widgets/subscri
 import 'package:flutter/material.dart';
 
 final class HomePage extends StatefulWidget {
-  static route() => MaterialPageRoute(builder: (context) => const HomePage());
+  static MaterialPageRoute<HomePage> route() => MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      );
 
   const HomePage({super.key});
 

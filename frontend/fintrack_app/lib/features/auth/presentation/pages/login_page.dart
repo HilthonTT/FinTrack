@@ -14,7 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 final class LoginPage extends StatefulWidget {
-  static route() => MaterialPageRoute(builder: (context) => const LoginPage());
+  static MaterialPageRoute<LoginPage> route() => MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      );
 
   const LoginPage({super.key});
 

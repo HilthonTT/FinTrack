@@ -28,19 +28,23 @@ final class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
-  Either<Failure, Unit> update({
+  Either<Failure, Settings> update({
     required SecurityOption securityOption,
     required SortingOption sortingOption,
     required String currency,
   }) {
     try {
-      settingsLocalDataSource.update(
+      final settings = settingsLocalDataSource.update(
         currency: currency,
         securityOption: securityOption,
         sortingOption: sortingOption,
       );
 
-      return right(unit);
+      return right(SettingsModel(
+        securityOption: settings.securityOption,
+        sortingOption: settings.sortingOption,
+        currency: settings.currency,
+      ));
     } catch (e) {
       return left(Failure("Failed to update settings"));
     }

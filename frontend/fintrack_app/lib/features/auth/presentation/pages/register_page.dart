@@ -14,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 final class RegisterPage extends StatefulWidget {
-  static route() => MaterialPageRoute(
+  static MaterialPageRoute<RegisterPage> route() => MaterialPageRoute(
         builder: (context) => const RegisterPage(),
       );
 
