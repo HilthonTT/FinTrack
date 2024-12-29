@@ -2,7 +2,7 @@
 
 public enum Frequency
 {
-    Daily = 1,
-    Monthly = 2,
-    Yearly = 3
+    Daily = 0,
+    Monthly = 1,
+    Yearly = 2
 }
