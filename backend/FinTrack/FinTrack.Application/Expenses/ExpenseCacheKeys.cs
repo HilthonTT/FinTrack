@@ -6,4 +6,9 @@ public static class ExpenseCacheKeys
     {
         return $"user-{userId}-expenses";
     }
+
+    public static string GetById(Guid expenseId)
+    {
+        return $"expense-{expenseId}";
+    }
 }

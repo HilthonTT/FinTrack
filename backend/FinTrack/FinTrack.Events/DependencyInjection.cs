@@ -4,6 +4,7 @@ using FinTrack.Events.Expenses.AmountChanged;
 using FinTrack.Events.Expenses.Created;
 using FinTrack.Events.Expenses.Deleted;
 using FinTrack.Events.Expenses.Updated;
+using FinTrack.Events.Subscriptions.Updated;
 using FinTrack.Events.Users.Created;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -23,16 +24,19 @@ public static class DependencyInjection
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
-            busConfigurator.AddUserConsumers();
-            busConfigurator.AddExpenseConsumers();
+            busConfigurator
+                .AddUserConsumers()
+                .AddExpenseConsumers()
+                .AddSubscriptionConsumers();
 
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
                 configurator.Host(mqConnectionString);
 
-                configurator.ReceiveUserEndpoints(context);
-
-                configurator.ReceiveExpensesEndpoints(context);
+                configurator
+                    .ReceiveUserEndpoints(context)
+                    .ReceiveExpensesEndpoints(context)
+                    .ReceiveSubscriptionsEndpoints(context);
 
                 configurator.ConfigureEndpoints(context);
             });
@@ -56,6 +60,13 @@ public static class DependencyInjection
         busConfigurator.AddConsumer<ExpenseCreatedIntegrationEventHandler>();
         busConfigurator.AddConsumer<ExpenseDeletedIntegrationEventHandler>();
         busConfigurator.AddConsumer<ExpenseUpdatedIntegrationEventHandler>();
+
+        return busConfigurator;
+    }
+
+    private static IBusRegistrationConfigurator AddSubscriptionConsumers(this IBusRegistrationConfigurator busConfigurator)
+    {
+        busConfigurator.AddConsumer<SubscriptionUpdatedIntegrationEventHandler>();
 
         return busConfigurator;
     }
@@ -97,6 +108,18 @@ public static class DependencyInjection
             e.ConfigureConsumer<ExpenseUpdatedIntegrationEventHandler>(context);
         });
 
+        return configurator;
+    }
+
+    private static IRabbitMqBusFactoryConfigurator ReceiveSubscriptionsEndpoints(
+        this IRabbitMqBusFactoryConfigurator configurator,
+        IBusRegistrationContext context)
+    {
+        configurator.ReceiveEndpoint(nameof(SubscriptionUpdatedIntegrationEventHandler), e =>
+        {
+            e.ConfigureConsumer<SubscriptionUpdatedIntegrationEventHandler>(context);
+        });
+        
         return configurator;
     }
 }

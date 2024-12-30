@@ -12,6 +12,14 @@ internal sealed class ExpenseRepository(AppDbContext dbContext) : IExpenseReposi
         return dbContext.Expenses.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
+    public Task<Expense?> GetByIdAsNoTrackingAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return dbContext
+            .Expenses
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+    }
+
     public void Insert(Expense expense)
     {
         dbContext.Expenses.Add(expense);

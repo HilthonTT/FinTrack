@@ -32,6 +32,8 @@ internal sealed class UpdateSubscriptionCommandHandler(
 
         subscription.ChangeCompany(request.Company);
 
+        subscription.RaiseUpdate();
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

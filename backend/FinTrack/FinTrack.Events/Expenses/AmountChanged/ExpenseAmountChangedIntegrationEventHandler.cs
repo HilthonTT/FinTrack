@@ -1,4 +1,6 @@
-﻿using FinTrack.Application.Abstractions.Data;
+﻿using FinTrack.Application.Abstractions.Caching;
+using FinTrack.Application.Abstractions.Data;
+using FinTrack.Application.Expenses;
 using FinTrack.Application.Expenses.Update;
 using FinTrack.Domain.Budget;
 using FinTrack.Domain.Budget.Repositories;
@@ -13,14 +15,17 @@ namespace FinTrack.Events.Expenses.AmountChanged;
 internal sealed class ExpenseAmountChangedIntegrationEventHandler(
     IExpenseRepository expenseRepository,
     IBudgetRepository budgetRepository,
-    IUnitOfWork unitOfWork) : IIntegrationEventHandler<ExpenseAmountChangedIntegrationEvent>
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService) : IIntegrationEventHandler<ExpenseAmountChangedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<ExpenseAmountChangedIntegrationEvent> context)
     {
-        Expense? expense = await expenseRepository.GetByIdAsync(context.Message.ExpenseId, context.CancellationToken);
+        Guid expenseId = context.Message.ExpenseId;
+
+        Expense? expense = await expenseRepository.GetByIdAsync(expenseId, context.CancellationToken);
         if (expense is null)
         {
-            throw new DomainException(ExpenseErrors.NotFound(context.Message.ExpenseId));
+            throw new DomainException(ExpenseErrors.NotFound(expenseId));
         }
 
         DateOnly date = DateOnly.FromDateTime(expense.Date);
@@ -37,5 +42,9 @@ internal sealed class ExpenseAmountChangedIntegrationEventHandler(
         }
 
         await unitOfWork.SaveChangesAsync(context.CancellationToken);
+
+        string cacheKey = ExpenseCacheKeys.GetById(expenseId);
+
+        await cacheService.RemoveAsync(cacheKey, context.CancellationToken);
     }
 }

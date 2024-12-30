@@ -2,6 +2,8 @@
 
 public interface IExpenseRepository
 {
+    Task<Expense?> GetByIdAsNoTrackingAsync(Guid id, CancellationToken cancellationToken = default);
+
     Task<Expense?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     void Insert(Expense expense);

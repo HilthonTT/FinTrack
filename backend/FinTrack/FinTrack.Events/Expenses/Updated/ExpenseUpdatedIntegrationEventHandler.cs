@@ -15,13 +15,19 @@ internal sealed class ExpenseUpdatedIntegrationEventHandler(
 {
     public async Task Consume(ConsumeContext<ExpenseUpdatedIntegrationEvent> context)
     {
-        Expense? expense = await expenseRepository.GetByIdAsync(context.Message.ExpenseId, context.CancellationToken);
+        Guid expenseId = context.Message.ExpenseId;
+
+        Expense? expense = await expenseRepository.GetByIdAsNoTrackingAsync(expenseId, context.CancellationToken);
         if (expense is null)
         {
-            throw new DomainException(ExpenseErrors.NotFound(context.Message.ExpenseId));
+            throw new DomainException(ExpenseErrors.NotFound(expenseId));
         }
 
         string cacheKey = ExpenseCacheKeys.GetUserExpenses(expense.UserId);
+
+        await cacheService.RemoveAsync(cacheKey, context.CancellationToken);
+
+        cacheKey = ExpenseCacheKeys.GetById(expenseId);
 
         await cacheService.RemoveAsync(cacheKey, context.CancellationToken);
     }

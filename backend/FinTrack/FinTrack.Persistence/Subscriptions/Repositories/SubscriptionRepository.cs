@@ -12,6 +12,14 @@ internal sealed class SubscriptionRepository(AppDbContext dbContext) : ISubscrip
         return dbContext.Subscriptions.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
+    public Task<Subscription?> GetByIdAsNoTrackingAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return dbContext
+            .Subscriptions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
+
     public void Insert(Subscription subscription)
     {
         dbContext.Subscriptions.Add(subscription);

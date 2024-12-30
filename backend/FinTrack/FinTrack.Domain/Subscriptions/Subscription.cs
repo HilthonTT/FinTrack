@@ -137,6 +137,14 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
         Company = company;
     }
 
+    /// <summary>
+    /// Raises the subscription updated domain event.
+    /// </summary>
+    public void RaiseUpdate()
+    {
+        Raise(new SubscriptionUpdatedDomainEvent(Id));
+    }
+
     public bool IsPaymentDue(DateOnly today) => Status == Status.Active && today == NextDueDate;
 
     private static DateOnly CalculateNextDueDate(DateOnly fromDate, Frequency frequency)
