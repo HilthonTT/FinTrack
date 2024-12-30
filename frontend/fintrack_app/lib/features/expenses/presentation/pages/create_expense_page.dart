@@ -225,7 +225,10 @@ final class _CreateExpensePageState extends State<CreateExpensePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 30, left: 20, right: 20),
+                            top: 30,
+                            left: 20,
+                            right: 20,
+                          ),
                           child: RoundTextField(
                             title: "Name",
                             titleAlign: TextAlign.left,

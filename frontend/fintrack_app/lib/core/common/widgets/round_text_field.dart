@@ -7,6 +7,7 @@ final class RoundTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextAlign titleAlign;
   final bool obscureText;
+  final String? hintText;
 
   const RoundTextField({
     super.key,
@@ -15,6 +16,7 @@ final class RoundTextField extends StatelessWidget {
     this.keyboardType,
     this.titleAlign = TextAlign.left,
     this.obscureText = false,
+    this.hintText,
   });
 
   @override
@@ -45,7 +47,7 @@ final class RoundTextField extends StatelessWidget {
             border: Border.all(color: AppPalette.gray70),
             borderRadius: BorderRadius.circular(15),
           ),
-          child: TextField(
+          child: TextFormField(
             cursorColor: AppPalette.secondary,
             style: TextStyle(
               color: AppPalette.white,
@@ -53,15 +55,29 @@ final class RoundTextField extends StatelessWidget {
             ),
             cursorErrorColor: AppPalette.secondary,
             controller: controller,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               focusedBorder: InputBorder.none,
               errorBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              hintText: hintText,
             ),
             keyboardType: keyboardType,
             obscureText: obscureText,
             textInputAction: TextInputAction.done,
+            validator: (value) {
+              if (hintText != null) {
+                if (value == null || value.isEmpty) {
+                  return "$hintText is required!";
+                }
+              }
+
+              if (value == null || value.isEmpty) {
+                return "This field is required!";
+              }
+
+              return null;
+            },
           ),
         )
       ],

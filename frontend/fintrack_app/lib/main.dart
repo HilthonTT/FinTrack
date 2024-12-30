@@ -4,6 +4,7 @@ import 'package:fintrack_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fintrack_app/features/auth/presentation/pages/login_page.dart';
 import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
 import 'package:fintrack_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/bloc/subscriptions_bloc.dart';
 import 'package:fintrack_app/features/tabs/widgets/main_tab.dart';
 import 'package:fintrack_app/init_dependencies.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
         BlocProvider(create: (_) => serviceLocator<ExpensesBloc>()),
         BlocProvider(create: (_) => serviceLocator<SettingsBloc>()),
+        BlocProvider(create: (_) => serviceLocator<SubscriptionsBloc>())
       ],
       child: const MyApp(),
     ),

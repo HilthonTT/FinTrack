@@ -63,8 +63,8 @@ final class SubscriptionRemoteDatasourceImpl
         'name': name,
         'amount': amount,
         'currency': sanitizedCurrency,
-        'frequency': frequency,
-        'company': company,
+        'frequency': frequency.value,
+        'company': company.value,
         'startDate': startDate,
         'endDate': endDate,
       });

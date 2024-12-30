@@ -32,6 +32,7 @@ import 'package:fintrack_app/features/subscriptions/domain/usecases/delete_subsc
 import 'package:fintrack_app/features/subscriptions/domain/usecases/get_by_id_subscription.dart';
 import 'package:fintrack_app/features/subscriptions/domain/usecases/get_subscriptions.dart';
 import 'package:fintrack_app/features/subscriptions/domain/usecases/update_subscription.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/bloc/subscriptions_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -148,4 +149,15 @@ void _initSubscriptions() {
   serviceLocator.registerFactory(() => GetByIdSubscription(serviceLocator()));
   serviceLocator.registerFactory(() => GetSubscriptions(serviceLocator()));
   serviceLocator.registerFactory(() => UpdateSubscription(serviceLocator()));
+
+  serviceLocator.registerLazySingleton(
+    () => SubscriptionsBloc(
+      cancelSubscription: serviceLocator(),
+      createSubscription: serviceLocator(),
+      deleteSubscription: serviceLocator(),
+      getByIdSubscription: serviceLocator(),
+      getSubscriptions: serviceLocator(),
+      updateSubscription: serviceLocator(),
+    ),
+  );
 }
