@@ -5,7 +5,9 @@ import 'package:fintrack_app/features/subscriptions/domain/enums/frequency.dart'
 import 'package:fpdart/fpdart.dart';
 
 abstract interface class SubscriptionRepository {
-  Future<Either<Failure, Subscription>> cancel();
+  Future<Either<Failure, Subscription>> cancel({
+    required String subscriptionId,
+  });
 
   Future<Either<Failure, Subscription>> create({
     required String name,
@@ -20,7 +22,7 @@ abstract interface class SubscriptionRepository {
   Future<Either<Failure, Unit>> delete({required String subscriptionId});
 
   Future<Either<Failure, List<Subscription>>> get({
-    String searchTerm,
+    String? searchTerm,
     int take = 10,
   });
 

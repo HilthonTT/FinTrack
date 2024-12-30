@@ -4,6 +4,7 @@ import 'package:fintrack_app/core/common/utils/error_parser.dart';
 import 'package:fintrack_app/core/common/utils/http_helper.dart';
 import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
 import 'package:fintrack_app/core/common/utils/status_codes.dart';
+import 'package:fintrack_app/core/constants/exceptions.dart';
 import 'package:fintrack_app/features/auth/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -26,9 +27,13 @@ abstract class AuthRemoteDataSource {
 final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel?> getCurrentUserData() async {
-    final user = await getUserInfo();
+    try {
+      final user = await getUserInfo();
 
-    return user;
+      return user;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 
   @override
@@ -36,18 +41,22 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String email,
     required String password,
   }) async {
-    final response = await postRequest("/users/login", {
-      'email': email,
-      'password': password,
-    });
+    try {
+      final response = await postRequest("/users/login", {
+        'email': email,
+        'password': password,
+      });
 
-    if (!isSuccessfulResponse(response.statusCode)) {
-      throw parseError(response);
+      if (!isSuccessfulResponse(response.statusCode)) {
+        throw parseError(response);
+      }
+
+      final user = await decodeJwtToken(response.body);
+
+      return user;
+    } catch (e) {
+      throw ServerException(e.toString());
     }
-
-    final user = await decodeJwtToken(response.body);
-
-    return user;
   }
 
   @override
@@ -56,25 +65,33 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
     required String name,
   }) async {
-    final response = await postRequest("/users/register", {
-      'email': email,
-      'name': name,
-      'password': password,
-    });
+    try {
+      final response = await postRequest("/users/register", {
+        'email': email,
+        'name': name,
+        'password': password,
+      });
 
-    if (!isSuccessfulResponse(response.statusCode)) {
-      throw parseError(response);
+      if (!isSuccessfulResponse(response.statusCode)) {
+        throw parseError(response);
+      }
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 
   @override
   Future<void> verifyEmail({required int code}) async {
-    final response = await postRequest("/users/verify-email", {
-      'code': code,
-    });
+    try {
+      final response = await postRequest("/users/verify-email", {
+        'code': code,
+      });
 
-    if (!isSuccessfulResponse(response.statusCode)) {
-      throw parseError(response);
+      if (!isSuccessfulResponse(response.statusCode)) {
+        throw parseError(response);
+      }
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 }

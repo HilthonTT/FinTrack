@@ -77,10 +77,14 @@ final class ExpenseRemoteDataSourceImpl implements ExpenseRemoteDataSource {
 
   @override
   Future<void> delete({required String id}) async {
-    final response = await deleteRequest("/expenses/$id");
+    try {
+      final response = await deleteRequest("/expenses/$id");
 
-    if (!isSuccessfulResponse(response.statusCode)) {
-      throw parseError(response);
+      if (!isSuccessfulResponse(response.statusCode)) {
+        throw parseError(response);
+      }
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 

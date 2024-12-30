@@ -23,6 +23,15 @@ import 'package:fintrack_app/features/settings/domain/repositories/settings_repo
 import 'package:fintrack_app/features/settings/domain/usecases/get_settings.dart';
 import 'package:fintrack_app/features/settings/domain/usecases/update_settings.dart';
 import 'package:fintrack_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:fintrack_app/features/subscriptions/data/datasources/subscription_remote_datasource.dart';
+import 'package:fintrack_app/features/subscriptions/data/repositories/subscription_repository_impl.dart';
+import 'package:fintrack_app/features/subscriptions/domain/repositories/subscription_repository.dart';
+import 'package:fintrack_app/features/subscriptions/domain/usecases/cancel_subscription.dart';
+import 'package:fintrack_app/features/subscriptions/domain/usecases/create_subscription.dart';
+import 'package:fintrack_app/features/subscriptions/domain/usecases/delete_subscription.dart';
+import 'package:fintrack_app/features/subscriptions/domain/usecases/get_by_id_subscription.dart';
+import 'package:fintrack_app/features/subscriptions/domain/usecases/get_subscriptions.dart';
+import 'package:fintrack_app/features/subscriptions/domain/usecases/update_subscription.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -36,6 +45,7 @@ Future<void> initDependencies() async {
   _initAuth();
   _initExpenses();
   _initSettings();
+  _initSubscriptions();
 }
 
 Future<void> _initServices() async {
@@ -121,4 +131,21 @@ void _initSettings() {
       updateSettings: serviceLocator(),
     ),
   );
+}
+
+void _initSubscriptions() {
+  serviceLocator.registerFactory<SubscriptionRemoteDatasource>(
+    () => SubscriptionRemoteDatasourceImpl(),
+  );
+
+  serviceLocator.registerFactory<SubscriptionRepository>(
+    () => SubscriptionRepositoryImpl(serviceLocator(), serviceLocator()),
+  );
+
+  serviceLocator.registerFactory(() => CancelSubscription(serviceLocator()));
+  serviceLocator.registerFactory(() => CreateSubscription(serviceLocator()));
+  serviceLocator.registerFactory(() => DeleteSubscription(serviceLocator()));
+  serviceLocator.registerFactory(() => GetByIdSubscription(serviceLocator()));
+  serviceLocator.registerFactory(() => GetSubscriptions(serviceLocator()));
+  serviceLocator.registerFactory(() => UpdateSubscription(serviceLocator()));
 }
