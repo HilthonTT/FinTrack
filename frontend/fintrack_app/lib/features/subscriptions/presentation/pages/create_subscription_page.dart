@@ -6,6 +6,7 @@ import 'package:fintrack_app/core/common/widgets/primary_button.dart';
 import 'package:fintrack_app/core/common/widgets/rounded_dropdown_menu.dart';
 import 'package:fintrack_app/core/constants/companies.dart';
 import 'package:fintrack_app/core/enums/company.dart';
+import 'package:fintrack_app/core/enums/enum_helper.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/presentation/widgets/image_button.dart';
 import 'package:fintrack_app/core/common/widgets/round_text_field.dart';
@@ -311,7 +312,7 @@ final class _CreateSubscriptionPageState extends State<CreateSubscriptionPage> {
                             hint: 'Select a frequency',
                             items: Frequency.values.toList(),
                             itemToString: (Frequency frequency) =>
-                                _formatFrequencyName(frequency.name),
+                                formatEnumName(frequency.name),
                           ),
                         ),
                         Padding(
@@ -469,16 +470,5 @@ final class _CreateSubscriptionPageState extends State<CreateSubscriptionPage> {
         ],
       ),
     );
-  }
-
-  String _formatFrequencyName(String name) {
-    // Add spaces between camel case words
-    String formattedName = name.replaceAllMapped(
-      RegExp(r'([a-z])([A-Z])'),
-      (Match match) => '${match.group(1)} ${match.group(2)}',
-    );
-
-    // Capitalize the first letter of the formatted name
-    return formattedName[0].toUpperCase() + formattedName.substring(1);
   }
 }

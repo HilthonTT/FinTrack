@@ -5,6 +5,7 @@ import 'package:fintrack_app/core/common/widgets/primary_button.dart';
 import 'package:fintrack_app/core/common/widgets/rounded_dropdown_menu.dart';
 import 'package:fintrack_app/core/constants/companies.dart';
 import 'package:fintrack_app/core/enums/company.dart';
+import 'package:fintrack_app/core/enums/enum_helper.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/domain/enums/expense_category.dart';
 import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
@@ -248,7 +249,7 @@ final class _CreateExpensePageState extends State<CreateExpensePage> {
                             hint: 'Select Expense Category',
                             items: ExpenseCategory.values.toList(),
                             itemToString: (ExpenseCategory category) =>
-                                _formatCategoryName(category.name),
+                                formatEnumName(category.name),
                           ),
                         ),
                         Padding(
@@ -369,16 +370,5 @@ final class _CreateExpensePageState extends State<CreateExpensePage> {
         ],
       ),
     );
-  }
-
-  String _formatCategoryName(String name) {
-    // Add spaces between camel case words
-    String formattedName = name.replaceAllMapped(
-      RegExp(r'([a-z])([A-Z])'),
-      (Match match) => '${match.group(1)} ${match.group(2)}',
-    );
-
-    // Capitalize the first letter of the formatted name
-    return formattedName[0].toUpperCase() + formattedName.substring(1);
   }
 }

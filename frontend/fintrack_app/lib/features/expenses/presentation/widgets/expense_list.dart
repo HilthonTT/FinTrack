@@ -6,6 +6,7 @@ import 'package:fintrack_app/core/common/widgets/loader.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/domain/entities/expense.dart';
 import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
+import 'package:fintrack_app/features/expenses/presentation/dialogs/expense_info_dialog.dart';
 import 'package:fintrack_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,26 @@ final class _ExpenseListState extends State<ExpenseList> {
     });
 
     context.read<ExpensesBloc>().add(ExpenseGetAllExpensesEvent(take: take));
+  }
+
+  Future<void> _showInfo(Expense expense) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppPalette.gray,
+          title: expenseInfoDialogTitle(
+            expense,
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          content: expenseInfoDialogContent(expense, onOk: () {
+            Navigator.of(context).pop();
+          }),
+        );
+      },
+    );
   }
 
   @override
@@ -74,7 +95,9 @@ final class _ExpenseListState extends State<ExpenseList> {
 
                   final imagePath = getImagePath(expense.company);
 
-                  void onTap() {}
+                  Future<void> onTap() async {
+                    await _showInfo(expense);
+                  }
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -125,9 +148,9 @@ final class _ExpenseListState extends State<ExpenseList> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
-                                )
+                                ),
                               ],
-                            )
+                            ),
                           ],
                         ),
                       ),
