@@ -43,9 +43,17 @@ final class _ExpenseListState extends State<ExpenseList> {
               Navigator.of(context).pop();
             },
           ),
-          content: expenseInfoDialogContent(expense, onOk: () {
-            Navigator.of(context).pop();
-          }),
+          content: expenseInfoDialogContent(
+            context,
+            expense,
+            take,
+            onOk: () {
+              Navigator.of(context).pop();
+            },
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+          ),
         );
       },
     );

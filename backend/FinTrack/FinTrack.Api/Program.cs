@@ -6,7 +6,6 @@ using FinTrack.Infrastructure;
 using FinTrack.Application;
 using FinTrack.Api;
 using FinTrack.Api.Constants;
-using Zylo.Api.Extensions;
 using Asp.Versioning.Builder;
 using Asp.Versioning;
 using Hangfire;

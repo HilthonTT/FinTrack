@@ -1,13 +1,12 @@
 ﻿using FinTrack.Domain.Expenses.Events;
 using FinTrack.Domain.Shared.Enums;
 using FinTrack.Domain.Shared.ValueObjects;
-using FinTrack.Domain.Subscriptions.Enums;
 using FinTrack.Domain.Users.ValueObjects;
 using SharedKernel;
 
 namespace FinTrack.Domain.Expenses;
 
-public sealed class Expense : Entity, IAuditable, ISoftDeletable
+public sealed class Expense : Entity, IAuditable
 {
     private Expense(
         Guid id, 
@@ -54,10 +53,6 @@ public sealed class Expense : Entity, IAuditable, ISoftDeletable
     public DateTime CreatedOnUtc { get; set; }
 
     public DateTime? ModifiedOnUtc { get; set; }
-
-    public bool IsDeleted { get; set; }
-
-    public DateTime? DeletedOnUtc { get; set; }
 
     public static Result<Expense> Create(
         Guid userId, 

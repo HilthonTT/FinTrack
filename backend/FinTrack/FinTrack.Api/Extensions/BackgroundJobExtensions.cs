@@ -2,7 +2,7 @@
 using FinTrack.Infrastructure.Outbox;
 using Hangfire;
 
-namespace Zylo.Api.Extensions;
+namespace FinTrack.Api.Extensions;
 
 public static class BackgroundJobExtensions
 {

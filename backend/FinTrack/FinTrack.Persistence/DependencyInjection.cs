@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddSingleton<SoftDeleteInterceptor>();
         services.AddSingleton<UpdateAuditableInterceptor>();
         services.AddSingleton<InsertOutboxMessagesInterceptor>();
+        services.AddSingleton<DebugInterceptor>();
 
         string? connectionString = configuration.GetConnectionString("fintrack-db");
         Ensure.NotNullOrWhitespace(connectionString, nameof(connectionString));
@@ -41,7 +42,8 @@ public static class DependencyInjection
                 .AddInterceptors(
                     sp.GetRequiredService<UpdateAuditableInterceptor>(),
                     sp.GetRequiredService<SoftDeleteInterceptor>(),
-                    sp.GetRequiredService<InsertOutboxMessagesInterceptor>());
+                    sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
+                    sp.GetRequiredService<DebugInterceptor>());
         });
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());

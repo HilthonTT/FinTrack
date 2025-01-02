@@ -28,8 +28,6 @@ internal sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
                 .HasConversion(currency => currency.Code, code => Currency.FromCode(code) ?? Currency.None);
         });
 
-        builder.Property(e => e.IsDeleted).HasDefaultValue(false);
-
         builder.HasIndex(b => new { b.Name })
             .HasMethod("GIN")
             .IsTsVectorExpressionIndex("english");

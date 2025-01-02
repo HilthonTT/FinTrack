@@ -6,7 +6,7 @@ using SharedKernel;
 
 namespace FinTrack.Domain.Subscriptions;
 
-public sealed class Subscription : Entity, IAuditable, ISoftDeletable
+public sealed class Subscription : Entity, IAuditable
 {
     private Subscription(
         Guid id, 
@@ -57,10 +57,6 @@ public sealed class Subscription : Entity, IAuditable, ISoftDeletable
     public DateTime CreatedOnUtc { get; set; }
 
     public DateTime? ModifiedOnUtc { get; set; }
-
-    public bool IsDeleted { get; set; }
-
-    public DateTime? DeletedOnUtc { get; set; }
 
     public static Subscription Create(
         Guid userId,

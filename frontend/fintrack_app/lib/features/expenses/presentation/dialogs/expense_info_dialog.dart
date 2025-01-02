@@ -3,7 +3,9 @@ import 'package:fintrack_app/core/common/widgets/secondary_button.dart';
 import 'package:fintrack_app/core/enums/enum_helper.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:fintrack_app/features/expenses/domain/entities/expense.dart';
+import 'package:fintrack_app/features/expenses/presentation/bloc/expenses_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 Widget expenseInfoDialogTitle(Expense expense, {VoidCallback? onClose}) {
@@ -26,8 +28,32 @@ Widget expenseInfoDialogTitle(Expense expense, {VoidCallback? onClose}) {
   );
 }
 
-Widget expenseInfoDialogContent(Expense expense, {VoidCallback? onOk}) {
+Widget expenseInfoDialogContent(
+  BuildContext context,
+  Expense expense,
+  int take, {
+  VoidCallback? onOk,
+  VoidCallback? onClose,
+}) {
   final imagePath = getImagePath(expense.company);
+
+  void refreshExpenses() {
+    final event = ExpenseGetAllExpensesEvent(take: take);
+
+    context.read<ExpensesBloc>().add(event);
+  }
+
+  void handleDelete() {
+    final event = ExpenseDeleteExpenseEvent(expenseId: expense.id);
+
+    context.read<ExpensesBloc>().add(event);
+
+    refreshExpenses();
+
+    if (onClose != null) {
+      onClose();
+    }
+  }
 
   return SizedBox(
     width: 600,
@@ -126,7 +152,7 @@ Widget expenseInfoDialogContent(Expense expense, {VoidCallback? onOk}) {
               height: 50,
             ),
             SecondaryButton(
-              onPressed: () {},
+              onPressed: handleDelete,
               icon: Icons.delete,
               title: "Delete",
               width: 250,
