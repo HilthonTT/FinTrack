@@ -1,5 +1,6 @@
 import 'package:fintrack_app/core/constants/error_messages.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/core/errors/failure.dart';
 import 'package:fintrack_app/core/network/connection_checker.dart';
@@ -90,18 +91,18 @@ final class SubscriptionRepositoryImpl implements SubscriptionRepository {
   }
 
   @override
-  Future<Either<Failure, List<Subscription>>> get({
+  Future<Either<Failure, PagedList<Subscription>>> get({
     String? searchTerm,
-    int take = 10,
+    int pageSize = 10,
   }) async {
     try {
       if (!await connectionChecker.isConnected) {
         return left(Failure(ErrorMessages.noInternetConnection));
       }
 
-      final subscriptions = await remoteDatasource.get(
+      final subscriptions = await remoteDatasource.getAll(
         searchTerm: searchTerm,
-        take: take,
+        pageSize: pageSize,
       );
 
       return right(subscriptions);

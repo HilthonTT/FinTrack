@@ -6,6 +6,7 @@ import 'package:fintrack_app/core/common/utils/http_helper.dart';
 import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
 import 'package:fintrack_app/core/common/utils/status_codes.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/features/subscriptions/data/models/subscription_model.dart';
 import 'package:fintrack_app/features/subscriptions/domain/enums/frequency.dart';
@@ -25,7 +26,10 @@ abstract interface class SubscriptionRemoteDatasource {
 
   Future<void> delete({required String subscriptionId});
 
-  Future<List<SubscriptionModel>> get({String? searchTerm, int take = 10});
+  Future<PagedList<SubscriptionModel>> getAll({
+    String? searchTerm,
+    int pageSize = 10,
+  });
 
   Future<void> update({
     required String subscriptionId,
@@ -95,12 +99,12 @@ final class SubscriptionRemoteDatasourceImpl
   }
 
   @override
-  Future<List<SubscriptionModel>> get({
+  Future<PagedList<SubscriptionModel>> getAll({
     String? searchTerm,
-    int take = 10,
+    int pageSize = 10,
   }) async {
     try {
-      String query = "/subscriptions?take=$take";
+      String query = "/subscriptions?pageSize=$pageSize";
       if (searchTerm != null && searchTerm.isNotEmpty) {
         query += "&searchTerm=${Uri.encodeComponent(searchTerm)}";
       }
@@ -111,12 +115,21 @@ final class SubscriptionRemoteDatasourceImpl
         throw parseError(response);
       }
 
-      final List<dynamic> responseData = jsonDecode(response.body);
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
 
+      final List<dynamic> itemsData = responseData['items'];
       final List<SubscriptionModel> subscriptions =
-          responseData.map((data) => SubscriptionModel.fromJson(data)).toList();
+          itemsData.map((data) => SubscriptionModel.fromJson(data)).toList();
 
-      return subscriptions;
+      final PagedList<SubscriptionModel> pagedList =
+          PagedList<SubscriptionModel>(
+        items: subscriptions,
+        pageSize: responseData['pageSize'],
+        totalCount: responseData['totalCount'],
+        hasNextPage: responseData['hasNextPage'],
+      );
+
+      return pagedList;
     } catch (e) {
       throw ServerException(e.toString());
     }

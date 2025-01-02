@@ -54,6 +54,11 @@ final class _ExpenseListState extends State<ExpenseList> {
         }
 
         if (state is ExpensesLoadedSuccess) {
+          final pagedExpenses = state.pagedExpenses;
+
+          final expenses = pagedExpenses.items;
+          final hasNextPage = pagedExpenses.hasNextPage;
+
           return Column(
             children: [
               ListView.builder(
@@ -63,9 +68,9 @@ final class _ExpenseListState extends State<ExpenseList> {
                 ),
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: state.expenses.length,
+                itemCount: expenses.length,
                 itemBuilder: (context, index) {
-                  final expense = state.expenses[index];
+                  final expense = expenses[index];
 
                   final imagePath = getImagePath(expense.company);
 
@@ -131,7 +136,7 @@ final class _ExpenseListState extends State<ExpenseList> {
                 },
               ),
               const SizedBox(height: 10),
-              LoadMoreButton(onPressed: loadMore, hasMore: true),
+              LoadMoreButton(onPressed: loadMore, hasMore: hasNextPage),
             ],
           );
         }

@@ -1,6 +1,7 @@
 ﻿using FinTrack.Application.Abstractions.Authentication;
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
+using FinTrack.Contracts.Common;
 using FinTrack.Contracts.Subscriptions;
 using FinTrack.Domain.Subscriptions;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +11,18 @@ namespace FinTrack.Application.Subscriptions.Get;
 
 internal sealed class GetSubscriptionsQueryHandler(
     IUserContext userContext,
-    IDbContext dbContext) : IQueryHandler<GetSubscriptionsQuery, List<SubscriptionResponse>>
+    IDbContext dbContext) : IQueryHandler<GetSubscriptionsQuery, PagedList<SubscriptionResponse>>
 {
-    public async Task<Result<List<SubscriptionResponse>>> Handle(
+    public async Task<Result<PagedList<SubscriptionResponse>>> Handle(
         GetSubscriptionsQuery request,
         CancellationToken cancellationToken)
     {
         IQueryable<Subscription> subscriptionsQuery = BuildSubscriptionsQuery(request);
 
-        List<SubscriptionResponse> subscriptions = await GetSubscriptionResponsesAsync(subscriptionsQuery, cancellationToken);
+        PagedList<SubscriptionResponse> subscriptions = await GetSubscriptionResponsesAsync(
+            request, 
+            subscriptionsQuery, 
+            cancellationToken);
 
         return subscriptions;
     }
@@ -40,16 +44,15 @@ internal sealed class GetSubscriptionsQueryHandler(
                 .Select(x => x.Subscription);
         }
 
-        query = query.Take(request.Take);
-
         return query;
     }
 
-    private static async Task<List<SubscriptionResponse>> GetSubscriptionResponsesAsync(
+    private static async Task<PagedList<SubscriptionResponse>> GetSubscriptionResponsesAsync(
+        GetSubscriptionsQuery request,
         IQueryable<Subscription> query,
         CancellationToken cancellationToken)
     {
-        return await query.Select(s => new SubscriptionResponse
+        IQueryable<SubscriptionResponse> subscriptionsResponsesQuery = query.Select(s => new SubscriptionResponse
         {
             Id = s.Id,
             UserId = s.UserId,
@@ -64,6 +67,13 @@ internal sealed class GetSubscriptionsQueryHandler(
             Status = s.Status,
             CreatedOnUtc = s.CreatedOnUtc,
             ModifiedOnUtc = s.ModifiedOnUtc,
-        }).ToListAsync(cancellationToken);
+        });
+
+        PagedList<SubscriptionResponse> subscriptions = await PagedList<SubscriptionResponse>.CreateAsync(
+            subscriptionsResponsesQuery,
+            request.PageSize,
+            cancellationToken);
+
+        return subscriptions;
     }
 }

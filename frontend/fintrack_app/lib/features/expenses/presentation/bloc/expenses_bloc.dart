@@ -1,3 +1,4 @@
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/features/expenses/domain/entities/expense.dart';
 import 'package:fintrack_app/features/expenses/domain/enums/expense_category.dart';
@@ -90,7 +91,7 @@ final class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     ExpenseGetAllExpensesEvent event,
     Emitter<ExpensesState> emit,
   ) async {
-    final query = GetExpensesQuery(take: event.take);
+    final query = GetExpensesQuery(pageSize: event.take);
 
     final response = await getExpenses(query);
 

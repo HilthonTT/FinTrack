@@ -1,3 +1,4 @@
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/core/errors/failure.dart';
 import 'package:fintrack_app/features/subscriptions/domain/entities/subscription.dart';
@@ -21,9 +22,9 @@ abstract interface class SubscriptionRepository {
 
   Future<Either<Failure, Unit>> delete({required String subscriptionId});
 
-  Future<Either<Failure, List<Subscription>>> get({
+  Future<Either<Failure, PagedList<Subscription>>> get({
     String? searchTerm,
-    int take = 10,
+    int pageSize = 10,
   });
 
   Future<Either<Failure, Subscription>> getById({

@@ -1,3 +1,4 @@
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/features/subscriptions/domain/entities/subscription.dart';
 import 'package:fintrack_app/features/subscriptions/domain/enums/frequency.dart';
@@ -121,7 +122,7 @@ final class SubscriptionsBloc
   ) async {
     final query = GetSubscriptionsQuery(
       searchTerm: event.searchTerm,
-      take: event.take,
+      pageSize: event.take,
     );
 
     final response = await getSubscriptions(query);

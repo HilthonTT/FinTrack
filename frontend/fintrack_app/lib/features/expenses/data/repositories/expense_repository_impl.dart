@@ -1,5 +1,6 @@
 import 'package:fintrack_app/core/constants/error_messages.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/core/errors/failure.dart';
 import 'package:fintrack_app/core/network/connection_checker.dart';
@@ -60,13 +61,19 @@ final class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
-  Future<Either<Failure, List<Expense>>> getAll({int take = 10}) async {
+  Future<Either<Failure, PagedList<Expense>>> getAll({
+    String? searchTerm,
+    int pageSize = 10,
+  }) async {
     try {
       if (!await connectionChecker.isConnected) {
         return left(Failure(ErrorMessages.noInternetConnection));
       }
 
-      final expenses = await remoteDataSource.getAll(take: take);
+      final expenses = await remoteDataSource.getAll(
+        searchTerm: searchTerm,
+        pageSize: pageSize,
+      );
 
       return right(expenses);
     } on ServerException catch (e) {

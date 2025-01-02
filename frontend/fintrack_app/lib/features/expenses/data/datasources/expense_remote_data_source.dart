@@ -6,6 +6,7 @@ import 'package:fintrack_app/core/common/utils/http_helper.dart';
 import 'package:fintrack_app/core/common/utils/jwt_helper.dart';
 import 'package:fintrack_app/core/common/utils/status_codes.dart';
 import 'package:fintrack_app/core/constants/exceptions.dart';
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/features/expenses/data/models/expense_model.dart';
 import 'package:fintrack_app/features/expenses/domain/enums/expense_category.dart';
@@ -13,7 +14,10 @@ import 'package:fintrack_app/features/expenses/domain/enums/expense_category.dar
 abstract interface class ExpenseRemoteDataSource {
   Future<ExpenseModel> getById({required String id});
 
-  Future<List<ExpenseModel>> getAll({int take = 10});
+  Future<PagedList<ExpenseModel>> getAll({
+    String? searchTerm,
+    int pageSize = 10,
+  });
 
   Future<String> create({
     required String name,
@@ -89,20 +93,37 @@ final class ExpenseRemoteDataSourceImpl implements ExpenseRemoteDataSource {
   }
 
   @override
-  Future<List<ExpenseModel>> getAll({int take = 10}) async {
+  Future<PagedList<ExpenseModel>> getAll({
+    String? searchTerm,
+    int pageSize = 10,
+  }) async {
     try {
-      final response = await getRequest("/expenses?take=$take");
+      String query = "/expenses?pageSize=$pageSize";
+      if (searchTerm != null && searchTerm.isNotEmpty) {
+        query += "&searchTerm=${Uri.encodeComponent(searchTerm)}";
+      }
+
+      final response = await getRequest(query);
 
       if (!isSuccessfulResponse(response.statusCode)) {
         throw parseError(response);
       }
 
-      final List<dynamic> responseData = jsonDecode(response.body);
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      final List<dynamic> itemsData = responseData['items'];
 
       final List<ExpenseModel> expenses =
-          responseData.map((data) => ExpenseModel.fromJson(data)).toList();
+          itemsData.map((data) => ExpenseModel.fromJson(data)).toList();
 
-      return expenses;
+      final PagedList<ExpenseModel> pagedList = PagedList<ExpenseModel>(
+        items: expenses,
+        pageSize: responseData['pageSize'] ?? 0,
+        totalCount: responseData['totalCount'] ?? 0,
+        hasNextPage: responseData['hasNextPage'] ?? false,
+      );
+
+      return pagedList;
     } catch (e) {
       throw ServerException(e.toString());
     }

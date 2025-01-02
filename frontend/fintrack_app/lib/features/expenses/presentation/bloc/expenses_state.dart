@@ -20,9 +20,9 @@ final class ExpensesFailure extends ExpensesState {
 }
 
 final class ExpensesLoadedSuccess extends ExpensesState {
-  final List<Expense> expenses;
+  final PagedList<Expense> pagedExpenses;
 
-  const ExpensesLoadedSuccess(this.expenses);
+  const ExpensesLoadedSuccess(this.pagedExpenses);
 }
 
 final class ExpenseByIdLoadedSuccess extends ExpensesState {

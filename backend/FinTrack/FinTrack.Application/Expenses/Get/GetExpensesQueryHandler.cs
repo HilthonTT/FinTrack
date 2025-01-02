@@ -1,6 +1,7 @@
 ﻿using FinTrack.Application.Abstractions.Authentication;
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
+using FinTrack.Contracts.Common;
 using FinTrack.Contracts.Expenses;
 using FinTrack.Domain.Expenses;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +12,16 @@ namespace FinTrack.Application.Expenses.Get;
 
 internal sealed class GetExpensesQueryHandler(
     IUserContext userContext,
-    IDbContext dbContext) : IQueryHandler<GetExpensesQuery, List<ExpenseResponse>>
+    IDbContext dbContext) : IQueryHandler<GetExpensesQuery, PagedList<ExpenseResponse>>
 {
-    public async Task<Result<List<ExpenseResponse>>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedList<ExpenseResponse>>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Expense> query = BuildExpensesQuery(request);
 
-        List<ExpenseResponse> expenses = await GetExpenseResponsesAsync(query, cancellationToken);
+        PagedList<ExpenseResponse> expenses = await GetExpenseResponsesAsync(
+            request, 
+            query, 
+            cancellationToken);
 
         return expenses;
     }
@@ -39,16 +43,15 @@ internal sealed class GetExpensesQueryHandler(
                 .Select(x => x.Subscription);
         }
 
-        query = query.Take(request.Take);
-
         return query;
     }
 
-    private static async Task<List<ExpenseResponse>> GetExpenseResponsesAsync(
+    private static async Task<PagedList<ExpenseResponse>> GetExpenseResponsesAsync(
+        GetExpensesQuery request,
         IQueryable<Expense> query,
         CancellationToken cancellationToken)
     {
-        return await query.Select(s => new ExpenseResponse
+        var expenseResponsesQuery = query.Select(s => new ExpenseResponse
         {
             Id = s.Id,
             UserId = s.UserId,
@@ -60,6 +63,13 @@ internal sealed class GetExpensesQueryHandler(
             Date = s.Date,
             CreatedOnUtc = s.CreatedOnUtc,
             ModifiedOnUtc = s.ModifiedOnUtc,
-        }).ToListAsync(cancellationToken);
+        });
+
+        PagedList<ExpenseResponse> expenses = await PagedList<ExpenseResponse>.CreateAsync(
+            expenseResponsesQuery, 
+            request.PageSize, 
+            cancellationToken);
+
+        return expenses;
     }
 }

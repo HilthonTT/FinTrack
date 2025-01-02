@@ -1,3 +1,4 @@
+import 'package:fintrack_app/core/entities/paged_list.dart';
 import 'package:fintrack_app/core/enums/company.dart';
 import 'package:fintrack_app/core/errors/failure.dart';
 import 'package:fintrack_app/features/expenses/domain/entities/expense.dart';
@@ -7,7 +8,10 @@ import 'package:fpdart/fpdart.dart';
 abstract interface class ExpenseRepository {
   Future<Either<Failure, Expense>> getById({required String id});
 
-  Future<Either<Failure, List<Expense>>> getAll({int take = 10});
+  Future<Either<Failure, PagedList<Expense>>> getAll({
+    String? searchTerm,
+    int pageSize = 10,
+  });
 
   Future<Either<Failure, String>> create({
     required String name,

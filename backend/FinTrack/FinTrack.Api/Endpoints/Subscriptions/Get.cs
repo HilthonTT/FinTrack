@@ -1,6 +1,7 @@
 ﻿using FinTrack.Api.Extensions;
 using FinTrack.Api.Infrastructure;
 using FinTrack.Application.Subscriptions.Get;
+using FinTrack.Contracts.Common;
 using FinTrack.Contracts.Subscriptions;
 using FinTrack.Domain.Users;
 using MediatR;
@@ -15,13 +16,13 @@ internal sealed class Get : IEndpoint
     {
         app.MapGet("subscriptions", async (
             [FromQuery] string? searchTerm,
+            [FromQuery] int pageSize,
             ISender sender,
-            CancellationToken cancellationToken,
-            [FromQuery] int take = 10) =>
+            CancellationToken cancellationToken) =>
         {
-            var query = new GetSubscriptionsQuery(searchTerm, take);
+            var query = new GetSubscriptionsQuery(searchTerm, pageSize);
 
-            Result<List<SubscriptionResponse>> result = await sender.Send(query, cancellationToken);
+            Result<PagedList<SubscriptionResponse>> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })

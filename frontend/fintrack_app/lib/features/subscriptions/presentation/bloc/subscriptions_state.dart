@@ -20,9 +20,9 @@ final class SubscriptionsFailure extends SubscriptionsState {
 }
 
 final class SubscriptionsLoadedSuccess extends SubscriptionsState {
-  final List<Subscription> subscriptions;
+  final PagedList<Subscription> pagedSubscriptions;
 
-  const SubscriptionsLoadedSuccess(this.subscriptions);
+  const SubscriptionsLoadedSuccess(this.pagedSubscriptions);
 }
 
 final class SubscriptionByIdLoadedSuccess extends SubscriptionsState {
