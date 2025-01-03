@@ -33,17 +33,19 @@ final class ExpenseModel extends Expense {
 
   factory ExpenseModel.fromJson(Map<String, dynamic> map) {
     return ExpenseModel(
-      id: map['id'],
-      userId: map['userId'],
-      name: map['name'],
-      amount: map['amount'],
-      currency: map['currency'],
-      company: Company.values[map['company']],
-      category: ExpenseCategory.values[map['category']],
-      date: DateTime.parse(map['date']),
-      createdOnUtc: DateTime.parse(map['createdOnUtc']),
+      id: map['id'] as String,
+      userId: map['userId'] as String,
+      name: map['name'] as String,
+      amount: map['amount'] is int
+          ? (map['amount'] as int).toDouble() // Convert int to double
+          : double.parse(map['amount'] as String), // Parse String to double
+      currency: map['currency'] as String,
+      company: Company.values[map['company'] as int],
+      category: ExpenseCategory.values[map['category'] as int],
+      date: DateTime.parse(map['date'] as String),
+      createdOnUtc: DateTime.parse(map['createdOnUtc'] as String),
       modifiedOnUtc: map['modifiedOnUtc'] != null
-          ? DateTime.parse(map['modifiedOnUtc'])
+          ? DateTime.parse(map['modifiedOnUtc'] as String)
           : null,
     );
   }

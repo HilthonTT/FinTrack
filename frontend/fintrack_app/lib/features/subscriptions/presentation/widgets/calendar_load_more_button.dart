@@ -1,16 +1,14 @@
 import 'package:fintrack_app/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
-final class SubscriptionCard extends StatelessWidget {
-  final String icon;
-  final String name;
-  final String amount;
+final class CalendarLoadMoreButton extends StatelessWidget {
+  final VoidCallback onLoadMore;
+  final bool canLoadMore;
 
-  const SubscriptionCard({
+  const CalendarLoadMoreButton({
     super.key,
-    required this.icon,
-    required this.name,
-    required this.amount,
+    required this.onLoadMore,
+    required this.canLoadMore,
   });
 
   @override
@@ -23,7 +21,7 @@ final class SubscriptionCard extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () {},
+      onTap: canLoadMore ? onLoadMore : null,
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(16),
@@ -31,30 +29,26 @@ final class SubscriptionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              icon,
+            Container(
               width: imageSize,
               height: imageSize,
+              decoration: BoxDecoration(
+                color: canLoadMore ? AppPalette.white : AppPalette.gray20,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: const EdgeInsets.all(8.0),
+              child: const Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
             ),
             const SizedBox(height: 20),
             Text(
-              name,
-              textAlign: TextAlign.center,
+              "Load more",
               style: TextStyle(
-                overflow: TextOverflow.ellipsis,
-                color: AppPalette.white,
-                fontSize: isMobile ? 12 : 18,
+                color: canLoadMore ? AppPalette.white : AppPalette.gray20,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              "\$$amount",
-              style: TextStyle(
-                overflow: TextOverflow.ellipsis,
-                color: AppPalette.white,
-                fontSize: isMobile ? 16 : 20,
-                fontWeight: FontWeight.w700,
               ),
             ),
           ],

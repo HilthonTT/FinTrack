@@ -1,11 +1,16 @@
 import 'dart:math';
 
 import 'package:calendar_agenda/calendar_agenda.dart';
+import 'package:fintrack_app/core/common/utils/toast_helper.dart';
 import 'package:fintrack_app/core/common/widgets/settings_button.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
+import 'package:fintrack_app/features/subscriptions/presentation/bloc/subscriptions_bloc.dart';
+import 'package:fintrack_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-final class CalendarHeader extends StatelessWidget {
+final class CalendarHeader extends StatefulWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
 
@@ -14,6 +19,26 @@ final class CalendarHeader extends StatelessWidget {
     required this.selectedDate,
     required this.onDateSelected,
   });
+
+  @override
+  State<CalendarHeader> createState() => _CalendarHeaderState();
+}
+
+final class _CalendarHeaderState extends State<CalendarHeader> {
+  late FToast fToast;
+
+  int subscriptionsCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fToast = FToast();
+    fToast.init(navigatorKey.currentContext!);
+
+    final event = GetSubscriptionsEvent();
+    context.read<SubscriptionsBloc>().add(event);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,18 +96,33 @@ final class CalendarHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "3 subscriptions for today",
-                        style: TextStyle(
-                          color: AppPalette.gray30,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                  BlocConsumer<SubscriptionsBloc, SubscriptionsState>(
+                    listener: (context, state) {
+                      if (state is SubscriptionsFailure) {
+                        showToast(fToast, state.error, Icons.error);
+                      } else if (state is SubscriptionsLoadedSuccess) {
+                        setState(() {
+                          final pagedSubscriptions = state.pagedSubscriptions;
+
+                          subscriptionsCount = pagedSubscriptions.totalCount;
+                        });
+                      }
+                    },
+                    builder: (context, state) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "$subscriptionsCount subscriptions for today",
+                            style: TextStyle(
+                              color: AppPalette.gray30,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   )
                 ],
               ),
@@ -107,7 +147,7 @@ final class CalendarHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              onDateSelected: onDateSelected,
+              onDateSelected: widget.onDateSelected,
             )
           ],
         ),
