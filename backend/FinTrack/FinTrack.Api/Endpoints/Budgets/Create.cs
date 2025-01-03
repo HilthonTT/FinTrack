@@ -1,4 +1,5 @@
 ﻿using FinTrack.Api.Extensions;
+using FinTrack.Api.Idempotency;
 using FinTrack.Api.Infrastructure;
 using FinTrack.Application.Budgets.Create;
 using FinTrack.Contracts.Budgets;
@@ -20,13 +21,13 @@ internal sealed class Create : IEndpoint
             CancellationToken cancellationToken) =>
         {
             var command = new CreateBudgetCommand(
-                requestId, 
+                requestId,
                 request.UserId,
                 request.Name,
                 request.Type,
                 request.Amount,
-                request.CurrencyCode, 
-                request.StartDate, 
+                request.CurrencyCode,
+                request.StartDate,
                 request.EndDate);
 
             Result<Guid> result = await sender.Send(command, cancellationToken);
@@ -35,6 +36,7 @@ internal sealed class Create : IEndpoint
         })
         .WithTags(Tags.Budgets)
         .RequireAuthorization()
-        .HasPermission(Permission.UsersRead.Name);
+        .HasPermission(Permission.UsersRead.Name)
+        .AddEndpointFilter<IdempotencyFilter>();
     }
 }

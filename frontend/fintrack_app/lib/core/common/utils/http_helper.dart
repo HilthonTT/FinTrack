@@ -7,6 +7,7 @@ import 'package:fintrack_app/core/constants/exceptions.dart';
 import 'package:fintrack_app/core/constants/server_constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 final _secureStorage = FlutterSecureStorage();
 
@@ -19,11 +20,16 @@ Future<http.Response> postRequest(
   try {
     final jwtToken = await getJwtToken(_secureStorage);
 
+    final uuid = Uuid();
+
+    final idempotencyKey = uuid.v4();
+
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $jwtToken',
+        'Idempotence-Key': idempotencyKey,
       },
       body: jsonEncode(body),
     );

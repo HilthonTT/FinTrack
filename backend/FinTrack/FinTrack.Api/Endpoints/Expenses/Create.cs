@@ -1,4 +1,5 @@
 ﻿using FinTrack.Api.Extensions;
+using FinTrack.Api.Idempotency;
 using FinTrack.Api.Infrastructure;
 using FinTrack.Application.Expenses.Create;
 using FinTrack.Contracts.Expenses;
@@ -32,6 +33,7 @@ internal sealed class Create : IEndpoint
         })
         .WithTags(Tags.Expenses)
         .RequireAuthorization()
-        .HasPermission(Permission.UsersRead.Name);
+        .HasPermission(Permission.UsersRead.Name)
+        .AddEndpointFilter<IdempotencyFilter>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FinTrack.Api.Extensions;
+using FinTrack.Api.Idempotency;
 using FinTrack.Api.Infrastructure;
 using FinTrack.Application.Subscriptions.Create;
 using FinTrack.Contracts.Subscriptions;
@@ -33,6 +34,7 @@ internal sealed class Create : IEndpoint
         })
         .WithTags(Tags.Subscriptions)
         .RequireAuthorization()
-        .HasPermission(Permission.UsersRead.Name);
+        .HasPermission(Permission.UsersRead.Name)
+        .AddEndpointFilter<IdempotencyFilter>();
     }
 }
