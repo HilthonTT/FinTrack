@@ -6,7 +6,7 @@ using SharedKernel;
 
 namespace FinTrack.Domain.Expenses;
 
-public sealed class Expense : Entity, IAuditable
+public sealed class Expense : Entity, IAuditable, ISoftDeletable
 {
     private Expense(
         Guid id, 
@@ -53,6 +53,10 @@ public sealed class Expense : Entity, IAuditable
     public DateTime CreatedOnUtc { get; set; }
 
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedOnUtc { get; set; }
 
     public static Result<Expense> Create(
         Guid userId, 
@@ -146,5 +150,14 @@ public sealed class Expense : Entity, IAuditable
     public void RaiseUpdate()
     {
         Raise(new ExpenseDeletedDomainEvent(Id));
+    }
+
+    /// <summary>
+    /// Use only in the soft delete interceptor
+    /// </summary>
+    /// <param name="money">The money</param>
+    public void UpdateMoney(Money money)
+    {
+        Money = money;
     }
 }

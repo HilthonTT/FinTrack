@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SharedKernel;
+using FinTrack.Domain.Expenses;
+using FinTrack.Domain.Shared.ValueObjects;
 
 namespace FinTrack.Persistence.Interceptors;
 
@@ -36,6 +38,13 @@ internal sealed class SoftDeleteInterceptor : SaveChangesInterceptor
 
             entry.Property(e => e.IsDeleted).CurrentValue = true;
             entry.Property(e => e.DeletedOnUtc).CurrentValue = utcNow;
+
+            if (entry.Entity is Expense expense && expense.Money is not null)
+            {
+                var money = new Money(expense.Money.Amount, expense.Money.Currency);
+
+                expense.UpdateMoney(money);
+            }
         }
     }
 }

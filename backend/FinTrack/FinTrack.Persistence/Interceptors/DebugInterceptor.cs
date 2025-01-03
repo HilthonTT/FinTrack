@@ -23,6 +23,8 @@ internal sealed class DebugInterceptor(ILogger<DebugInterceptor> logger) : SaveC
 
     private void LogEntities(DbContext dbContext)
     {
+        return;
+
         List<EntityEntry> trackedEntities = dbContext.ChangeTracker.Entries().ToList();
 
         foreach (EntityEntry entry in trackedEntities)

@@ -29,6 +29,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 
     public DbSet<Subscription> Subscriptions { get; set; }
 
+    public DbContext Context => this;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(PersistenceAssembly.Instance);

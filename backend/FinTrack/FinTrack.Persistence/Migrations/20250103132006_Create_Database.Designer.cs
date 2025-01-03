@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinTrack.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241223125453_Add_Budget_Index_Fields")]
-    partial class Add_Budget_Index_Fields
+    [Migration("20250103132006_Create_Database")]
+    partial class Create_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,16 +92,6 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date");
 
-                    b.Property<DateTime?>("DeletedOnUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_on_utc");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_deleted");
-
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_on_utc");
@@ -115,6 +105,12 @@ namespace FinTrack.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id")
                         .HasName("pk_expenses");
@@ -146,17 +142,9 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_on_utc");
 
-                    b.Property<DateTime?>("DeletedOnUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_on_utc");
-
                     b.Property<int>("Frequency")
                         .HasColumnType("integer")
                         .HasColumnName("frequency");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone")

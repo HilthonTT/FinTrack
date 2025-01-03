@@ -12,6 +12,12 @@ public sealed record Money : IComparable<Money>
         Currency = currency;
     }
 
+    public Money()
+    {
+        Amount = 0;
+        Currency = Currency.None; 
+    }
+
     public decimal Amount { get; init; }
 
     public Currency Currency { get; init; }

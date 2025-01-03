@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinTrack.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241222170854_Add_Expenses_And_Subscriptions_Index")]
-    partial class Add_Expenses_And_Subscriptions_Index
+    [Migration("20250103134312_Added_SoftDelete_To_Expenses")]
+    partial class Added_SoftDelete_To_Expenses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,12 +40,28 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_on_utc");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_budgets");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_budgets_name")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "english");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Name"), "GIN");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_budgets_user_id");
@@ -81,9 +97,7 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnName("deleted_on_utc");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
-                        .HasDefaultValue(false)
                         .HasColumnName("is_deleted");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
@@ -99,6 +113,12 @@ namespace FinTrack.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id")
                         .HasName("pk_expenses");
@@ -130,17 +150,9 @@ namespace FinTrack.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_on_utc");
 
-                    b.Property<DateTime?>("DeletedOnUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_on_utc");
-
                     b.Property<int>("Frequency")
                         .HasColumnType("integer")
                         .HasColumnName("frequency");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone")

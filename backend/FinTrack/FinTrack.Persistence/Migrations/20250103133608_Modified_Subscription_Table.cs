@@ -5,7 +5,7 @@
 namespace FinTrack.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class DeletingExpense_DoesNotModifyMoney : Migration
+    public partial class Modified_Subscription_Table : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -2,6 +2,7 @@
 using FinTrack.Api.Infrastructure;
 using FinTrack.Application.Budgets.Get;
 using FinTrack.Contracts.Budgets;
+using FinTrack.Contracts.Common;
 using FinTrack.Domain.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,13 @@ internal sealed class Get : IEndpoint
     {
         app.MapGet("budgets", async (
             [FromQuery] string? searchTerm,
+            [FromQuery] int pageSize,
             ISender sender,
-            CancellationToken cancellationToken,
-            [FromQuery] int take = 10) =>
+            CancellationToken cancellationToken) =>
         {
-            var query = new GetBudgetsQuery(searchTerm, take);
+            var query = new GetBudgetsQuery(searchTerm, pageSize);
 
-            Result<List<BudgetResponse>> result = await sender.Send(query, cancellationToken);
+            Result<PagedList<BudgetResponse>> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })

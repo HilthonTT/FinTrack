@@ -2,13 +2,13 @@
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Domain.Users;
 using FinTrack.Domain.Users.Repositories;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace FinTrack.Application.Users.VerifyEmail;
 
 internal sealed class VerifyEmailCommandHandler(
     IEmailVerificationTokenRepository emailVerificationTokenRepository,
-    IUserRepository userRepository,
     IDateTimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork) : ICommandHandler<VerifyEmailCommand>
 {
@@ -26,15 +26,15 @@ internal sealed class VerifyEmailCommandHandler(
             return Result.Failure(UserErrors.EmailAlreadyVerified);
         }
 
-        User? user = await userRepository.GetByEmailAsync(token.User.Email, cancellationToken);
-        if (user is null)
+        User existingUser = token.User;
+        if (unitOfWork.Context.Entry(existingUser).State == EntityState.Detached)
         {
-            return Result.Failure(UserErrors.NotFoundByEmail);
+            unitOfWork.Context.Entry(existingUser).State = EntityState.Detached;
         }
 
-        user.VerifyEmail();
+        token.User.VerifyEmail();
 
-        user.AddRole(Role.Registered);
+        token.User.AddRole(Role.Registered);
 
         emailVerificationTokenRepository.Remove(token);
 

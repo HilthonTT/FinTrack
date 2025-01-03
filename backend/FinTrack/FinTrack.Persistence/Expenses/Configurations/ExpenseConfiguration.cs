@@ -24,6 +24,8 @@ internal sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
 
         builder.OwnsOne(x => x.Money, moneyBuilder =>
         {
+            moneyBuilder.WithOwner();
+
             moneyBuilder.Property(money => money.Currency)
                 .HasConversion(currency => currency.Code, code => Currency.FromCode(code) ?? Currency.None);
         });
@@ -31,5 +33,10 @@ internal sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.HasIndex(b => new { b.Name })
             .HasMethod("GIN")
             .IsTsVectorExpressionIndex("english");
+
+        // optimistic concurrency support
+        builder.Property<uint>("Version").IsRowVersion();
+
+        builder.HasQueryFilter(r => !r.IsDeleted);
     }
 }

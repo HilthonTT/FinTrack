@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinTrack.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250102171258_Removed_SoftDeleted_Fields")]
-    partial class Removed_SoftDeleted_Fields
+    [Migration("20250103133608_Modified_Subscription_Table")]
+    partial class Modified_Subscription_Table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,6 +105,12 @@ namespace FinTrack.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id")
                         .HasName("pk_expenses");

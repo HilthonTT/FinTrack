@@ -114,6 +114,8 @@ namespace FinTrack.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false),
                     amount_amount = table.Column<decimal>(type: "numeric", nullable: false),
                     amount_currency = table.Column<string>(type: "text", nullable: false),
                     spent_amount = table.Column<decimal>(type: "numeric", nullable: false),
@@ -169,8 +171,7 @@ namespace FinTrack.Persistence.Migrations
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    deleted_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -244,8 +245,6 @@ namespace FinTrack.Persistence.Migrations
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    deleted_on_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -275,6 +274,13 @@ namespace FinTrack.Persistence.Migrations
                 values: new object[] { 1, 1 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_budgets_name",
+                table: "budgets",
+                column: "name")
+                .Annotation("Npgsql:IndexMethod", "GIN")
+                .Annotation("Npgsql:TsVectorConfig", "english");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_budgets_user_id",
                 table: "budgets",
                 column: "user_id");
@@ -289,6 +295,13 @@ namespace FinTrack.Persistence.Migrations
                 name: "ix_email_verification_tokens_user_id",
                 table: "email_verification_tokens",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_expenses_name",
+                table: "expenses",
+                column: "name")
+                .Annotation("Npgsql:IndexMethod", "GIN")
+                .Annotation("Npgsql:TsVectorConfig", "english");
 
             migrationBuilder.CreateIndex(
                 name: "ix_expenses_user_id",
@@ -321,6 +334,13 @@ namespace FinTrack.Persistence.Migrations
                 name: "ix_role_user_users_id",
                 table: "role_user",
                 column: "users_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_subscriptions_name",
+                table: "subscriptions",
+                column: "name")
+                .Annotation("Npgsql:IndexMethod", "GIN")
+                .Annotation("Npgsql:TsVectorConfig", "english");
 
             migrationBuilder.CreateIndex(
                 name: "ix_subscriptions_user_id",

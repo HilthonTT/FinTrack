@@ -2,6 +2,7 @@
 using FinTrack.Application.Abstractions.Data;
 using FinTrack.Application.Abstractions.Messaging;
 using FinTrack.Contracts.Budgets;
+using FinTrack.Contracts.Common;
 using FinTrack.Domain.Budget;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -10,13 +11,13 @@ namespace FinTrack.Application.Budgets.Get;
 
 internal sealed class GetBudgetsQueryHandler(
     IUserContext userContext,
-    IDbContext dbContext) : IQueryHandler<GetBudgetsQuery, List<BudgetResponse>>
+    IDbContext dbContext) : IQueryHandler<GetBudgetsQuery, PagedList<BudgetResponse>>
 {
-    public async Task<Result<List<BudgetResponse>>> Handle(GetBudgetsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedList<BudgetResponse>>> Handle(GetBudgetsQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Budget> query = BuildBudgetsQuery(request);
 
-        List<BudgetResponse> budgets = await GetBudgetResponsesAsync(query, cancellationToken);
+        PagedList<BudgetResponse> budgets = await GetBudgetResponsesAsync(request, query, cancellationToken);
 
         return budgets;
     }
@@ -38,16 +39,15 @@ internal sealed class GetBudgetsQueryHandler(
                 .Select(x => x.Budget);
         }
 
-        query = query.Take(request.Take);
-
         return query;
     }
 
-    private static async Task<List<BudgetResponse>> GetBudgetResponsesAsync(
+    private static async Task<PagedList<BudgetResponse>> GetBudgetResponsesAsync(
+        GetBudgetsQuery request,
         IQueryable<Budget> query,
         CancellationToken cancellationToken)
     {
-        return await query.Select(b => new BudgetResponse
+        IQueryable<BudgetResponse> budgetResponsesQuery = query.Select(b => new BudgetResponse
         {
             Id = b.Id,
             UserId = b.UserId,
@@ -61,7 +61,13 @@ internal sealed class GetBudgetsQueryHandler(
             EndDate = b.DateRange.End,
             CreatedOnUtc = b.CreatedOnUtc,
             ModifiedOnUtc = b.ModifiedOnUtc
-        })
-        .ToListAsync(cancellationToken);
+        });
+
+        PagedList<BudgetResponse> budgets = await PagedList<BudgetResponse>.CreateAsync(
+            budgetResponsesQuery, 
+            request.PageSize,
+            cancellationToken);
+
+        return budgets;
     }
 }

@@ -19,8 +19,12 @@ internal sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subsc
 
         builder.OwnsOne(x => x.Amount, amountBuilder =>
         {
+            amountBuilder.WithOwner();
+
             amountBuilder.Property(money => money.Currency)
-                .HasConversion(currency => currency.Code, code => Currency.FromCode(code) ?? Currency.None);
+                .HasConversion(
+                    currency => currency.Code, 
+                    code => Currency.FromCode(code) ?? Currency.None);
         });
 
         builder.HasOne<User>()
