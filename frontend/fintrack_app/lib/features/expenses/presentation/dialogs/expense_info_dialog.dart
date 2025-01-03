@@ -1,4 +1,7 @@
 import 'package:fintrack_app/core/common/utils/image_path.dart';
+import 'package:fintrack_app/core/common/widgets/editable_date_field.dart';
+import 'package:fintrack_app/core/common/widgets/editable_numeric_field.dart';
+import 'package:fintrack_app/core/common/widgets/editable_text_field.dart';
 import 'package:fintrack_app/core/common/widgets/secondary_button.dart';
 import 'package:fintrack_app/core/enums/enum_helper.dart';
 import 'package:fintrack_app/core/theme/app_palette.dart';
@@ -8,159 +11,232 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-Widget expenseInfoDialogTitle(Expense expense, {VoidCallback? onClose}) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(
-        expense.name,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppPalette.white,
-        ),
-      ),
-      IconButton(
-        icon: Icon(Icons.close),
-        onPressed: onClose,
-      ),
-    ],
-  );
+final class ExpenseInfoDialog extends StatefulWidget {
+  final Expense expense;
+  final int take;
+  final VoidCallback? onOk;
+  final VoidCallback? onClose;
+
+  const ExpenseInfoDialog({
+    super.key,
+    required this.expense,
+    required this.take,
+    this.onOk,
+    this.onClose,
+  });
+
+  @override
+  State<ExpenseInfoDialog> createState() => _ExpenseInfoDialogState();
 }
 
-Widget expenseInfoDialogContent(
-  BuildContext context,
-  Expense expense,
-  int take, {
-  VoidCallback? onOk,
-  VoidCallback? onClose,
-}) {
-  final imagePath = getImagePath(expense.company);
+final class _ExpenseInfoDialogState extends State<ExpenseInfoDialog> {
+  late String name;
+  late double amount;
+  late DateTime date;
 
-  void refreshExpenses() {
-    final event = ExpenseGetAllExpensesEvent(take: take);
-
+  void _refreshExpenses() {
+    final event = ExpenseGetAllExpensesEvent(take: widget.take);
     context.read<ExpensesBloc>().add(event);
   }
 
-  void handleDelete() {
-    final event = ExpenseDeleteExpenseEvent(expenseId: expense.id);
-
+  void _handleDelete() {
+    final event = ExpenseDeleteExpenseEvent(expenseId: widget.expense.id);
     context.read<ExpensesBloc>().add(event);
 
-    refreshExpenses();
+    _refreshExpenses();
 
-    if (onClose != null) {
-      onClose();
+    if (widget.onClose != null) {
+      widget.onClose!();
     }
   }
 
-  return SizedBox(
-    width: 600,
-    height: 300,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header with company logo and name
-        Row(
-          children: [
-            if (imagePath != null)
-              Image.asset(
-                imagePath,
-                width: 40,
-                height: 40,
-                fit: BoxFit.contain,
-              ),
-            SizedBox(width: 10),
-            Text(
-              formatEnumName(expense.company.name.toString()),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppPalette.white,
-              ),
-            ),
-          ],
-        ),
+  void _handleUpdate() {
+    final event = ExpenseUpdateExpenseEvent(
+      expenseId: widget.expense.id,
+      name: name,
+      amount: amount,
+      date: date,
+    );
 
-        SizedBox(height: 20),
+    context.read<ExpensesBloc>().add(event);
+  }
 
-        Divider(color: AppPalette.gray50),
+  @override
+  void initState() {
+    super.initState();
 
-        SizedBox(height: 5),
+    final expense = widget.expense;
+    name = expense.name;
+    amount = expense.amount;
+    date = expense.date;
+  }
 
-        Text(
-          'Amount: ${expense.amount.toStringAsFixed(2)} ${expense.currency}',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppPalette.white,
-          ),
-        ),
+  @override
+  Widget build(BuildContext context) {
+    final imagePath = getImagePath(widget.expense.company);
 
-        SizedBox(height: 5),
+    return BlocConsumer<ExpensesBloc, ExpensesState>(
+      listener: (context, state) {
+        if (state is ExpenseUpdatedSuccess) {
+          _refreshExpenses();
+        }
+      },
+      builder: (context, state) {
+        return AlertDialog(
+          backgroundColor: AppPalette.gray,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: EditableTextField(
+                  initialValue: name,
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppPalette.white,
+                  ),
+                  inputDecoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Enter title',
+                    hintStyle: TextStyle(color: AppPalette.gray50),
+                  ),
+                  onSave: (newValue) {
+                    setState(() {
+                      name = newValue;
+                    });
 
-        // Expense Category
-        Text(
-          'Category: ${formatEnumName(expense.category.name)}',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppPalette.white,
-          ),
-        ),
-        SizedBox(height: 5),
-
-        // Expense Date
-        Text(
-          'Date: ${DateFormat('yyyy-MM-dd').format(expense.date.toLocal())}', // Format the date
-          style: TextStyle(
-            fontSize: 16,
-            color: AppPalette.white,
-          ),
-        ),
-        SizedBox(height: 10),
-
-        // Created and Modified timestamps
-        Row(
-          children: [
-            Text(
-              'Created On: ${DateFormat('yyyy-MM-dd').format(expense.createdOnUtc.toLocal())}',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppPalette.gray40,
-              ),
-            ),
-            SizedBox(width: 10),
-            if (expense.modifiedOnUtc != null)
-              Text(
-                'Modified On: ${DateFormat('yyyy-MM-dd').format(expense.modifiedOnUtc!.toLocal())}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppPalette.gray40,
+                    _handleUpdate();
+                  },
                 ),
               ),
-          ],
-        ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: widget.onClose ?? () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+          content: AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 350),
+              child: SizedBox(
+                width: 600,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header with company logo and name
+                      Row(
+                        children: [
+                          if (imagePath != null)
+                            Image.asset(
+                              imagePath,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.contain,
+                            ),
+                          const SizedBox(width: 10),
+                          Text(
+                            formatEnumName(
+                                widget.expense.company.name.toString()),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppPalette.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Divider(color: AppPalette.gray50),
+                      const SizedBox(height: 5),
+                      EditableNumericField(
+                        initialValue: amount,
+                        textStyle: TextStyle(
+                          fontSize: 16,
+                          color: AppPalette.white,
+                        ),
+                        inputDecoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Enter amount',
+                          hintStyle: TextStyle(color: AppPalette.gray50),
+                        ),
+                        onSave: (newAmount) {
+                          setState(() {
+                            amount = newAmount;
+                          });
 
-        const SizedBox(height: 50),
+                          _handleUpdate();
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Category: ${formatEnumName(widget.expense.category.name)}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppPalette.white,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      EditableDateField(
+                        initialDate: date, // Pass the current date
+                        onDateChanged: (newDate) {
+                          setState(() {
+                            date = newDate;
+                          });
 
-        Row(
-          children: <Widget>[
-            SecondaryButton(
-              onPressed: onOk ?? () {},
-              title: "Ok",
-              width: 250,
-              height: 50,
+                          _handleUpdate();
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Text(
+                            'Created On: ${DateFormat('yyyy-MM-dd').format(widget.expense.createdOnUtc.toLocal())}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppPalette.gray40,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          if (widget.expense.modifiedOnUtc != null)
+                            Text(
+                              'Modified On: ${DateFormat('yyyy-MM-dd').format(widget.expense.modifiedOnUtc!.toLocal())}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppPalette.gray40,
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 50),
+                      Row(
+                        children: [
+                          SecondaryButton(
+                            onPressed: widget.onOk ??
+                                () => Navigator.of(context).pop(),
+                            title: "Ok",
+                            width: 250,
+                            height: 50,
+                          ),
+                          SecondaryButton(
+                            onPressed: () => _handleDelete(),
+                            icon: Icons.delete,
+                            title: "Delete",
+                            width: 250,
+                            height: 50,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            SecondaryButton(
-              onPressed: handleDelete,
-              icon: Icons.delete,
-              title: "Delete",
-              width: 250,
-              height: 50,
-            ),
-          ],
-        )
-      ],
-    ),
-  );
+          ),
+        );
+      },
+    );
+  }
 }

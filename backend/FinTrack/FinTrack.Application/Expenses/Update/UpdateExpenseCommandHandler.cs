@@ -26,9 +26,11 @@ internal sealed class UpdateExpenseCommandHandler(
             return Result.Failure(UserErrors.Unauthorized);
         }
 
+        DateTime dateToUtc = request.Date.ToUniversalTime();
+
         Result nameResult = expense.ChangeName(request.Name);
         Result amountResult = expense.ChangeAmount(request.Amount);
-        Result dateResult = expense.ChangeDate(request.Date);
+        Result dateResult = expense.ChangeDate(dateToUtc);
 
         Result firstFailureOrSuccess = Result.FirstFailureOrSuccess(nameResult, amountResult, dateResult);
         if (firstFailureOrSuccess.IsFailure)

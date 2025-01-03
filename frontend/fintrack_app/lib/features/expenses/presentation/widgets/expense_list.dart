@@ -35,25 +35,9 @@ final class _ExpenseListState extends State<ExpenseList> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppPalette.gray,
-          title: expenseInfoDialogTitle(
-            expense,
-            onClose: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          content: expenseInfoDialogContent(
-            context,
-            expense,
-            take,
-            onOk: () {
-              Navigator.of(context).pop();
-            },
-            onClose: () {
-              Navigator.of(context).pop();
-            },
-          ),
+        return ExpenseInfoDialog(
+          expense: expense,
+          take: take,
         );
       },
     );
@@ -150,7 +134,7 @@ final class _ExpenseListState extends State<ExpenseList> {
                                   ),
                                 ),
                                 Text(
-                                  formatDate(expense.createdOnUtc.toString()),
+                                  formatDate(expense.date.toString()),
                                   style: TextStyle(
                                     color: AppPalette.white,
                                     fontSize: 14,
